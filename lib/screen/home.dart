@@ -20,28 +20,45 @@ class HomeRoute extends StatelessWidget {
                 context.router.replaceNamed('/notifi');
               },
               icon: Icon(Icons.notifications_outlined)),
-          IconButton(
-              onPressed: () {
-                context.router.replaceNamed('/add');
-              },
-              icon: Icon(Icons.add_circle_outline))
+          PopupMenuButton<String>(
+            icon: Icon(Icons.add_circle_outline),
+            onSelected: (value) {
+              if (value == "Add device") {
+                context.router.replaceNamed('/addDevice');
+              } else if (value == "Scan") {
+                context.router.replaceNamed('/scan');
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return {"Add device", "Scan"}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice.toLowerCase(),
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
         ],
         title: Text(
           "Silo",
           style: TextStyle(
-              color: Color.fromRGBO(77, 22, 0, 1),
-              fontSize: 30,
-              fontWeight: FontWeight.w600),
+              color: fontcolor, fontSize: 30, fontWeight: FontWeight.w600),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home,
+              color: Color.fromRGBO(77, 22, 0, 1),
+            ),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
+            icon: Icon(
+              Icons.person_2_outlined,
+              color: Color.fromRGBO(217, 217, 217, 1),
+            ),
             label: "Profile",
           ),
         ],

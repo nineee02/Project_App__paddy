@@ -22,11 +22,17 @@ class ProfileRoute extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home,
+              color: Color.fromRGBO(217, 217, 217, 1),
+            ),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
+            icon: Icon(
+              Icons.person_2,
+              color: Color.fromRGBO(77, 22, 0, 1),
+            ),
             label: "Profile",
           ),
         ],

@@ -25,9 +25,7 @@ class ForgotRoute extends StatelessWidget {
         title: Text(
           "Reset password",
           style: TextStyle(
-              color: Color.fromRGBO(77, 22, 0, 1),
-              fontSize: 20,
-              fontWeight: FontWeight.w500),
+              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
         ),
       ),
       backgroundColor: maincolor,
@@ -119,7 +117,7 @@ class ForgotRoute extends StatelessWidget {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
-                  Color.fromRGBO(255, 222, 47, 1),
+                  buttoncolor,
                 ),
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
@@ -133,7 +131,7 @@ class ForgotRoute extends StatelessWidget {
               child: Text(
                 "Next",
                 style: TextStyle(
-                    color: Color.fromRGBO(77, 22, 0, 1),
+                    color: fontcolor,
                     fontSize: 18,
                     fontWeight: FontWeight.w600),
               ),

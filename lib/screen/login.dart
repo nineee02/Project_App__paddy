@@ -19,7 +19,7 @@ class LoginRoute extends StatelessWidget {
               child: Text(
                 "Welcome",
                 style: TextStyle(
-                  color: const Color.fromRGBO(77, 22, 0, 1),
+                  color: fontcolor,
                   fontSize: 40,
                   fontWeight: FontWeight.w500,
                 ),
@@ -35,7 +35,7 @@ class LoginRoute extends StatelessWidget {
                     Text(
                       "Paddy Rice Drying Silo\n\n",
                       style: TextStyle(
-                        color: const Color.fromRGBO(77, 22, 0, 1),
+                        color: fontcolor,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),
@@ -44,7 +44,7 @@ class LoginRoute extends StatelessWidget {
                     Text(
                       "Control Notification",
                       style: TextStyle(
-                        color: const Color.fromRGBO(77, 22, 0, 1),
+                        color: fontcolor,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),

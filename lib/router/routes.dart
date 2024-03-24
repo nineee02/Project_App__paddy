@@ -34,6 +34,26 @@ class AppRouter extends $AppRouter {
         CustomRoute(
             path: '/scan',
             page: ScanRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/addDevice',
+            page: AddDeviceRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/selectWifi',
+            page: SelectWifiRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/device',
+            page: DeviceRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/settingNotifi',
+            page: SettingNotifiRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/otp',
+            page: OtpRoute.page,
             transitionsBuilder: TransitionsBuilders.fadeIn)
       ];
 }

@@ -11,13 +11,24 @@ class NotifiRoute extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: maincolor,
+        leading: (IconButton(
+            onPressed: () {
+              context.router.replaceNamed('/home');
+            },
+            icon: Icon(Icons.arrow_back))),
         title: Text(
           "Notification",
           style: TextStyle(
-              color: Color.fromRGBO(77, 22, 0, 1),
-              fontSize: 30,
-              fontWeight: FontWeight.w600),
+              color: fontcolor, fontSize: 30, fontWeight: FontWeight.w600),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.router.replaceNamed('/settingNotifi');
+            },
+            icon: Icon(Icons.settings),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
