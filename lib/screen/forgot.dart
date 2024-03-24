@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:dropdown_below/dropdown_below.dart';
+import 'package:paddy_rice/constants/color.dart';
+// import 'package:dropdown_below/dropdown_below.dart';
 
 // import 'package:flutter_launcher_icons/main.dart';
 // import 'package:paddy_rice/l10n/locali18n.dart';
@@ -15,7 +16,7 @@ class ForgotRoute extends StatelessWidget {
     String dropdownValue = 'Phone number';
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(255, 233, 207, 1),
+        backgroundColor: maincolor,
         leading: (IconButton(
             onPressed: () {
               context.router.replaceNamed('/login');
@@ -29,7 +30,7 @@ class ForgotRoute extends StatelessWidget {
               fontWeight: FontWeight.w500),
         ),
       ),
-      backgroundColor: Color.fromRGBO(255, 233, 207, 1),
+      backgroundColor: maincolor,
       body: Center(
         child: Column(children: [
           SizedBox(

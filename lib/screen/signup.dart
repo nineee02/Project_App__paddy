@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:paddy_rice/constants/color.dart';
 
 const List<String> county = <String>['Thailand', 'Laos'];
 
@@ -10,9 +11,9 @@ class SignupRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(255, 233, 207, 1),
+      backgroundColor: maincolor,
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(255, 233, 207, 1),
+        backgroundColor: maincolor,
         leading: (IconButton(
             onPressed: () {
               context.router.replaceNamed('/login');

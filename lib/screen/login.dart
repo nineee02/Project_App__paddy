@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:paddy_rice/constants/color.dart';
 
 @RoutePage()
 class LoginRoute extends StatelessWidget {
@@ -9,7 +10,7 @@ class LoginRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(255, 233, 207, 1),
+      backgroundColor: maincolor,
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

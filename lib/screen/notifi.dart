@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:paddy_rice/constants/color.dart';
 
 @RoutePage()
 class NotifiRoute extends StatelessWidget {
@@ -9,7 +10,7 @@ class NotifiRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(255, 233, 207, 1),
+        backgroundColor: maincolor,
         title: Text(
           "Notification",
           style: TextStyle(
@@ -38,7 +39,7 @@ class NotifiRoute extends StatelessWidget {
           }
         },
       ),
-      backgroundColor: const Color.fromRGBO(255, 233, 207, 1),
+      backgroundColor: maincolor,
       body: Center(
         child: Container(
           child: Column(

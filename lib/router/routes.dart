@@ -18,7 +18,7 @@ class AppRouter extends $AppRouter {
         CustomRoute(
             path: '/signup',
             page: SignupRoute.page,
-            transitionsBuilder: TransitionsBuilders.zoomIn),
+            transitionsBuilder: TransitionsBuilders.fadeIn),
         CustomRoute(
             path: '/forgot',
             page: ForgotRoute.page,
@@ -30,6 +30,10 @@ class AppRouter extends $AppRouter {
         CustomRoute(
             path: '/notifi',
             page: NotifiRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/scan',
+            page: ScanRoute.page,
             transitionsBuilder: TransitionsBuilders.fadeIn)
       ];
 }
