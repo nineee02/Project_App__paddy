@@ -73,7 +73,7 @@ class LoginRoute extends StatelessWidget {
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.person_outline,
-                    color: Color.fromRGBO(77, 22, 0, 1),
+                    color: iconcolor,
                   ),
 
                   suffixIcon: IconButton(
@@ -83,7 +83,7 @@ class LoginRoute extends StatelessWidget {
                   labelText: "Email or Phone number",
                   hintText: "Enter your Email or Phone number",
                   hintStyle: TextStyle(
-                    color: Color.fromRGBO(77, 22, 0, 1),
+                    color: fontcolor,
                     fontSize: 16,
                   ),
                   labelStyle: TextStyle(
@@ -119,7 +119,7 @@ class LoginRoute extends StatelessWidget {
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock_outline,
-                    color: Color.fromRGBO(77, 22, 0, 1),
+                    color: iconcolor,
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(Icons.clear),
@@ -128,7 +128,7 @@ class LoginRoute extends StatelessWidget {
                   labelText: "Password",
                   hintText: "Enter your password",
                   hintStyle: TextStyle(
-                    color: Color.fromRGBO(77, 22, 0, 1),
+                    color: fontcolor,
                     fontSize: 16,
                   ),
                   labelStyle: TextStyle(
@@ -178,7 +178,7 @@ class LoginRoute extends StatelessWidget {
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                    Color.fromRGBO(255, 222, 47, 1),
+                    buttoncolor,
                   ),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
@@ -192,7 +192,7 @@ class LoginRoute extends StatelessWidget {
                 child: Text(
                   "Sign in",
                   style: TextStyle(
-                    color: Color.fromRGBO(77, 22, 0, 1),
+                    color: fontcolor,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -235,7 +235,7 @@ class LoginRoute extends StatelessWidget {
                     child: Text(
                       "Sign up",
                       style: TextStyle(
-                        color: const Color.fromRGBO(77, 22, 0, 1),
+                        color: fontcolor,
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                       ),

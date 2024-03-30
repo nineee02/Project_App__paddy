@@ -63,7 +63,7 @@ class ForgotRoute extends StatelessWidget {
                     value,
                     style: TextStyle(
                       fontSize: 20,
-                      color: Color.fromRGBO(77, 22, 0, 1),
+                      color: fontcolor,
                     ),
                   ),
                 );
@@ -85,8 +85,7 @@ class ForgotRoute extends StatelessWidget {
                 // suffixIcon: Icon(Icons.clear),
                 labelText: "Confirm Password",
                 hintText: "Enter your Confirm Password",
-                hintStyle: TextStyle(
-                    color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                 labelStyle: TextStyle(
                     color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                 fillColor: Color.fromRGBO(255, 255, 244, 1),
@@ -137,24 +136,52 @@ class ForgotRoute extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            width: 456,
-            height: 456,
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 255, 244, 1),
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'lib/assets/icon/home.png',
+          // Container(
+          //   width: 456,
+          //   height: 456,
+          //   decoration: BoxDecoration(
+          //     color: Color.fromRGBO(255, 255, 244, 1),
+          //     borderRadius: BorderRadius.circular(228),
+          //   ),
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Image.asset(
+          //         'lib/assets/icon/home.png',
+          //         width: 338,
+          //         height: 338,
+          //       ),
+          //       // SizedBox(width: 8.0),
+          //     ],
+          //   ),
+          // ),
+          Stack(
+            children: [
+              Container(
+                width: 456,
+                height: 456,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(255, 255, 244, 1),
+                  borderRadius: BorderRadius.circular(228),
+                ),
+              ),
+              Positioned(
+                top:
+                    114, // คำนึงถึงขนาดของวงกลมและรูปภาพเพื่อปรับตำแหน่งให้เหมาะสม
+
+                child: Container(
                   width: 338,
                   height: 338,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage('lib/assets/icon/home.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                // SizedBox(width: 8.0),
-              ],
-            ),
+              ),
+            ],
           ),
         ]),
       ),

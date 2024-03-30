@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:paddy_rice/constants/color.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -16,17 +17,26 @@ class HomeRoute extends StatelessWidget {
         backgroundColor: maincolor,
         actions: [
           IconButton(
-              onPressed: () {
-                context.router.replaceNamed('/notifi');
-              },
-              icon: Icon(Icons.notifications_outlined)),
+            onPressed: () {
+              context.router.replaceNamed('/notifi');
+            },
+            icon: Icon(
+              Icons.notifications_outlined,
+              color: iconcolor,
+            ),
+          ),
           PopupMenuButton<String>(
-            icon: Icon(Icons.add_circle_outline),
+            icon: Icon(
+              Icons.add_circle_outline,
+              color: iconcolor,
+            ),
             onSelected: (value) {
               if (value == "Add device") {
-                context.router.replaceNamed('/addDevice');
+                // context.router.replaceNamed('/addDevice');
+                AutoRouter.of(context).replaceNamed('/addDevice');
               } else if (value == "Scan") {
-                context.router.replaceNamed('/scan');
+                // context.router.replaceNamed('/scan');
+                AutoRouter.of(context).replaceNamed('/scan');
               }
             },
             itemBuilder: (BuildContext context) {
@@ -50,7 +60,7 @@ class HomeRoute extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              color: Color.fromRGBO(77, 22, 0, 1),
+              color: iconcolor,
             ),
             label: "Home",
           ),
@@ -83,6 +93,40 @@ class HomeRoute extends StatelessWidget {
               Container(
                 width: 316,
                 height: 135,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(255, 255, 244, 1),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'lib/assets/icon/home.png',
+                      height: 94,
+                      fit: BoxFit.contain,
+                    ),
+                    Divider(
+                      height: 1.0,
+                      color: Color.fromRGBO(215, 215, 215, 1),
+                      thickness: 1,
+                      indent: 20,
+                      endIndent: 20,
+                    ),
+                    Text(
+                      "No devices",
+                      style: TextStyle(
+                          color: Color.fromRGBO(137, 137, 137, 1),
+                          fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Container(
+                width: 316,
+                height: 135,
                 color: Color.fromRGBO(255, 255, 244, 1),
                 child: ElevatedButton(
                   style: ButtonStyle(
@@ -107,34 +151,16 @@ class HomeRoute extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  context.router.replaceNamed('/login');
+                  context.router.replaceNamed('/scan');
                 },
                 child: Text(
                   "Edit",
                   style: TextStyle(
-                      color: Color.fromRGBO(77, 22, 0, 1),
+                      color: fontcolor,
                       fontSize: 16,
                       fontWeight: FontWeight.w500),
                 ),
               ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     context.router.replaceNamed('/signup');
-              //   },
-              //   child: Text("Sign UP"),
-              // ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     MyApp.setLocale(context, Locale('th'));
-              //   },
-              //   child: Text("Change language thai"),
-              // ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     MyApp.setLocale(context, Locale('en'));
-              //   },
-              //   child: Text("Change language english"),
-              // )
             ],
           ),
         ),

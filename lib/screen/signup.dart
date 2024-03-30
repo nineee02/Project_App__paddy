@@ -22,9 +22,7 @@ class SignupRoute extends StatelessWidget {
         title: Text(
           "Create account",
           style: TextStyle(
-              color: Color.fromRGBO(77, 22, 0, 1),
-              fontSize: 20,
-              fontWeight: FontWeight.w500),
+              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
         ),
       ),
       body: SingleChildScrollView(
@@ -43,12 +41,11 @@ class SignupRoute extends StatelessWidget {
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.person_outlined,
-                      color: Color.fromRGBO(77, 22, 0, 1),
+                      color: iconcolor,
                     ),
                     labelText: "Name",
                     hintText: "Enter your name",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
                         color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
@@ -80,13 +77,12 @@ class SignupRoute extends StatelessWidget {
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.person_outlined,
-                      color: Color.fromRGBO(77, 22, 0, 1),
+                      color: iconcolor,
                     ),
                     // suffixIcon: Icon(Icons.clear),
                     labelText: "Surname",
                     hintText: "Enter your Surname",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
                         color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
@@ -118,13 +114,12 @@ class SignupRoute extends StatelessWidget {
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.email_outlined,
-                      color: Color.fromRGBO(77, 22, 0, 1),
+                      color: iconcolor,
                     ),
                     // suffixIcon: Icon(Icons.clear),
                     labelText: "Email",
                     hintText: "Enter your Email",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
                         color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
@@ -156,13 +151,12 @@ class SignupRoute extends StatelessWidget {
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.phone_outlined,
-                      color: Color.fromRGBO(77, 22, 0, 1),
+                      color: iconcolor,
                     ),
                     // suffixIcon: Icon(Icons.clear),
                     labelText: "Phone number",
                     hintText: "Enter your Phone number",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
                         color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
@@ -194,13 +188,12 @@ class SignupRoute extends StatelessWidget {
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.lock_outline,
-                      color: Color.fromRGBO(77, 22, 0, 1),
+                      color: iconcolor,
                     ),
                     // suffixIcon: Icon(Icons.clear),
                     labelText: "Password",
                     hintText: "Enter your Password",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
                         color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
@@ -232,13 +225,12 @@ class SignupRoute extends StatelessWidget {
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.lock_outline,
-                      color: Color.fromRGBO(77, 22, 0, 1),
+                      color: iconcolor,
                     ),
                     // suffixIcon: Icon(Icons.clear),
                     labelText: "Confirm Password",
                     hintText: "Enter your Confirm Password",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
                         color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
@@ -313,10 +305,8 @@ class SignupRoute extends StatelessWidget {
                     suffixIcon: Icon(Icons.expand_more),
                     labelText: "Province",
                     hintText: "Select Province",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
+                    labelStyle: TextStyle(color: fontcolor, fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
                     //helperText: 'supporting text',
                     border: OutlineInputBorder(),
@@ -338,10 +328,8 @@ class SignupRoute extends StatelessWidget {
                     suffixIcon: Icon(Icons.expand_more),
                     labelText: "District",
                     hintText: "Select District",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
+                    labelStyle: TextStyle(color: fontcolor, fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
                     //helperText: 'supporting text',
                     border: OutlineInputBorder(),
@@ -363,10 +351,8 @@ class SignupRoute extends StatelessWidget {
                     suffixIcon: Icon(Icons.expand_more),
                     labelText: "County",
                     hintText: "Select County",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
+                    labelStyle: TextStyle(color: fontcolor, fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
                     //helperText: 'supporting text',
                     border: OutlineInputBorder(),
@@ -402,8 +388,7 @@ class SignupRoute extends StatelessWidget {
                               children: [
                                 Icon(
                                   Icons.search, // Replace with the desired icon
-                                  color: Color.fromRGBO(
-                                      77, 22, 0, 1), // Set icon color
+                                  color: iconcolor, // Set icon color
                                 ),
                                 SizedBox(width: 10.0),
                                 Text(value),
@@ -420,18 +405,6 @@ class SignupRoute extends StatelessWidget {
                     )
                   ],
                 ),
-                // child: DropdownButton<String>(
-                //   items: county.map((String value) {
-                //     return DropdownMenuItem<String>(
-                //       value: value,
-                //       child: Text(value),
-                //     );
-                //   }).toList(),
-                //   onChanged: (String? newValue) {
-                //     // setState(() {});
-                //   },
-                //   hint: Text('Select County'),
-                // ),
               ),
               Container(
                 width: 312,
@@ -442,10 +415,8 @@ class SignupRoute extends StatelessWidget {
                     // suffixIcon: Icon(Icons.clear),
                     labelText: "Postal code",
                     hintText: "Enter your Postal code",
-                    hintStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(77, 22, 0, 1), fontSize: 16),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
+                    labelStyle: TextStyle(color: fontcolor, fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
                     //helperText: 'supporting text',
                     border: OutlineInputBorder(),
@@ -464,7 +435,7 @@ class SignupRoute extends StatelessWidget {
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
-                      Color.fromRGBO(255, 222, 47, 1),
+                      buttoncolor,
                     ),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
@@ -478,7 +449,7 @@ class SignupRoute extends StatelessWidget {
                   child: Text(
                     "Sign up",
                     style: TextStyle(
-                      color: Color.fromRGBO(77, 22, 0, 1),
+                      color: fontcolor,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),

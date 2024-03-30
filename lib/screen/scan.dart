@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 @RoutePage()
 class ScanRoute extends StatelessWidget {
@@ -12,6 +13,44 @@ class ScanRoute extends StatelessWidget {
       backgroundColor: maincolor,
       appBar: AppBar(
         backgroundColor: maincolor,
+        leading: (IconButton(
+            onPressed: () {
+              context.router.replaceNamed('/home');
+            },
+            icon: Icon(Icons.arrow_back))),
+        title: Text(
+          "Scan",
+          style: TextStyle(
+              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
+        ),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Container(),
+            SizedBox(
+              height: 16.0,
+            ),
+            Container(),
+            SizedBox(
+              height: 16.0,
+            ),
+            Container(),
+            ElevatedButton(
+                onPressed: () {
+                  context.router.replaceNamed('/addDevice');
+                },
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(buttoncolor)),
+                child: Text(
+                  "No QR code available",
+                  style: TextStyle(
+                      color: fontcolor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                ))
+          ],
+        ),
       ),
     );
   }

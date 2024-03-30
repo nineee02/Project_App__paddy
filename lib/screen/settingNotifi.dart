@@ -51,6 +51,30 @@ class SettingNotifiRoute extends StatelessWidget {
                   ),
                 ]),
               ),
+              Container(
+                padding: EdgeInsets.only(left: 24.0, top: 16),
+                child: InkWell(
+                  onTap: () {
+                    context.router.replaceNamed('/deviceNotifiSetting');
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        "Device notification management",
+                        style: TextStyle(
+                            color: fontcolor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(width: 96),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 24.0,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

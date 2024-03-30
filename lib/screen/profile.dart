@@ -14,9 +14,7 @@ class ProfileRoute extends StatelessWidget {
         title: Text(
           "Profile",
           style: TextStyle(
-              color: Color.fromRGBO(77, 22, 0, 1),
-              fontSize: 30,
-              fontWeight: FontWeight.w600),
+              color: fontcolor, fontSize: 30, fontWeight: FontWeight.w600),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -31,7 +29,7 @@ class ProfileRoute extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.person_2,
-              color: Color.fromRGBO(77, 22, 0, 1),
+              color: iconcolor,
             ),
             label: "Profile",
           ),
@@ -55,7 +53,27 @@ class ProfileRoute extends StatelessWidget {
                 height: 24,
               ),
               Container(),
-              Container(),
+              Container(
+                width: 312,
+                height: 48,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Color.fromRGBO(245, 247, 248, 1)),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)))),
+                  onPressed: () {
+                    context.router.replaceNamed('/login');
+                  },
+                  child: Text(
+                    "Sign out",
+                    style: TextStyle(
+                        color: Color.fromRGBO(254, 0, 0, 1),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

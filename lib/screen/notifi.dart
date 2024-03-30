@@ -30,26 +30,6 @@ class NotifiRoute extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            label: "Profile",
-          ),
-        ],
-        onTap: (int index) {
-          if (index == 0) {
-            context.router.replaceNamed('/home');
-          }
-          if (index == 1) {
-            context.router.replaceNamed('/profile');
-          }
-        },
-      ),
       backgroundColor: maincolor,
       body: Center(
         child: Container(
