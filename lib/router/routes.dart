@@ -54,6 +54,10 @@ class AppRouter extends $AppRouter {
         CustomRoute(
             path: '/otp',
             page: OtpRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/deviceNotifiSetting',
+            page: DeviceNotifiSettingRoute.page,
             transitionsBuilder: TransitionsBuilders.fadeIn)
       ];
 }

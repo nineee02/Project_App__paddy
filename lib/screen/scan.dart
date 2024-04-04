@@ -17,7 +17,10 @@ class ScanRoute extends StatelessWidget {
             onPressed: () {
               context.router.replaceNamed('/home');
             },
-            icon: Icon(Icons.arrow_back))),
+            icon: Icon(
+              Icons.arrow_back,
+              color: iconcolor,
+            ))),
         title: Text(
           "Scan",
           style: TextStyle(
@@ -26,6 +29,7 @@ class ScanRoute extends StatelessWidget {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(),
             SizedBox(
