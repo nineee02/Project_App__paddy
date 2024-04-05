@@ -44,7 +44,6 @@ dependencies:
   pull_down_button: ^0.9.3
   foundation: ^0.0.5
   dropdown_below: ^1.0.3
-  qr_code_scanner: ^0.4.0
 
 dev_dependencies:
   flutter_test:
