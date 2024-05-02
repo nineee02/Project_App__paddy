@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
+
+final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
 
 @RoutePage()
 class ScanRoute extends StatelessWidget {
@@ -8,6 +11,8 @@ class ScanRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? code;
+
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
@@ -38,7 +43,14 @@ class ScanRoute extends StatelessWidget {
             SizedBox(
               height: 16.0,
             ),
-            Container(),
+            Container(
+              child: ElevatedButton(
+                  onPressed: () {
+                    _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
+                        context: context, onCode: (code) {});
+                  },
+                  child: Text(code ?? "Click me")),
+            ),
             ElevatedButton(
                 onPressed: () {
                   context.router.replaceNamed('/addDevice');

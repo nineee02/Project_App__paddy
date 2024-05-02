@@ -29,6 +29,28 @@ class OtpRoute extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
+            Positioned(
+              bottom: -135,
+              left: (MediaQuery.of(context).size.width - 456) / 2,
+              child: Container(
+                width: 456,
+                height: 456,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('lib/assets/icon/home.png'),
+                    alignment: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+            ),
             Container(),
             Container(
               width: 312,

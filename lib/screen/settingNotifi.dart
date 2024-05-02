@@ -18,22 +18,13 @@ class SettingNotifiRoute extends StatelessWidget {
             },
             icon: Icon(Icons.arrow_back))),
         title: Text(
-          "Notification",
+          "Notification setting",
           style: TextStyle(
               color: fontcolor, fontSize: 20, fontWeight: FontWeight.w600),
         ),
       ),
       body: Center(
         child: Container(
-          // width: 390,
-          // height: 390,
-          // decoration: BoxDecoration(
-          //   image: DecorationImage(
-          //     image: AssetImage(
-          //         'lib/assets/icon/home.png'), // เปลี่ยนเป็นที่อยู่ของรูปภาพของคุณ
-          //     fit: BoxFit.cover,
-          //   ),
-          // ),
           child: Column(
             children: [
               Container(

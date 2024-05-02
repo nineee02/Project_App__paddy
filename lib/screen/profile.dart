@@ -22,24 +22,26 @@ class ProfileRoute extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              color: Color.fromRGBO(217, 217, 217, 1),
+              // color: Color.fromRGBO(217, 217, 217, 1),
             ),
             label: "Home",
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.person_2,
-              color: iconcolor,
+              // color: iconcolor,
             ),
             label: "Profile",
           ),
         ],
+        selectedItemColor: Color.fromRGBO(217, 217, 217, 1),
+        unselectedItemColor: iconcolor,
         onTap: (int index) {
           if (index == 0) {
             context.router.replaceNamed('/home');
           }
           if (index == 1) {
-            context.router.replaceNamed('/profile');
+            context.router.replaceNamed('/profilehome');
           }
         },
       ),
@@ -52,7 +54,55 @@ class ProfileRoute extends StatelessWidget {
               SizedBox(
                 height: 24,
               ),
+              Container(
+                padding: EdgeInsets.only(left: 24.0, top: 16),
+                child: InkWell(
+                  onTap: () {
+                    context.router.replaceNamed('/account');
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        "My account",
+                        style: TextStyle(
+                            color: fontcolor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(width: 88),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 24.0,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               Container(),
+              // Container(
+              //   padding: EdgeInsets.only(left: 24.0, top: 16),
+              //   child: InkWell(
+              //     onTap: () {
+              //       context.router.replaceNamed('/settingNotifi');
+              //     },
+              //     child: Row(
+              //       children: [
+              //         Text(
+              //           "Notification setting",
+              //           style: TextStyle(
+              //               color: fontcolor,
+              //               fontSize: 16,
+              //               fontWeight: FontWeight.w500),
+              //         ),
+              //         SizedBox(width: 88),
+              //         Icon(
+              //           Icons.chevron_right,
+              //           size: 24.0,
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               Container(
                 width: 312,
                 height: 48,

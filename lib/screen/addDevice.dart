@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
@@ -28,6 +26,13 @@ class AddDeviceRoute extends StatelessWidget {
           style: TextStyle(
               color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                context.router.replaceNamed('/scan');
+              },
+              icon: Icon(Icons.qr_code_scanner))
+        ],
       ),
       body: Center(
         child: Container(
@@ -40,18 +45,12 @@ class AddDeviceRoute extends StatelessWidget {
                 width: 312,
                 height: 48,
                 child: TextField(
-                  cursorColor: Color.fromRGBO(77, 22, 0, 1),
                   decoration: InputDecoration(
                     labelText: "serial number",
                     hintText: "Enter your serial number",
-                    hintStyle: TextStyle(
-                      color: fontcolor,
-                      fontSize: 16,
-                    ),
+                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
-                      color: Color.fromRGBO(121, 121, 121, 1),
-                      fontSize: 16,
-                    ),
+                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: Color.fromRGBO(255, 255, 244, 1),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -59,10 +58,17 @@ class AddDeviceRoute extends StatelessWidget {
                         color: Color.fromRGBO(255, 255, 244, 1),
                       ),
                     ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1,
+                        color: Color.fromRGBO(77, 22, 0, 1),
+                      ),
+                    ),
                   ),
                 ),
-                decoration:
-                    BoxDecoration(color: Color.fromRGBO(255, 255, 244, 1)),
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(255, 255, 244, 1),
+                ),
               ),
               SizedBox(
                 height: 16.0,

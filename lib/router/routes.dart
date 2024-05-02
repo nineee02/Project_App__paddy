@@ -9,11 +9,11 @@ class AppRouter extends $AppRouter {
         CustomRoute(
             path: '/home',
             page: HomeRoute.page,
-            initial: true,
             transitionsBuilder: TransitionsBuilders.fadeIn),
         CustomRoute(
             path: '/login',
             page: LoginRoute.page,
+            initial: true,
             transitionsBuilder: TransitionsBuilders.fadeIn),
         CustomRoute(
             path: '/signup',

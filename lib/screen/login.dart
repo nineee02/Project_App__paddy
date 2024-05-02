@@ -25,32 +25,26 @@ class LoginRoute extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              child: Center(
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 50.0),
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    "Paddy Rice Drying Silo",
+                    style: TextStyle(
+                      color: fontcolor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    Text(
-                      "Paddy Rice Drying Silo\n\n",
-                      style: TextStyle(
-                        color: fontcolor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
+                  ),
+                  Text(
+                    "Control Notification",
+                    style: TextStyle(
+                      color: fontcolor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    // Spacer(),
-                    Text(
-                      "Control Notification",
-                      style: TextStyle(
-                        color: fontcolor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 20.0),
@@ -75,23 +69,21 @@ class LoginRoute extends StatelessWidget {
                     Icons.person_outline,
                     color: iconcolor,
                   ),
-
                   suffixIcon: IconButton(
                     icon: Icon(Icons.clear),
                     onPressed: () {},
                   ),
                   labelText: "Email or Phone number",
-                  hintText: "Enter your Email or Phone number",
-                  hintStyle: TextStyle(
-                    color: fontcolor,
-                    fontSize: 16,
-                  ),
                   labelStyle: TextStyle(
                     color: Color.fromRGBO(121, 121, 121, 1),
                     fontSize: 16,
                   ),
+                  hintText: "Enter your Email or Phone number",
+                  hintStyle: TextStyle(
+                    color: Color.fromRGBO(121, 121, 121, 1),
+                    fontSize: 16,
+                  ),
                   fillColor: Color.fromRGBO(255, 255, 244, 1),
-                  //helperText: 'supporting text',
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       width: 1,
@@ -122,24 +114,25 @@ class LoginRoute extends StatelessWidget {
                     color: iconcolor,
                   ),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.clear),
+                    icon: Icon(Icons.remove_red_eye_rounded),
                     onPressed: () {},
                   ),
                   labelText: "Password",
-                  hintText: "Enter your password",
-                  hintStyle: TextStyle(
-                    color: fontcolor,
-                    fontSize: 16,
-                  ),
+                  focusColor: fontcolor,
                   labelStyle: TextStyle(
                     color: Color.fromRGBO(121, 121, 121, 1),
                     fontSize: 16,
                   ),
-                  fillColor: Color.fromRGBO(255, 255, 244, 1),
+                  hintText: "Enter your password",
+                  hintStyle: TextStyle(
+                    color: Color.fromRGBO(121, 121, 121, 1),
+                    fontSize: 16,
+                  ),
+                  fillColor: fill_color,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       width: 1,
-                      color: Color.fromRGBO(255, 255, 244, 1),
+                      color: fill_color,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -151,12 +144,12 @@ class LoginRoute extends StatelessWidget {
                 ),
               ),
               decoration: BoxDecoration(
-                color: Color.fromRGBO(255, 255, 244, 1),
+                color: fill_color,
               ),
             ),
             Container(
-              padding: EdgeInsets.only(left: 262.0),
-              child: Row(
+              padding: EdgeInsets.only(left: 230),
+              child: Column(
                 children: [
                   TextButton(
                     onPressed: () {
