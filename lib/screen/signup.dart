@@ -2,11 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 
-const List<String> county = <String>['Thailand', 'Laos'];
-
 @RoutePage()
 class SignupRoute extends StatelessWidget {
-  const SignupRoute({Key? key});
+  const SignupRoute({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,19 +12,15 @@ class SignupRoute extends StatelessWidget {
       backgroundColor: maincolor,
       appBar: AppBar(
         backgroundColor: maincolor,
-        leading: IconButton(
-          onPressed: () {
-            context.router.replaceNamed('/login');
-          },
-          icon: Icon(Icons.arrow_back),
-        ),
+        leading: (IconButton(
+            onPressed: () {
+              context.router.replaceNamed('/login');
+            },
+            icon: Icon(Icons.arrow_back))),
         title: Text(
           "Create account",
           style: TextStyle(
-            color: fontcolor,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
+              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
         ),
       ),
       body: SingleChildScrollView(
@@ -51,9 +45,7 @@ class SignupRoute extends StatelessWidget {
                     hintText: "Enter your name",
                     hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
-                      color: Color.fromRGBO(121, 121, 121, 1),
-                      fontSize: 16,
-                    ),
+                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: fill_color,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -85,13 +77,12 @@ class SignupRoute extends StatelessWidget {
                       Icons.person_outlined,
                       color: iconcolor,
                     ),
+                    // suffixIcon: Icon(Icons.clear),
                     labelText: "Surname",
                     hintText: "Enter your Surname",
                     hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
-                      color: Color.fromRGBO(121, 121, 121, 1),
-                      fontSize: 16,
-                    ),
+                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: fill_color,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -123,13 +114,12 @@ class SignupRoute extends StatelessWidget {
                       Icons.email_outlined,
                       color: iconcolor,
                     ),
+                    // suffixIcon: Icon(Icons.clear),
                     labelText: "Email",
                     hintText: "Enter your Email",
                     hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
-                      color: Color.fromRGBO(121, 121, 121, 1),
-                      fontSize: 16,
-                    ),
+                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: fill_color,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -161,13 +151,12 @@ class SignupRoute extends StatelessWidget {
                       Icons.phone_outlined,
                       color: iconcolor,
                     ),
+                    // suffixIcon: Icon(Icons.clear),
                     labelText: "Phone number",
                     hintText: "Enter your Phone number",
                     hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
-                      color: Color.fromRGBO(121, 121, 121, 1),
-                      fontSize: 16,
-                    ),
+                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: fill_color,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -199,13 +188,12 @@ class SignupRoute extends StatelessWidget {
                       Icons.lock_outline,
                       color: iconcolor,
                     ),
+                    // suffixIcon: Icon(Icons.clear),
                     labelText: "Password",
                     hintText: "Enter your Password",
                     hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
-                      color: Color.fromRGBO(121, 121, 121, 1),
-                      fontSize: 16,
-                    ),
+                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: fill_color,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -237,13 +225,12 @@ class SignupRoute extends StatelessWidget {
                       Icons.lock_outline,
                       color: iconcolor,
                     ),
+                    // suffixIcon: Icon(Icons.clear),
                     labelText: "Confirm Password",
                     hintText: "Enter your Confirm Password",
                     hintStyle: TextStyle(color: fontcolor, fontSize: 16),
                     labelStyle: TextStyle(
-                      color: Color.fromRGBO(121, 121, 121, 1),
-                      fontSize: 16,
-                    ),
+                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
                     fillColor: fill_color,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -265,132 +252,6 @@ class SignupRoute extends StatelessWidget {
               ),
               SizedBox(
                 height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(25.0)),
-                      ),
-                      builder: (BuildContext context) {
-                        return SizedBox(
-                          height: 400,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
-                                title: Text("Select country"),
-                              ),
-                              _buildCountryListTile(context, "Thailand"),
-                              _buildCountryListTile(context, "Laos"),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  icon: Icon(Icons.home_outlined),
-                  label: Text(
-                    "Select County",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color.fromRGBO(121, 121, 121, 1),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.home_outlined),
-                    suffixIcon: Icon(Icons.expand_more),
-                    labelText: "Province",
-                    hintText: "Select Province",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    fillColor: fill_color,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.home_outlined),
-                    suffixIcon: Icon(Icons.expand_more),
-                    labelText: "District",
-                    hintText: "Select District",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    fillColor: fill_color,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.home_outlined),
-                    suffixIcon: Icon(Icons.expand_more),
-                    labelText: "County",
-                    hintText: "Select County",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    fillColor: fill_color,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.home_outlined),
-                    labelText: "Postal code",
-                    hintText: "Enter your Postal code",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    fillColor: fill_color,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
               ),
               SizedBox(
                 height: 16.0,
@@ -429,16 +290,6 @@ class SignupRoute extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildCountryListTile(BuildContext context, String countryName) {
-    return ListTile(
-      title: Text(countryName),
-      onTap: () {
-        // Handle country selection
-        Navigator.pop(context);
-      },
     );
   }
 }

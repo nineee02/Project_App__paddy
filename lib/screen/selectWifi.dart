@@ -79,7 +79,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
               Container(
                 // child: Column(
                 //   children: [
-                padding: EdgeInsets.only(right: 64),
+                padding: EdgeInsets.only(right: 53),
                 child: Text(
                   "This device only supports 2.4GHz Wi-Fi",
                   style: TextStyle(

@@ -46,11 +46,12 @@ dependencies:
   dropdown_below: ^1.0.3
   qr_bar_code_scanner_dialog: ^0.0.5
   dropdown_button2: ^2.3.9
-  flutter_bluetooth_basic: ^0.1.7
   get: ^4.6.6
-  flutter_blue_plus: ^1.32.4
   intl_phone_field: ^3.2.0
   wifi_scan: ^0.4.1
+  flutter_blue: ^0.8.0
+  image_picker: ^1.1.1
+  icapps_torch_compat: ^2.0.0
 
 dev_dependencies:
   flutter_test:

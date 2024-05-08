@@ -122,10 +122,6 @@ class _ForgotRouteState extends State<ForgotRoute> {
                 selectedValue == 'Phone number'
                     ? Container(
                         width: 312,
-                        height: 72,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(255, 255, 244, 1),
-                        ),
                         child: IntlPhoneField(
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
@@ -134,13 +130,15 @@ class _ForgotRouteState extends State<ForgotRoute> {
                             ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color.fromRGBO(121, 121, 121, 1)),
+                                width: 1,
+                                color: Color.fromRGBO(121, 121, 121, 1),
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color.fromRGBO(121, 121, 121, 1)),
+                                  // width: 1,
+                                  // color: Color.fromRGBO(121, 121, 121, 1),
+                                  ),
                             ),
                           ),
                           initialCountryCode: 'TH',
