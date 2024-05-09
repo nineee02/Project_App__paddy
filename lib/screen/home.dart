@@ -130,10 +130,13 @@ class HomeRoute extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      'lib/assets/icon/home.png',
-                      height: 94,
-                      fit: BoxFit.contain,
+                    Opacity(
+                      opacity: 0.5,
+                      child: Image.asset(
+                        'lib/assets/icon/home.png',
+                        height: 94,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                     Divider(
                       height: 1.0,

@@ -12,7 +12,7 @@ class ScanRoute extends StatefulWidget {
 }
 
 class _ScanRouteState extends State<ScanRoute> {
-  bool _torchIsOn = false; // To track the state of the torch
+  bool _torchIsOn = false;
 
   // Function to handle opening the gallery
   void _openGallery(BuildContext context) async {
@@ -32,7 +32,7 @@ class _ScanRouteState extends State<ScanRoute> {
       await TorchCompat.turnOn();
     }
     setState(() {
-      _torchIsOn = !_torchIsOn; // Toggle the state
+      _torchIsOn = !_torchIsOn;
     });
   }
 

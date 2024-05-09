@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:wifi_scan/wifi_scan.dart';
+import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:wifi_scan/wifi_scan.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 @RoutePage()
 class SelectWifiRoute extends StatefulWidget {
@@ -13,37 +14,38 @@ class SelectWifiRoute extends StatefulWidget {
 }
 
 class _SelectWifiRouteState extends State<SelectWifiRoute> {
-  List<WiFiAccessPoint> accessPoints = <WiFiAccessPoint>[];
+  List<WiFiAccessPoint> accessPoints = [];
   StreamSubscription<List<WiFiAccessPoint>>? subscription;
   TextEditingController passwordController = TextEditingController();
+  String? selectedWifi;
 
   @override
   void initState() {
     super.initState();
-    _startListeningToScanResults();
+    initWifiScan();
   }
 
   @override
   void dispose() {
-    super.dispose();
-    _stopListeningToScanResults();
-    passwordController.dispose();
-  }
-
-  Future<void> _startListeningToScanResults() async {
-    subscription = WiFiScan.instance.onScannedResultsAvailable
-        .listen((result) => setState(() => accessPoints = result));
-  }
-
-  void _stopListeningToScanResults() {
     subscription?.cancel();
-    setState(() => accessPoints = <WiFiAccessPoint>[]);
+    passwordController.dispose();
+    super.dispose();
   }
 
-  Future<void> _startScan(BuildContext context) async {
-    final result = await WiFiScan.instance.startScan();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("startScan: $result")));
+  void initWifiScan() async {
+    var status = await Permission.locationWhenInUse.request();
+    if (status.isGranted) {
+      await WiFiScan.instance.startScan();
+      subscription = WiFiScan.instance.onScannedResultsAvailable.listen(
+        (List<WiFiAccessPoint> results) {
+          setState(() {
+            accessPoints = results;
+          });
+        },
+      );
+    } else {
+      print('Location permission denied');
+    }
   }
 
   @override
@@ -53,129 +55,113 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
       appBar: AppBar(
         backgroundColor: maincolor,
         leading: IconButton(
-          onPressed: () {
-            context.router.replaceNamed('/home');
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: iconcolor,
-          ),
+          onPressed: () => context.router.replaceNamed('/addDevice'),
+          icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
-        title: Text(
-          "Select Wi-Fi network",
-          style: TextStyle(
-            color: fontcolor,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        title: Text("Select Wi-Fi network", style: TextStyle(color: fontcolor)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-        child: Center(
-          child: Column(
-            children: [
-              SizedBox(height: 24),
-              Container(
-                // child: Column(
-                //   children: [
-                padding: EdgeInsets.only(right: 53),
-                child: Text(
-                  "This device only supports 2.4GHz Wi-Fi",
-                  style: TextStyle(
-                    color: fontcolor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                // ],
-                // ),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.perm_scan_wifi),
-                label: const Text('SCAN'),
-                onPressed: () async => _startScan(context),
-              ),
-              const Divider(),
-              // Flexible(
-              //   child: Center(
-              //     child: accessPoints.isEmpty
-              //         ? const Text("NO SCANNED RESULTS")
-              //         : ListView.builder(
-              //             itemCount: accessPoints.length,
-              //             itemBuilder: (context, i) => ListTile(
-              //               title: Text(accessPoints[i].ssid),
-              //               subtitle: Text(accessPoints[i].bssid),
-              //             ),
-              //           ),
-              //   ),
-              // ),
-              SizedBox(height: 16),
-              Center(
-                child: Container(
-                  width: 312,
-                  height: 48,
-                  child: TextField(
-                    controller: passwordController,
-                    cursorColor: Color.fromRGBO(77, 22, 0, 1),
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      hintText: "Enter your password",
-                      hintStyle: TextStyle(
-                        color: fontcolor,
-                        fontSize: 16,
-                      ),
-                      labelStyle: TextStyle(
-                        color: Color.fromRGBO(121, 121, 121, 1),
-                        fontSize: 16,
-                      ),
-                      fillColor: Color.fromRGBO(255, 255, 244, 1),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: Color.fromRGBO(255, 255, 244, 1),
-                        ),
-                      ),
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(255, 255, 244, 1),
-                  ),
+      body: Stack(
+        children: [
+          Positioned(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Opacity(
+                opacity: 0.2,
+                child: Image.asset(
+                  'lib/assets/icon/home.png',
+                  fit: BoxFit.contain,
+                  width: 390,
+                  height: 390,
                 ),
               ),
-              SizedBox(height: 16),
-              Center(
-                child: Container(
-                  width: 312,
-                  height: 48,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(buttoncolor),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      context.router.replaceNamed('/home');
-                    },
-                    child: Text(
-                      "Next",
-                      style: TextStyle(
-                        color: fontcolor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-          // crossAxisAlignment: CrossAxisAlignment.start,
-        ),
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "This device only supports 2.4GHz Wi-Fi",
+                  style: TextStyle(fontSize: 16, color: fontcolor),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                Center(
+                    child: Column(
+                  children: [
+                    Container(
+                      width: 312,
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          filled: true,
+                          fillColor: fill_color,
+                        ),
+                        value: selectedWifi,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedWifi = newValue;
+                          });
+                        },
+                        items: accessPoints.map<DropdownMenuItem<String>>(
+                            (WiFiAccessPoint value) {
+                          return DropdownMenuItem<String>(
+                            value: value.ssid,
+                            child: Text(value.ssid),
+                          );
+                        }).toList(),
+                        hint: Text("Select Wi-Fi network"),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      width: 312,
+                      height: 48,
+                      child: TextField(
+                        controller: passwordController,
+                        decoration: InputDecoration(
+                          labelText: "Enter password",
+                          border: OutlineInputBorder(),
+                          filled: true,
+                          fillColor: fill_color,
+                          suffixIcon: Icon(Icons.visibility),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      width: 312,
+                      height: 48,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(buttoncolor),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          context.router.replaceNamed('/home');
+                        },
+                        child: Text(
+                          "Next",
+                          style: TextStyle(
+                            color: fontcolor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

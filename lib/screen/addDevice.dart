@@ -107,7 +107,7 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
   void connectToDevice(BluetoothDevice device) async {
     await device.connect();
     setState(() {
-      context.router.replaceNamed('/selectWifi');
+      // context.router.replaceNamed('/selectWifi');
     });
   }
 }
@@ -124,7 +124,7 @@ class DeviceCategoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: () {
-        // Implement functionality to add specific device type
+        context.router.replaceNamed('/selectWifi');
       },
       icon: Icon(icon, size: 24),
       label: Text(label),

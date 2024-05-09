@@ -60,6 +60,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 image: DecorationImage(
+                  opacity: 0.5,
                   image: AssetImage('lib/assets/icon/home.png'),
                   alignment: Alignment.bottomCenter,
                 ),
