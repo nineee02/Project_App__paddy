@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 @RoutePage()
 class OtpRoute extends StatelessWidget {
@@ -8,74 +9,81 @@ class OtpRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _pinController = TextEditingController();
+
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
         backgroundColor: maincolor,
-        leading: (IconButton(
-          onPressed: () {
-            context.router.replaceNamed('/forgot');
-          },
-          icon: Icon(
-            Icons.arrow_back,
-          ),
-        )),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: iconcolor),
+          onPressed: () => context.router.replaceNamed('/forgot'),
+        ),
         title: Text(
-          "OTP",
+          "OTP Verification",
           style: TextStyle(
               color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
         ),
+        centerTitle: true,
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Positioned(
-              bottom: -135,
-              left: (MediaQuery.of(context).size.width - 456) / 2,
-              child: Container(
-                width: 456,
-                height: 456,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
+            Icon(Icons.email, size: 100, color: iconcolor), // Email icon
+            SizedBox(height: 20),
+            Text(
+              "Please enter the 4 digit verification code sent to +90 536 585 86 16",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: fontcolor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('lib/assets/icon/home.png'),
-                    alignment: Alignment.bottomCenter,
-                  ),
-                ),
+            SizedBox(height: 20),
+            PinCodeTextField(
+              appContext: context,
+              length: 4,
+              controller: _pinController,
+              pinTheme: PinTheme(
+                activeColor: Colors.white,
+                selectedColor: iconcolor,
+                inactiveColor: Colors.grey,
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {},
+            ),
+            SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                // Implement resend OTP logic here
+              },
+              child: Text(
+                "Didn't receive the OTP? Resend code",
+                style: TextStyle(color: fontcolor),
               ),
             ),
-            Container(),
-            Container(
-              width: 312,
-              height: 48,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    buttoncolor,
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  context.router.replaceNamed('/login');
-                },
-                child: Text(
-                  "Next",
-                  style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600),
-                ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: buttoncolor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                minimumSize: Size(312, 48),
+              ),
+              onPressed: () {
+                // Add verify OTP logic here
+                print("OTP Entered: ${_pinController.text}");
+                context.router.replaceNamed('/login');
+              },
+              child: Text(
+                "VERIFY AND PROCEED",
+                style: TextStyle(
+                    color: fontcolor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ],

@@ -9,123 +9,119 @@ class ProfileRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: maincolor,
       appBar: AppBar(
         backgroundColor: maincolor,
         title: Text(
-          "Profile",
+          "My Profile",
           style: TextStyle(
-              color: fontcolor, fontSize: 30, fontWeight: FontWeight.w600),
+              color: fontcolor, fontSize: 22, fontWeight: FontWeight.bold),
         ),
+        centerTitle: true,
+        elevation: 0,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              // color: Color.fromRGBO(217, 217, 217, 1),
-            ),
+            icon: Icon(Icons.home),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_2,
-              // color: iconcolor,
-            ),
+            icon: Icon(Icons.person),
             label: "Profile",
           ),
         ],
-        selectedItemColor: Color.fromRGBO(217, 217, 217, 1),
+        selectedItemColor: Colors.grey[400],
         unselectedItemColor: iconcolor,
         onTap: (int index) {
           if (index == 0) {
             context.router.replaceNamed('/home');
-          }
-          if (index == 1) {
-            context.router.replaceNamed('/profilehome');
+          } else if (index == 1) {
+            context.router.replaceNamed('/profile');
           }
         },
       ),
-      backgroundColor: maincolor,
-      body: Center(
-        child: Container(
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 24,
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 24.0, top: 16),
-                child: InkWell(
-                  onTap: () {
-                    context.router.replaceNamed('/account');
-                  },
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Align(
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () => context.router.replaceNamed('/edit_profile'),
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: maincolor,
+                  ),
                   child: Row(
                     children: [
-                      Text(
-                        "My account",
-                        style: TextStyle(
-                            color: fontcolor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
+                      CircleAvatar(
+                        radius: 40,
+                        // backgroundImage:
+                        //     NetworkImage('https://via.placeholder.com/150'),
                       ),
-                      SizedBox(width: 88),
-                      Icon(
-                        Icons.chevron_right,
-                        size: 24.0,
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 16, right: 40),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Edward Lorry",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: fontcolor),
+                              ),
+                              Text(
+                                "Senior Designer",
+                                style: TextStyle(
+                                    fontSize: 16, color: unnecessary_colors),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
+                      Icon(Icons.edit, color: iconcolor), // Example icon
                     ],
                   ),
                 ),
               ),
-              Container(),
-              // Container(
-              //   padding: EdgeInsets.only(left: 24.0, top: 16),
-              //   child: InkWell(
-              //     onTap: () {
-              //       context.router.replaceNamed('/settingNotifi');
-              //     },
-              //     child: Row(
-              //       children: [
-              //         Text(
-              //           "Notification setting",
-              //           style: TextStyle(
-              //               color: fontcolor,
-              //               fontSize: 16,
-              //               fontWeight: FontWeight.w500),
-              //         ),
-              //         SizedBox(width: 88),
-              //         Icon(
-              //           Icons.chevron_right,
-              //           size: 24.0,
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              Container(
-                width: 312,
-                height: 48,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Color.fromRGBO(245, 247, 248, 1)),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)))),
-                  onPressed: () {
-                    context.router.replaceNamed('/login');
-                  },
-                  child: Text(
-                    "Sign out",
-                    style: TextStyle(
-                        color: Color.fromRGBO(254, 0, 0, 1),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
+            ),
+            SizedBox(height: 20),
+            ListTile(
+              leading: Icon(Icons.wallet_giftcard, color: Colors.green),
+              title: Text("My Wallet"),
+              trailing: Icon(Icons.chevron_right),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.card_membership, color: Colors.blue),
+              title: Text("Payments"),
+              trailing: Icon(Icons.chevron_right),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.settings, color: Colors.black),
+              title: Text("Settings"),
+              trailing: Icon(Icons.chevron_right),
+              onTap: () {},
+            ),
+            Spacer(),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
               ),
-            ],
-          ),
+              onPressed: () => context.router.replaceNamed('/login'),
+              child: Text('Log Out'),
+            ),
+            SizedBox(height: 20),
+          ],
         ),
       ),
     );

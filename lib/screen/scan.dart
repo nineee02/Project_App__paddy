@@ -4,6 +4,7 @@ import 'package:paddy_rice/constants/color.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:icapps_torch_compat/icapps_torch_compat.dart';
 
+@RoutePage()
 class ScanRoute extends StatefulWidget {
   const ScanRoute({Key? key}) : super(key: key);
 

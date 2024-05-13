@@ -30,9 +30,11 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
 
     flutterBlue.scanResults.listen((results) {
       for (ScanResult result in results) {
-        setState(() {
-          devicesList.add(result.device);
-        });
+        if (!devicesList.any((device) => device.id == result.device.id)) {
+          setState(() {
+            devicesList.add(result.device);
+          });
+        }
       }
     }).onDone(() => setState(() => isScanning = false));
   }
@@ -47,11 +49,9 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
           onPressed: () => context.router.replaceNamed('/home'),
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
-        title: Text(
-          "Add Device",
-          style: TextStyle(
-              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
-        ),
+        title: Text("Add Device",
+            style: TextStyle(
+                color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500)),
         actions: [
           IconButton(
             onPressed: () => context.router.replaceNamed('/scan'),
@@ -70,14 +70,10 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
                       ? LinearProgressIndicator()
                       : ElevatedButton(
                           onPressed: startScan,
-                          child: Text('Scan for Devices'),
-                        ),
+                          child: Text('Scan for Devices')),
                   SizedBox(height: 16),
                   Text('Discover nearby devices',
                       style: TextStyle(fontSize: 16, color: fontcolor)),
-                  Text('Auto-detecting nearby devices...',
-                      style:
-                          TextStyle(fontSize: 14, color: unnecessary_colors)),
                   ...devicesList.map((device) => ListTile(
                         title: Text(device.name),
                         subtitle: Text(device.id.toString()),
@@ -95,7 +91,7 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
             Wrap(
               spacing: 10,
               children: [
-                DeviceCategoryButton(icon: Icons.videocam, label: 'Devices'),
+                DeviceCategoryButton(icon: Icons.videocam, label: 'Devices')
               ],
             ),
           ],
@@ -105,10 +101,13 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
   }
 
   void connectToDevice(BluetoothDevice device) async {
-    await device.connect();
-    setState(() {
-      // context.router.replaceNamed('/selectWifi');
-    });
+    try {
+      await device.connect();
+      context.router.replaceNamed('/selectWifi');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to connect: ${e.toString()}")));
+    }
   }
 }
 
@@ -132,9 +131,7 @@ class DeviceCategoryButton extends StatelessWidget {
         foregroundColor: fontcolor,
         backgroundColor: fill_color,
         textStyle: TextStyle(color: iconcolor),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }

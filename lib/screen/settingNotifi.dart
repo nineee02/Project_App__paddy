@@ -55,29 +55,18 @@ class SettingNotifiRoute extends StatelessWidget {
                   SwitchMod(),
                 ]),
               ),
-              Container(
-                padding: EdgeInsets.only(left: 24.0, top: 16),
-                child: InkWell(
-                  onTap: () {
-                    context.router.replaceNamed('/deviceNotifiSetting');
-                  },
-                  child: Row(
-                    children: [
-                      Text(
-                        "Device notification management",
-                        style: TextStyle(
-                            color: fontcolor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(width: 88),
-                      Icon(
-                        Icons.chevron_right,
-                        size: 24.0,
-                      ),
-                    ],
-                  ),
+              const SizedBox(height: 16),
+              ListTile(
+                title: Text(
+                  "Device Notification Management",
+                  style: TextStyle(
+                      color: fontcolor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
                 ),
+                trailing: Icon(Icons.chevron_right),
+                onTap: () =>
+                    context.router.replaceNamed('/deviceNotifiSetting'),
               ),
             ],
           ),

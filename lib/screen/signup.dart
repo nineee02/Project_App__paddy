@@ -1,10 +1,22 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+// import 'package:paddy_rice/router/routes.gr.dart';
 
 @RoutePage()
-class SignupRoute extends StatelessWidget {
-  const SignupRoute({super.key});
+class SignupRoute extends StatefulWidget {
+  const SignupRoute({Key? key}) : super(key: key);
+
+  @override
+  _SignupRouteState createState() => _SignupRouteState();
+}
+
+class _SignupRouteState extends State<SignupRoute> {
+  bool _obscureText = true;
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _surnameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -17,277 +29,103 @@ class SignupRoute extends StatelessWidget {
               context.router.replaceNamed('/login');
             },
             icon: Icon(Icons.arrow_back))),
-        title: Text(
-          "Create account",
-          style: TextStyle(
-              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
-        ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        // padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Center(
           child: Column(
             children: [
-              SizedBox(
-                height: 16.0,
+              const SizedBox(height: 16.0),
+              Text(
+                "Create Account",
+                style: TextStyle(
+                    color: fontcolor,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500),
               ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  cursorColor: Color.fromRGBO(77, 22, 0, 1),
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.person_outlined,
-                      color: iconcolor,
-                    ),
-                    labelText: "Name",
-                    hintText: "Enter your name",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
-                    fillColor: fill_color,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: fill_color,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: Color.fromRGBO(77, 22, 0, 1),
-                      ),
-                    ),
-                  ),
+              Text(
+                "Creare a new account",
+                style: TextStyle(
+                    color: fontcolor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
+              ),
+              const SizedBox(height: 16.0),
+              signupTextField(_nameController, "Name",
+                  Icons.person_outline_outlined, Icons.clear),
+              const SizedBox(height: 16.0),
+              signupTextField(_surnameController, "Surname",
+                  Icons.person_outline, Icons.clear),
+              const SizedBox(height: 16.0),
+              signupTextField(
+                  _emailController, "Email", Icons.email_outlined, Icons.clear),
+              const SizedBox(height: 16.0),
+              signupTextField(
+                  _passwordController,
+                  "Password",
+                  Icons.lock_outline,
+                  _obscureText ? Icons.visibility : Icons.visibility_off),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: buttoncolor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  minimumSize: Size(312, 48),
                 ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.person_outlined,
-                      color: iconcolor,
-                    ),
-                    // suffixIcon: Icon(Icons.clear),
-                    labelText: "Surname",
-                    hintText: "Enter your Surname",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
-                    fillColor: fill_color,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: fill_color,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: Color.fromRGBO(77, 22, 0, 1),
-                      ),
-                    ),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.email_outlined,
-                      color: iconcolor,
-                    ),
-                    // suffixIcon: Icon(Icons.clear),
-                    labelText: "Email",
-                    hintText: "Enter your Email",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
-                    fillColor: fill_color,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: fill_color,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: Color.fromRGBO(77, 22, 0, 1),
-                      ),
-                    ),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.phone_outlined,
-                      color: iconcolor,
-                    ),
-                    // suffixIcon: Icon(Icons.clear),
-                    labelText: "Phone number",
-                    hintText: "Enter your Phone number",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
-                    fillColor: fill_color,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: fill_color,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: Color.fromRGBO(77, 22, 0, 1),
-                      ),
-                    ),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.lock_outline,
-                      color: iconcolor,
-                    ),
-                    // suffixIcon: Icon(Icons.clear),
-                    labelText: "Password",
-                    hintText: "Enter your Password",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
-                    fillColor: fill_color,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: fill_color,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: Color.fromRGBO(77, 22, 0, 1),
-                      ),
-                    ),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.lock_outline,
-                      color: iconcolor,
-                    ),
-                    // suffixIcon: Icon(Icons.clear),
-                    labelText: "Confirm Password",
-                    hintText: "Enter your Confirm Password",
-                    hintStyle: TextStyle(color: fontcolor, fontSize: 16),
-                    labelStyle: TextStyle(
-                        color: Color.fromRGBO(121, 121, 121, 1), fontSize: 16),
-                    fillColor: fill_color,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: fill_color,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: Color.fromRGBO(77, 22, 0, 1),
-                      ),
-                    ),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: fill_color,
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              Container(
-                width: 312,
-                height: 48,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      buttoncolor,
-                    ),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  ),
-                  onPressed: () {
-                    context.router.replaceNamed('/login');
-                  },
-                  child: Text(
-                    "Sign up",
-                    style: TextStyle(
+                onPressed: () => context.router.replaceNamed('/login'),
+                child: Text(
+                  "Sign up",
+                  style: TextStyle(
                       color: fontcolor,
                       fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                      fontWeight: FontWeight.w600),
                 ),
-              ),
-              SizedBox(
-                height: 64,
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget signupTextField(TextEditingController controller, String labelText,
+      IconData prefixIcon, IconData suffixIcon) {
+    return Container(
+      height: 48,
+      width: 312,
+      child: TextField(
+        controller: controller,
+        obscureText: labelText == "Password" && _obscureText,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: fill_color,
+          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+          prefixIcon: Icon(
+            prefixIcon,
+            color: iconcolor,
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              suffixIcon,
+              color: iconcolor,
+            ),
+            onPressed: () {
+              if (labelText == "Password") {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              } else {
+                controller.clear();
+              }
+            },
+          ),
+          labelText: labelText,
+          labelStyle: TextStyle(color: unnecessary_colors, fontSize: 16),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: fill_color, width: 1)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: focusedBorder_color, width: 1)),
         ),
       ),
     );

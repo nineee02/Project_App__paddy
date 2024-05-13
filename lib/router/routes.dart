@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:paddy_rice/router/routes.gr.dart';
 
 @AutoRouterConfig()
@@ -58,6 +57,10 @@ class AppRouter extends $AppRouter {
         CustomRoute(
             path: '/deviceNotifiSetting',
             page: DeviceNotifiSettingRoute.page,
-            transitionsBuilder: TransitionsBuilders.fadeIn)
+            transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/edit_profile',
+            page: EditProfileRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
       ];
 }
