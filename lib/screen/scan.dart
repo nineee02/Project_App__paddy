@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:icapps_torch_compat/icapps_torch_compat.dart';
@@ -14,6 +15,32 @@ class ScanRoute extends StatefulWidget {
 
 class _ScanRouteState extends State<ScanRoute> {
   bool _torchIsOn = false;
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  Barcode? result;
+  QRViewController? controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // Optionally start the camera here if needed
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    setState(() {
+      this.controller = controller;
+    });
+    controller.scannedDataStream.listen((scanData) {
+      setState(() {
+        result = scanData;
+      });
+    });
+  }
 
   // Function to handle opening the gallery
   void _openGallery(BuildContext context) async {
@@ -40,37 +67,44 @@ class _ScanRouteState extends State<ScanRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: maincolor,
-      appBar: AppBar(
-        backgroundColor: maincolor,
-        leading: IconButton(
-          onPressed: () => context.router.replaceNamed('/home'),
-          icon: Icon(Icons.arrow_back, color: iconcolor),
-        ),
-        title: Text(
-          "Scan",
-          style: TextStyle(
-              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
-        ),
-      ),
       body: Stack(
         children: [
+          QRView(
+            key: qrKey,
+            onQRViewCreated: _onQRViewCreated,
+            overlay: QrScannerOverlayShape(
+              borderColor: Colors.red,
+              borderRadius: 10,
+              borderLength: 30,
+              borderWidth: 10,
+              cutOutSize: 300,
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                onPressed: () => context.router.replaceNamed('/home'),
+                icon: Icon(Icons.arrow_back, color: iconcolor),
+              ),
+              title: Text(
+                "Scan",
+                style: TextStyle(
+                    color: fontcolor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.center,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "Please scan the QR code on the device or user manual",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
                 ElevatedButton(
                   onPressed: () {
                     context.router.replaceNamed('/addDevice');
