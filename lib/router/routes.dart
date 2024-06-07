@@ -62,5 +62,9 @@ class AppRouter extends $AppRouter {
             path: '/edit_profile',
             page: EditProfileRoute.page,
             transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/change_password',
+            page: ChangePasswordRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
       ];
 }

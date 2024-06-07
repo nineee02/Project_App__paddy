@@ -2,12 +2,59 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class UserProfile {
+  final String name;
+  final String surname;
+  final String email;
+  final String phone;
+
+  UserProfile({
+    required this.name,
+    required this.surname,
+    required this.email,
+    required this.phone,
+  });
+
+  // Factory method สำหรับแปลง JSON เป็น Object
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      name: json['name'],
+      surname: json['surname'],
+      email: json['email'],
+      phone: json['phone'],
+    );
+  }
+}
+
+class UserProfileService {
+  static const String baseUrl = 'http://10.0.2.2:3000/profile';
+  // เรียกใช้ข้อมูลผู้ใช้จาก server
+  static Future<UserProfile> fetchUserProfile() async {
+    final response = await http.get(Uri.parse('$baseUrl/profile'));
+
+    if (response.statusCode == 200) {
+      // ถ้า response สำเร็จ
+      // แปลงข้อมูล JSON เป็น Object UserProfile
+      return UserProfile.fromJson(jsonDecode(response.body));
+    } else {
+      // ถ้า response ไม่สำเร็จ
+      throw Exception('Failed to load user profile');
+    }
+  }
+}
+
 @RoutePage()
 class ProfileRoute extends StatelessWidget {
   const ProfileRoute({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic>? user =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
@@ -71,7 +118,7 @@ class ProfileRoute extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Edward Lorry",
+                                "${user?['name']} ${user?['surname']}",
                                 style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,

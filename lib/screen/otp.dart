@@ -2,14 +2,54 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 @RoutePage()
 class OtpRoute extends StatelessWidget {
-  const OtpRoute({super.key});
+  final String inputType;
+  final String inputValue;
+
+  const OtpRoute({
+    Key? key,
+    required this.inputType,
+    required this.inputValue,
+  }) : super(key: key);
+
+  Future<void> resendOtp(BuildContext context) async {
+    final String apiUrl =
+        'http://10.0.2.2:3000/resend_otp'; // เปลี่ยน URL ตามต้องการ
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'contact': inputValue, 'type': inputType}),
+      );
+
+      if (response.statusCode == 200) {
+        print("OTP resent successfully.");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('OTP resent successfully.')),
+        );
+      } else {
+        print("Failed to resend OTP. Status code: ${response.statusCode}");
+        print("Response body: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to resend OTP.')),
+        );
+      }
+    } catch (e) {
+      print("Error occurred: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error occurred while resending OTP.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     TextEditingController _pinController = TextEditingController();
+    String contactInfo = inputType == 'phone' ? inputValue : inputValue;
 
     return Scaffold(
       backgroundColor: maincolor,
@@ -22,7 +62,10 @@ class OtpRoute extends StatelessWidget {
         title: Text(
           "OTP Verification",
           style: TextStyle(
-              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
+            color: fontcolor,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         centerTitle: true,
       ),
@@ -31,10 +74,14 @@ class OtpRoute extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(Icons.email, size: 100, color: iconcolor), // Email icon
+            Icon(
+              inputType == 'phone' ? Icons.phone : Icons.email,
+              size: 100,
+              color: iconcolor,
+            ),
             SizedBox(height: 20),
             Text(
-              "Please enter the 4 digit verification code sent to +90 536 585 86 16",
+              "Please enter the 6-digit verification code sent to $contactInfo",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: fontcolor,
@@ -45,24 +92,42 @@ class OtpRoute extends StatelessWidget {
             SizedBox(height: 20),
             PinCodeTextField(
               appContext: context,
-              length: 4,
+              length: 6,
               controller: _pinController,
               pinTheme: PinTheme(
+                shape: PinCodeFieldShape.box,
+                borderRadius: BorderRadius.circular(5),
+                fieldHeight: 50,
+                fieldWidth: 40,
                 activeColor: Colors.white,
                 selectedColor: iconcolor,
                 inactiveColor: Colors.grey,
+                activeFillColor: fill_color,
+                selectedFillColor: fill_color,
+                inactiveFillColor: fill_color,
               ),
               keyboardType: TextInputType.number,
+              boxShadows: [
+                BoxShadow(
+                  offset: Offset(0, 1),
+                  color: Colors.black12,
+                  blurRadius: 10,
+                ),
+              ],
               onChanged: (value) {},
+              enableActiveFill: true,
             ),
             SizedBox(height: 20),
             TextButton(
-              onPressed: () {
-                // Implement resend OTP logic here
+              onPressed: () async {
+                await resendOtp(context);
               },
               child: Text(
                 "Didn't receive the OTP? Resend code",
-                style: TextStyle(color: fontcolor),
+                style: TextStyle(
+                  color: buttoncolor,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -70,20 +135,22 @@ class OtpRoute extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: buttoncolor,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 minimumSize: Size(312, 48),
               ),
               onPressed: () {
                 // Add verify OTP logic here
-                print("OTP Entered: ${_pinController.text}");
-                context.router.replaceNamed('/login');
+                // print("OTP Entered: ${_pinController.text}");
+                context.router.replaceNamed('/change_password');
               },
               child: Text(
                 "VERIFY AND PROCEED",
                 style: TextStyle(
-                    color: fontcolor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                  color: fontcolor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
