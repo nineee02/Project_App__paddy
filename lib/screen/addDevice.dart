@@ -25,6 +25,7 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
   void startScan() {
     setState(() {
       isScanning = true;
+      devicesList.clear();
     });
     flutterBlue.startScan(timeout: Duration(seconds: 4));
 
@@ -52,49 +53,65 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
         title: Text("Add Device",
             style: TextStyle(
                 color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500)),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () => context.router.replaceNamed('/scan'),
-            icon: Icon(Icons.qr_code_scanner),
+            icon: Icon(Icons.qr_code_scanner, color: iconcolor),
           )
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Discover nearby devices',
+                style: TextStyle(fontSize: 16, color: fontcolor),
+              ),
+              const SizedBox(height: 16),
+              isScanning
+                  ? LinearProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: startScan,
+                      child: Text('Scan for Devices'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: fontcolor,
+                        backgroundColor: buttoncolor,
+                      ),
+                    ),
+              const SizedBox(height: 16),
+              Column(
+                children: devicesList.map((device) {
+                  return ListTile(
+                    title: Text(device.name),
+                    subtitle: Text(device.id.toString()),
+                    onTap: () => connectToDevice(device),
+                    trailing: Icon(Icons.bluetooth, color: iconcolor),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 16),
+              Divider(),
+              ListTile(
+                title: Text(
+                  'Add devices manually',
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, color: fontcolor),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 10,
                 children: [
-                  isScanning
-                      ? LinearProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: startScan,
-                          child: Text('Scan for Devices')),
-                  SizedBox(height: 16),
-                  Text('Discover nearby devices',
-                      style: TextStyle(fontSize: 16, color: fontcolor)),
-                  ...devicesList.map((device) => ListTile(
-                        title: Text(device.name),
-                        subtitle: Text(device.id.toString()),
-                        onTap: () => connectToDevice(device),
-                      )),
+                  DeviceCategoryButton(icon: Icons.videocam, label: 'Camera'),
+                  // Add more DeviceCategoryButton as needed
                 ],
               ),
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Add devices manually',
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: fontcolor)),
-            ),
-            Wrap(
-              spacing: 10,
-              children: [
-                DeviceCategoryButton(icon: Icons.videocam, label: 'Devices')
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -129,7 +146,7 @@ class DeviceCategoryButton extends StatelessWidget {
       label: Text(label),
       style: ElevatedButton.styleFrom(
         foregroundColor: fontcolor,
-        backgroundColor: fill_color,
+        backgroundColor: buttoncolor,
         textStyle: TextStyle(color: iconcolor),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),

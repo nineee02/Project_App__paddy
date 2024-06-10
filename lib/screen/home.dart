@@ -13,20 +13,13 @@ class HomeRoute extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: maincolor,
-        title: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.only(left: 16),
-              child: Text(
-                "Silo",
-                style: TextStyle(
-                  color: fontcolor,
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
+        title: Text(
+          "Silo",
+          style: TextStyle(
+            color: fontcolor,
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         actions: [
           IconButton(
@@ -74,7 +67,7 @@ class HomeRoute extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                     color: fill_color,
                   ),
-                  offset: const Offset(0, 8),
+                  offset: const Offset(-144, 8),
                 ),
                 menuItemStyleData: MenuItemStyleData(
                   customHeights: [
@@ -92,15 +85,11 @@ class HomeRoute extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-            ),
+            icon: Icon(Icons.home),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_2_outlined,
-            ),
+            icon: Icon(Icons.person_2_outlined),
             label: "Profile",
           ),
         ],

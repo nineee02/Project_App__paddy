@@ -69,15 +69,18 @@ class _ScanRouteState extends State<ScanRoute> {
     return Scaffold(
       body: Stack(
         children: [
-          QRView(
-            key: qrKey,
-            onQRViewCreated: _onQRViewCreated,
-            overlay: QrScannerOverlayShape(
-              borderColor: Colors.red,
-              borderRadius: 10,
-              borderLength: 30,
-              borderWidth: 10,
-              cutOutSize: 300,
+          Container(
+            color: maincolor, // Change this color to match your background
+            child: QRView(
+              key: qrKey,
+              onQRViewCreated: _onQRViewCreated,
+              overlay: QrScannerOverlayShape(
+                borderColor: Colors.red,
+                borderRadius: 10,
+                borderLength: 30,
+                borderWidth: 10,
+                cutOutSize: 300,
+              ),
             ),
           ),
           Positioned(

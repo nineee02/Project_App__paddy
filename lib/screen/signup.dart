@@ -23,10 +23,43 @@ class _SignupRouteState extends State<SignupRoute> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
 
+  Color _nameBorderColor = fill_color;
+  Color _surnameBorderColor = fill_color;
+  Color _phoneBorderColor = fill_color;
   Color _emailBorderColor = fill_color;
+  Color _passwordBorderColor = fill_color;
+  Color _confirmPasswordBorderColor = fill_color;
+
   Color _labelColor = unnecessary_colors;
 
+  FocusNode _nameFocusNode = FocusNode();
+  FocusNode _surnameFocusNode = FocusNode();
+  FocusNode _phoneFocusNode = FocusNode();
   FocusNode _emailFocusNode = FocusNode();
+  FocusNode _passwordFocusNode = FocusNode();
+  FocusNode _confirmPasswordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFocusNode.addListener(() {
+      setState(() {
+        _labelColor =
+            _emailFocusNode.hasFocus ? focusedBorder_color : unnecessary_colors;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _nameFocusNode.dispose();
+    _surnameFocusNode.dispose();
+    _phoneFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+    super.dispose();
+  }
 
   Future<void> _signupUser(String name, String surname, String phone,
       String email, String password) async {
@@ -94,40 +127,65 @@ class _SignupRouteState extends State<SignupRoute> {
   }
 
   bool _validateFields() {
+    setState(() {
+      _nameBorderColor = fill_color;
+      _surnameBorderColor = fill_color;
+      _phoneBorderColor = fill_color;
+      _emailBorderColor = fill_color;
+      _passwordBorderColor = fill_color;
+      _confirmPasswordBorderColor = fill_color;
+    });
+
+    bool isValid = true;
+
     if (_nameController.text.length < 2) {
-      _showErrorDialog('Name must be at least 2 characters long');
-      return false;
+      setState(() {
+        _nameBorderColor = error_color;
+      });
+      isValid = false;
     }
 
     if (_surnameController.text.length < 2) {
-      _showErrorDialog('Surname must be at least 2 characters long');
-      return false;
+      setState(() {
+        _surnameBorderColor = error_color;
+      });
+      isValid = false;
     }
 
     final phoneRegex = RegExp(r'^[0-9]{10}$');
     if (!phoneRegex.hasMatch(_phoneController.text)) {
-      _showErrorDialog('Phone number must be 10 digits');
-      return false;
+      setState(() {
+        _phoneBorderColor = error_color;
+      });
+      isValid = false;
     }
 
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
     if (!emailRegex.hasMatch(_emailController.text)) {
-      _showErrorDialog('Invalid email format');
-      return false;
+      setState(() {
+        _emailBorderColor = error_color;
+      });
+      isValid = false;
     }
 
     if (_passwordController.text != _confirmPasswordController.text) {
-      _showErrorDialog('Passwords do not match');
-      return false;
+      setState(() {
+        _passwordBorderColor = error_color;
+        _confirmPasswordBorderColor = error_color;
+      });
+      isValid = false;
     }
 
     if (_passwordController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty) {
-      _showErrorDialog('Password fields cannot be empty');
-      return false;
+      setState(() {
+        _passwordBorderColor = error_color;
+        _confirmPasswordBorderColor = error_color;
+      });
+      isValid = false;
     }
 
-    return true;
+    return isValid;
   }
 
   @override
@@ -136,88 +194,127 @@ class _SignupRouteState extends State<SignupRoute> {
       backgroundColor: maincolor,
       appBar: AppBar(
         backgroundColor: maincolor,
-        leading: (IconButton(
+        leading: IconButton(
           onPressed: () {
             context.router.replaceNamed('/login');
           },
-          icon: Icon(Icons.arrow_back),
-          color: iconcolor,
-        )),
+          icon: Icon(Icons.arrow_back, color: iconcolor),
+        ),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 16.0),
-                Text(
-                  "Create Account",
-                  style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  "Create a new account",
-                  style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 16.0),
-                signupTextField(_nameController, "Name",
-                    Icons.person_outline_outlined, Icons.clear, false, null),
-                const SizedBox(height: 16.0),
-                signupTextField(_surnameController, "Surname",
-                    Icons.person_outline, Icons.clear, false, null),
-                const SizedBox(height: 16.0),
-                signupTextField(_phoneController, "Phone number",
-                    Icons.phone_outlined, Icons.clear, false, null),
-                const SizedBox(height: 16.0),
-                signupTextField(_emailController, "Email", Icons.email_outlined,
-                    Icons.clear, false, _emailFocusNode),
-                const SizedBox(height: 16.0),
-                signupTextField(
-                    _passwordController,
-                    "Password",
-                    Icons.lock_outline,
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
-                    true,
-                    null),
-                const SizedBox(height: 16.0),
-                signupTextField(
-                    _confirmPasswordController,
-                    "Confirm Password",
-                    Icons.lock_outline,
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
-                    true,
-                    null),
-                const SizedBox(height: 16.0),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: buttoncolor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    minimumSize: Size(312, 48),
-                  ),
-                  onPressed: () {
-                    if (_validateFields()) {
-                      _signupUser(
-                        _nameController.text,
-                        _surnameController.text,
-                        _phoneController.text,
-                        _emailController.text,
-                        _passwordController.text,
-                      );
-                    }
-                  },
+                Center(
                   child: Text(
-                    "Sign up",
+                    "Create Account",
                     style: TextStyle(
                         color: fontcolor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    "Create a new account",
+                    style: TextStyle(
+                        color: fontcolor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                signupTextField(
+                  _nameController,
+                  "Name",
+                  Icons.person_outline_outlined,
+                  Icons.clear,
+                  false,
+                  _nameBorderColor,
+                  _nameFocusNode,
+                ),
+                const SizedBox(height: 16.0),
+                signupTextField(
+                  _surnameController,
+                  "Surname",
+                  Icons.person_outline,
+                  Icons.clear,
+                  false,
+                  _surnameBorderColor,
+                  _surnameFocusNode,
+                ),
+                const SizedBox(height: 16.0),
+                signupTextField(
+                  _phoneController,
+                  "Phone number",
+                  Icons.phone_outlined,
+                  Icons.clear,
+                  false,
+                  _phoneBorderColor,
+                  _phoneFocusNode,
+                ),
+                const SizedBox(height: 16.0),
+                signupTextField(
+                  _emailController,
+                  "Email",
+                  Icons.email_outlined,
+                  Icons.clear,
+                  false,
+                  _emailBorderColor,
+                  _emailFocusNode,
+                ),
+                const SizedBox(height: 16.0),
+                signupTextField(
+                  _passwordController,
+                  "Password",
+                  Icons.lock_outline,
+                  _obscureText ? Icons.visibility : Icons.visibility_off,
+                  true,
+                  _passwordBorderColor,
+                  _passwordFocusNode,
+                ),
+                const SizedBox(height: 16.0),
+                signupTextField(
+                  _confirmPasswordController,
+                  "Confirm Password",
+                  Icons.lock_outline,
+                  _obscureText ? Icons.visibility : Icons.visibility_off,
+                  true,
+                  _confirmPasswordBorderColor,
+                  _confirmPasswordFocusNode,
+                ),
+                const SizedBox(height: 16.0),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: buttoncolor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      minimumSize: Size(312, 48),
+                    ),
+                    onPressed: () {
+                      if (_validateFields()) {
+                        _signupUser(
+                          _nameController.text,
+                          _surnameController.text,
+                          _phoneController.text,
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                      }
+                    },
+                    child: Text(
+                      "Sign up",
+                      style: TextStyle(
+                          color: fontcolor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
                   ),
                 )
               ],
@@ -234,6 +331,7 @@ class _SignupRouteState extends State<SignupRoute> {
     IconData prefixIcon,
     IconData suffixIcon,
     bool obscure,
+    Color borderColor,
     FocusNode? focusNode,
   ) {
     return Container(
@@ -274,9 +372,21 @@ class _SignupRouteState extends State<SignupRoute> {
                   : unnecessary_colors,
               fontSize: 16),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: fill_color, width: 1)),
+            borderSide: BorderSide(color: borderColor, width: 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: focusedBorder_color, width: 1)),
+            borderSide: BorderSide(color: focusedBorder_color, width: 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: error_color, width: 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: error_color, width: 1),
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {

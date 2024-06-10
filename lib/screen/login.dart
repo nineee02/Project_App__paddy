@@ -18,9 +18,8 @@ class _LoginRouteState extends State<LoginRoute> {
   bool _obscureText = true;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  Color _emailBorderColor = fill_color;
-  Color _passwordBorderColor = fill_color;
-  Color _labelColor = unnecessary_colors;
+  bool _isEmailError = false;
+  bool _isPasswordError = false;
 
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
@@ -30,18 +29,11 @@ class _LoginRouteState extends State<LoginRoute> {
     super.initState();
 
     _emailFocusNode.addListener(() {
-      setState(() {
-        _labelColor =
-            _emailFocusNode.hasFocus ? focusedBorder_color : unnecessary_colors;
-      });
+      setState(() {});
     });
 
     _passwordFocusNode.addListener(() {
-      setState(() {
-        _labelColor = _passwordFocusNode.hasFocus
-            ? focusedBorder_color
-            : unnecessary_colors;
-      });
+      setState(() {});
     });
   }
 
@@ -66,8 +58,8 @@ class _LoginRouteState extends State<LoginRoute> {
     );
 
     setState(() {
-      _emailBorderColor = fill_color;
-      _passwordBorderColor = fill_color;
+      _isEmailError = false;
+      _isPasswordError = false;
     });
 
     if (response.statusCode == 200) {
@@ -78,12 +70,12 @@ class _LoginRouteState extends State<LoginRoute> {
       if (response.statusCode == 401) {
         errorMessage = 'Invalid password. Please try again.';
         setState(() {
-          _passwordBorderColor = error_color;
+          _isPasswordError = true;
         });
       } else if (response.statusCode == 404) {
         errorMessage = 'User not found. Please sign up.';
         setState(() {
-          _emailBorderColor = error_color;
+          _isEmailError = true;
         });
       } else {
         errorMessage = 'Failed to save user data';
@@ -106,6 +98,7 @@ class _LoginRouteState extends State<LoginRoute> {
       backgroundColor: maincolor,
       body: Center(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -115,15 +108,16 @@ class _LoginRouteState extends State<LoginRoute> {
                   "Welcome",
                   style: TextStyle(
                       color: fontcolor,
-                      fontSize: 40,
+                      fontSize: 36,
                       fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 20.0),
                 Text(
                   "Paddy Rice Drying Silo \n Control Notification",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       color: fontcolor,
-                      fontSize: 16,
+                      fontSize: 20,
                       fontWeight: FontWeight.w400),
                 ),
                 SizedBox(height: 24.0),
@@ -135,30 +129,56 @@ class _LoginRouteState extends State<LoginRoute> {
                   "Email or Phone number",
                   Icons.person_outline,
                   Icons.clear,
-                  _emailBorderColor,
                   _emailFocusNode,
                   (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email or phone number';
                     }
+                    setState(() {
+                      _isEmailError = false;
+                    });
                     return null;
                   },
                 ),
+                if (_isEmailError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'User not found. Please sign up.',
+                        style: TextStyle(color: error_color, fontSize: 12),
+                      ),
+                    ),
+                  ),
                 SizedBox(height: 16.0),
                 loginTextField(
                   _passwordController,
                   "Password",
                   Icons.lock_outline,
                   _obscureText ? Icons.visibility : Icons.visibility_off,
-                  _passwordBorderColor,
                   _passwordFocusNode,
                   (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
                     }
+                    setState(() {
+                      _isPasswordError = false;
+                    });
                     return null;
                   },
                 ),
+                if (_isPasswordError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Invalid password. Please try again.',
+                        style: TextStyle(color: error_color, fontSize: 12),
+                      ),
+                    ),
+                  ),
                 SizedBox(height: 8.0),
                 Align(
                   alignment: Alignment.centerRight,
@@ -169,17 +189,17 @@ class _LoginRouteState extends State<LoginRoute> {
                       child: Text(
                         "Forgot Password?",
                         style:
-                            TextStyle(color: unnecessary_colors, fontSize: 10),
+                            TextStyle(color: unnecessary_colors, fontSize: 12),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 4.0),
+                SizedBox(height: 8.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: buttoncolor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     minimumSize: Size(312, 48),
                   ),
@@ -197,7 +217,7 @@ class _LoginRouteState extends State<LoginRoute> {
                         fontWeight: FontWeight.w600),
                   ),
                 ),
-                SizedBox(height: 4.0),
+                SizedBox(height: 8.0),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
@@ -209,7 +229,7 @@ class _LoginRouteState extends State<LoginRoute> {
                           "Don’t have an account? ",
                           style: TextStyle(
                             color: unnecessary_colors,
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -220,7 +240,8 @@ class _LoginRouteState extends State<LoginRoute> {
                             "Sign up",
                             style: TextStyle(
                                 color: fontcolor,
-                                fontSize: 10,
+                                decoration: TextDecoration.underline,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w600),
                           ),
                         ),
@@ -241,13 +262,13 @@ class _LoginRouteState extends State<LoginRoute> {
     String labelText,
     IconData prefixIcon,
     IconData suffixIcon,
-    Color borderColor,
     FocusNode focusNode,
     String? Function(String?)? validator,
   ) {
     return Container(
       width: 312,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
             focusNode: focusNode,
@@ -258,7 +279,7 @@ class _LoginRouteState extends State<LoginRoute> {
               filled: true,
               fillColor: fill_color,
               contentPadding:
-                  EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                  EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               prefixIcon: Icon(prefixIcon, color: iconcolor),
               suffixIcon: IconButton(
                 icon: Icon(suffixIcon, color: iconcolor),
@@ -276,22 +297,35 @@ class _LoginRouteState extends State<LoginRoute> {
               labelStyle: TextStyle(
                 color: focusNode.hasFocus
                     ? focusedBorder_color
-                    : unnecessary_colors,
+                    : (labelText == "Email or Phone number" && _isEmailError) ||
+                            (labelText == "Password" && _isPasswordError)
+                        ? error_color
+                        : unnecessary_colors,
                 fontSize: 16,
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: borderColor, width: 1),
+                borderSide: BorderSide(
+                  color:
+                      (labelText == "Email or Phone number" && _isEmailError) ||
+                              (labelText == "Password" && _isPasswordError)
+                          ? error_color
+                          : fill_color,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(8),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: focusedBorder_color, width: 1),
+                borderRadius: BorderRadius.circular(8),
               ),
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: error_color, width: 1),
+                borderRadius: BorderRadius.circular(8),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: error_color, width: 1),
+                borderRadius: BorderRadius.circular(8),
               ),
-              errorStyle: TextStyle(color: error_color),
             ),
           ),
         ],

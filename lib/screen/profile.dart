@@ -18,7 +18,6 @@ class UserProfile {
     required this.phone,
   });
 
-  // Factory method สำหรับแปลง JSON เป็น Object
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       name: json['name'],
@@ -31,16 +30,13 @@ class UserProfile {
 
 class UserProfileService {
   static const String baseUrl = 'http://10.0.2.2:3000/profile';
-  // เรียกใช้ข้อมูลผู้ใช้จาก server
+
   static Future<UserProfile> fetchUserProfile() async {
     final response = await http.get(Uri.parse('$baseUrl/profile'));
 
     if (response.statusCode == 200) {
-      // ถ้า response สำเร็จ
-      // แปลงข้อมูล JSON เป็น Object UserProfile
       return UserProfile.fromJson(jsonDecode(response.body));
     } else {
-      // ถ้า response ไม่สำเร็จ
       throw Exception('Failed to load user profile');
     }
   }

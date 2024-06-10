@@ -11,36 +11,55 @@ class NotifiRoute extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: maincolor,
-        leading: (IconButton(
-            onPressed: () {
-              context.router.replaceNamed('/home');
-            },
-            icon: Icon(Icons.arrow_back))),
+        leading: IconButton(
+          onPressed: () {
+            context.router.replaceNamed('/home');
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: iconcolor,
+          ),
+        ),
         title: Text(
           "Notification",
+          textAlign: TextAlign.center,
           style: TextStyle(
-              color: fontcolor, fontSize: 30, fontWeight: FontWeight.w600),
+            color: fontcolor,
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
         ),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
               context.router.replaceNamed('/settingNotifi');
             },
-            icon: Icon(Icons.settings),
+            icon: Icon(
+              Icons.settings,
+              color: iconcolor,
+            ),
           ),
         ],
       ),
       backgroundColor: maincolor,
       body: Center(
-        child: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 24,
+              SizedBox(height: 16),
+              Text(
+                "You have no new notifications",
+                style: TextStyle(
+                  color: fontcolor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center,
               ),
-              Container(),
-              Container(),
+              SizedBox(height: 24),
             ],
           ),
         ),
