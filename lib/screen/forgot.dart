@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:paddy_rice/router/routes.gr.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:paddy_rice/router/routes.gr.dart';
 
 final List<String> select_Value = [
   'Phone number',
@@ -69,7 +69,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
             TextButton(
               child: Text('Sign Up'),
               onPressed: () {
-                context.router.push(SignupRoute());
+                context.router.replaceNamed('/login');
               },
             ),
             TextButton(
@@ -338,12 +338,11 @@ class _ForgotRouteState extends State<ForgotRoute> {
                               MaterialStateProperty.all(buttoncolor),
                           shape: MaterialStateProperty.all(
                             RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  8), // Adjusted border radius
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             final inputType = selectedValue == 'Phone number'
                                 ? 'phone'

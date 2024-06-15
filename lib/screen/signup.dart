@@ -23,14 +23,12 @@ class _SignupRouteState extends State<SignupRoute> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
 
-  Color _nameBorderColor = fill_color;
-  Color _surnameBorderColor = fill_color;
-  Color _phoneBorderColor = fill_color;
-  Color _emailBorderColor = fill_color;
-  Color _passwordBorderColor = fill_color;
-  Color _confirmPasswordBorderColor = fill_color;
-
-  Color _labelColor = unnecessary_colors;
+  bool _isNameError = false;
+  bool _isSurnameError = false;
+  bool _isPhoneError = false;
+  bool _isEmailError = false;
+  bool _isPasswordError = false;
+  bool _isConfirmPasswordError = false;
 
   FocusNode _nameFocusNode = FocusNode();
   FocusNode _surnameFocusNode = FocusNode();
@@ -38,17 +36,6 @@ class _SignupRouteState extends State<SignupRoute> {
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
   FocusNode _confirmPasswordFocusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    _emailFocusNode.addListener(() {
-      setState(() {
-        _labelColor =
-            _emailFocusNode.hasFocus ? focusedBorder_color : unnecessary_colors;
-      });
-    });
-  }
 
   @override
   void dispose() {
@@ -128,65 +115,27 @@ class _SignupRouteState extends State<SignupRoute> {
 
   bool _validateFields() {
     setState(() {
-      _nameBorderColor = fill_color;
-      _surnameBorderColor = fill_color;
-      _phoneBorderColor = fill_color;
-      _emailBorderColor = fill_color;
-      _passwordBorderColor = fill_color;
-      _confirmPasswordBorderColor = fill_color;
+      _isNameError = _nameController.text.length < 2;
+      _isSurnameError = _surnameController.text.length < 2;
+      _isPhoneError = !phoneRegex.hasMatch(_phoneController.text);
+      _isEmailError = !emailRegex.hasMatch(_emailController.text);
+      _isPasswordError =
+          _passwordController.text != _confirmPasswordController.text ||
+              _passwordController.text.isEmpty;
+      _isConfirmPasswordError = _confirmPasswordController.text.isEmpty ||
+          _passwordController.text != _confirmPasswordController.text;
     });
 
-    bool isValid = true;
-
-    if (_nameController.text.length < 2) {
-      setState(() {
-        _nameBorderColor = error_color;
-      });
-      isValid = false;
-    }
-
-    if (_surnameController.text.length < 2) {
-      setState(() {
-        _surnameBorderColor = error_color;
-      });
-      isValid = false;
-    }
-
-    final phoneRegex = RegExp(r'^[0-9]{10}$');
-    if (!phoneRegex.hasMatch(_phoneController.text)) {
-      setState(() {
-        _phoneBorderColor = error_color;
-      });
-      isValid = false;
-    }
-
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-    if (!emailRegex.hasMatch(_emailController.text)) {
-      setState(() {
-        _emailBorderColor = error_color;
-      });
-      isValid = false;
-    }
-
-    if (_passwordController.text != _confirmPasswordController.text) {
-      setState(() {
-        _passwordBorderColor = error_color;
-        _confirmPasswordBorderColor = error_color;
-      });
-      isValid = false;
-    }
-
-    if (_passwordController.text.isEmpty ||
-        _confirmPasswordController.text.isEmpty) {
-      setState(() {
-        _passwordBorderColor = error_color;
-        _confirmPasswordBorderColor = error_color;
-      });
-      isValid = false;
-    }
-
-    return isValid;
+    return !(_isNameError ||
+        _isSurnameError ||
+        _isPhoneError ||
+        _isEmailError ||
+        _isPasswordError ||
+        _isConfirmPasswordError);
   }
+
+  final phoneRegex = RegExp(r'^[0-9]{10}$');
+  final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
 
   @override
   Widget build(BuildContext context) {
@@ -235,8 +184,9 @@ class _SignupRouteState extends State<SignupRoute> {
                   Icons.person_outline_outlined,
                   Icons.clear,
                   false,
-                  _nameBorderColor,
                   _nameFocusNode,
+                  _isNameError,
+                  "Name must be at least 2 characters long",
                 ),
                 const SizedBox(height: 16.0),
                 signupTextField(
@@ -245,8 +195,9 @@ class _SignupRouteState extends State<SignupRoute> {
                   Icons.person_outline,
                   Icons.clear,
                   false,
-                  _surnameBorderColor,
                   _surnameFocusNode,
+                  _isSurnameError,
+                  "Surname must be at least 2 characters long",
                 ),
                 const SizedBox(height: 16.0),
                 signupTextField(
@@ -255,8 +206,9 @@ class _SignupRouteState extends State<SignupRoute> {
                   Icons.phone_outlined,
                   Icons.clear,
                   false,
-                  _phoneBorderColor,
                   _phoneFocusNode,
+                  _isPhoneError,
+                  "Phone number must be 10 digits",
                 ),
                 const SizedBox(height: 16.0),
                 signupTextField(
@@ -265,8 +217,9 @@ class _SignupRouteState extends State<SignupRoute> {
                   Icons.email_outlined,
                   Icons.clear,
                   false,
-                  _emailBorderColor,
                   _emailFocusNode,
+                  _isEmailError,
+                  "Invalid email format",
                 ),
                 const SizedBox(height: 16.0),
                 signupTextField(
@@ -275,8 +228,9 @@ class _SignupRouteState extends State<SignupRoute> {
                   Icons.lock_outline,
                   _obscureText ? Icons.visibility : Icons.visibility_off,
                   true,
-                  _passwordBorderColor,
                   _passwordFocusNode,
+                  _isPasswordError,
+                  "Passwords do not match",
                 ),
                 const SizedBox(height: 16.0),
                 signupTextField(
@@ -285,8 +239,9 @@ class _SignupRouteState extends State<SignupRoute> {
                   Icons.lock_outline,
                   _obscureText ? Icons.visibility : Icons.visibility_off,
                   true,
-                  _confirmPasswordBorderColor,
                   _confirmPasswordFocusNode,
+                  _isConfirmPasswordError,
+                  "Passwords do not match",
                 ),
                 const SizedBox(height: 16.0),
                 Center(
@@ -331,69 +286,89 @@ class _SignupRouteState extends State<SignupRoute> {
     IconData prefixIcon,
     IconData suffixIcon,
     bool obscure,
-    Color borderColor,
-    FocusNode? focusNode,
+    FocusNode focusNode,
+    bool isError,
+    String errorMessage,
   ) {
     return Container(
-      height: 48,
       width: 312,
-      child: TextFormField(
-        controller: controller,
-        obscureText: (labelText == "Password" && _obscureText) ||
-            (labelText == "Confirm Password" && _obscureText && obscure),
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: fill_color,
-          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-          prefixIcon: Icon(
-            prefixIcon,
-            color: iconcolor,
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(
-              suffixIcon,
-              color: iconcolor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            focusNode: focusNode,
+            controller: controller,
+            obscureText: (labelText == "Password" && _obscureText) ||
+                (labelText == "Confirm Password" && _obscureText && obscure),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: fill_color,
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+              prefixIcon: Icon(
+                prefixIcon,
+                color: iconcolor,
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  suffixIcon,
+                  color: iconcolor,
+                ),
+                onPressed: () {
+                  if (labelText == "Password" ||
+                      labelText == "Confirm Password") {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  } else {
+                    controller.clear();
+                  }
+                },
+              ),
+              labelText: labelText,
+              labelStyle: TextStyle(
+                  color: focusNode.hasFocus
+                      ? focusedBorder_color
+                      : isError
+                          ? error_color
+                          : unnecessary_colors,
+                  fontSize: 16),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: isError ? error_color : fill_color,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: focusedBorder_color, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: error_color, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: error_color, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            onPressed: () {
-              if (labelText == "Password" || labelText == "Confirm Password") {
-                setState(() {
-                  _obscureText = !_obscureText;
-                });
-              } else {
-                controller.clear();
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return '$labelText is required';
               }
+              return null;
             },
           ),
-          labelText: labelText,
-          labelStyle: TextStyle(
-              color: focusNode?.hasFocus == true
-                  ? focusedBorder_color
-                  : unnecessary_colors,
-              fontSize: 16),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: borderColor, width: 1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: focusedBorder_color, width: 1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: error_color, width: 1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: error_color, width: 1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return '$labelText is required';
-          }
-          return null;
-        },
+          if (isError)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                errorMessage,
+                style: TextStyle(color: error_color, fontSize: 12),
+              ),
+            ),
+        ],
       ),
     );
   }

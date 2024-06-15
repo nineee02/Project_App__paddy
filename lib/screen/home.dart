@@ -144,27 +144,6 @@ class HomeRoute extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16),
-              Container(
-                width: 316,
-                height: 135,
-                color: fill_color,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    )),
-                  ),
-                  onPressed: () {
-                    context.router.replaceNamed('/device1');
-                  },
-                  child: Text(
-                    "No devices",
-                    style: TextStyle(
-                        color: Color.fromRGBO(137, 137, 137, 1), fontSize: 16),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {},
                 child: Text(

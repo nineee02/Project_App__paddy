@@ -66,30 +66,16 @@ class _LoginRouteState extends State<LoginRoute> {
       print('Login successful');
       context.router.replaceNamed('/home');
     } else {
-      String errorMessage;
       if (response.statusCode == 401) {
-        errorMessage = 'Invalid password. Please try again.';
         setState(() {
           _isPasswordError = true;
         });
       } else if (response.statusCode == 404) {
-        errorMessage = 'User not found. Please sign up.';
         setState(() {
           _isEmailError = true;
         });
-      } else {
-        errorMessage = 'Failed to save user data';
       }
-      _showErrorSnackBar(errorMessage);
     }
-  }
-
-  void _showErrorSnackBar(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      backgroundColor: error_color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -139,18 +125,9 @@ class _LoginRouteState extends State<LoginRoute> {
                     });
                     return null;
                   },
+                  _isEmailError,
+                  'User not found. Please sign up.',
                 ),
-                if (_isEmailError)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'User not found. Please sign up.',
-                        style: TextStyle(color: error_color, fontSize: 12),
-                      ),
-                    ),
-                  ),
                 SizedBox(height: 16.0),
                 loginTextField(
                   _passwordController,
@@ -167,18 +144,9 @@ class _LoginRouteState extends State<LoginRoute> {
                     });
                     return null;
                   },
+                  _isPasswordError,
+                  'Invalid password. Please try again.',
                 ),
-                if (_isPasswordError)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Invalid password. Please try again.',
-                        style: TextStyle(color: error_color, fontSize: 12),
-                      ),
-                    ),
-                  ),
                 SizedBox(height: 8.0),
                 Align(
                   alignment: Alignment.centerRight,
@@ -264,6 +232,8 @@ class _LoginRouteState extends State<LoginRoute> {
     IconData suffixIcon,
     FocusNode focusNode,
     String? Function(String?)? validator,
+    bool isError,
+    String errorMessage,
   ) {
     return Container(
       width: 312,
@@ -297,19 +267,18 @@ class _LoginRouteState extends State<LoginRoute> {
               labelStyle: TextStyle(
                 color: focusNode.hasFocus
                     ? focusedBorder_color
-                    : (labelText == "Email or Phone number" && _isEmailError) ||
-                            (labelText == "Password" && _isPasswordError)
+                    : (labelText == "Email or Phone number" && isError) ||
+                            (labelText == "Password" && isError)
                         ? error_color
                         : unnecessary_colors,
                 fontSize: 16,
               ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color:
-                      (labelText == "Email or Phone number" && _isEmailError) ||
-                              (labelText == "Password" && _isPasswordError)
-                          ? error_color
-                          : fill_color,
+                  color: (labelText == "Email or Phone number" && isError) ||
+                          (labelText == "Password" && isError)
+                      ? error_color
+                      : fill_color,
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -328,6 +297,14 @@ class _LoginRouteState extends State<LoginRoute> {
               ),
             ),
           ),
+          if (isError)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                errorMessage,
+                style: TextStyle(color: error_color, fontSize: 12),
+              ),
+            ),
         ],
       ),
     );

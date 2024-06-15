@@ -42,7 +42,6 @@ class _ScanRouteState extends State<ScanRoute> {
     });
   }
 
-  // Function to handle opening the gallery
   void _openGallery(BuildContext context) async {
     final ImagePicker picker = ImagePicker(); // Create a new instance here
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
