@@ -3,10 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
-class HomeRoute extends StatelessWidget {
-  const HomeRoute({Key? key});
+class HomeRoute extends StatefulWidget {
+  const HomeRoute({Key? key}) : super(key: key);
+
+  @override
+  _HomeRouteState createState() => _HomeRouteState();
+}
+
+class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.detached) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('isLoggedIn');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

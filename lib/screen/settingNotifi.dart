@@ -62,7 +62,7 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
               borderRadius: BorderRadius.circular(12),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                height: 48, // Ensuring a consistent height
+                height: 48,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

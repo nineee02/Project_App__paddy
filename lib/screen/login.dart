@@ -1,9 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:paddy_rice/constants/color.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/widgets/CustomButton.dart';
+import 'package:paddy_rice/widgets/CustomTextField.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class LoginRoute extends StatefulWidget {
@@ -63,6 +67,9 @@ class _LoginRouteState extends State<LoginRoute> {
     });
 
     if (response.statusCode == 200) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+
       print('Login successful');
       context.router.replaceNamed('/home');
     } else {
@@ -110,13 +117,19 @@ class _LoginRouteState extends State<LoginRoute> {
                 Image.asset('lib/assets/icon/home.png',
                     height: 214, width: 214),
                 SizedBox(height: 24.0),
-                loginTextField(
-                  _emailController,
-                  "Email or Phone number",
-                  Icons.person_outline,
-                  Icons.clear,
-                  _emailFocusNode,
-                  (value) {
+                CustomTextField(
+                  controller: _emailController,
+                  labelText: "Email or Phone number",
+                  prefixIcon: Icons.person_outline,
+                  suffixIcon: Icons.clear,
+                  obscureText: false,
+                  focusNode: _emailFocusNode,
+                  isError: _isEmailError,
+                  errorMessage: 'User not found. Please sign up.',
+                  onSuffixIconPressed: () {
+                    _emailController.clear();
+                  },
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email or phone number';
                     }
@@ -125,17 +138,24 @@ class _LoginRouteState extends State<LoginRoute> {
                     });
                     return null;
                   },
-                  _isEmailError,
-                  'User not found. Please sign up.',
                 ),
                 SizedBox(height: 16.0),
-                loginTextField(
-                  _passwordController,
-                  "Password",
-                  Icons.lock_outline,
-                  _obscureText ? Icons.visibility : Icons.visibility_off,
-                  _passwordFocusNode,
-                  (value) {
+                CustomTextField(
+                  controller: _passwordController,
+                  labelText: "Password",
+                  prefixIcon: Icons.lock_outline,
+                  suffixIcon:
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                  obscureText: _obscureText,
+                  focusNode: _passwordFocusNode,
+                  isError: _isPasswordError,
+                  errorMessage: 'Invalid password. Please try again.',
+                  onSuffixIconPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
                     }
@@ -144,8 +164,6 @@ class _LoginRouteState extends State<LoginRoute> {
                     });
                     return null;
                   },
-                  _isPasswordError,
-                  'Invalid password. Please try again.',
                 ),
                 SizedBox(height: 8.0),
                 Align(
@@ -163,27 +181,14 @@ class _LoginRouteState extends State<LoginRoute> {
                   ),
                 ),
                 SizedBox(height: 8.0),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: buttoncolor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    minimumSize: Size(312, 48),
-                  ),
+                CustomButton(
+                  text: "Sign in",
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _sendUserData(
                           _emailController.text, _passwordController.text);
                     }
                   },
-                  child: Text(
-                    "Sign in",
-                    style: TextStyle(
-                        color: fontcolor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
-                  ),
                 ),
                 SizedBox(height: 8.0),
                 Align(
@@ -221,91 +226,6 @@ class _LoginRouteState extends State<LoginRoute> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget loginTextField(
-    TextEditingController controller,
-    String labelText,
-    IconData prefixIcon,
-    IconData suffixIcon,
-    FocusNode focusNode,
-    String? Function(String?)? validator,
-    bool isError,
-    String errorMessage,
-  ) {
-    return Container(
-      width: 312,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            focusNode: focusNode,
-            controller: controller,
-            obscureText: labelText == "Password" && _obscureText,
-            validator: validator,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: fill_color,
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              prefixIcon: Icon(prefixIcon, color: iconcolor),
-              suffixIcon: IconButton(
-                icon: Icon(suffixIcon, color: iconcolor),
-                onPressed: () {
-                  if (labelText == "Password") {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  } else {
-                    controller.clear();
-                  }
-                },
-              ),
-              labelText: labelText,
-              labelStyle: TextStyle(
-                color: focusNode.hasFocus
-                    ? focusedBorder_color
-                    : (labelText == "Email or Phone number" && isError) ||
-                            (labelText == "Password" && isError)
-                        ? error_color
-                        : unnecessary_colors,
-                fontSize: 16,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: (labelText == "Email or Phone number" && isError) ||
-                          (labelText == "Password" && isError)
-                      ? error_color
-                      : fill_color,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: focusedBorder_color, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: error_color, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: error_color, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-          if (isError)
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                errorMessage,
-                style: TextStyle(color: error_color, fontSize: 12),
-              ),
-            ),
-        ],
       ),
     );
   }

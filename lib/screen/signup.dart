@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/widgets/CustomButton.dart';
+import 'package:paddy_rice/widgets/CustomTextField.dart';
 
 @RoutePage()
 class SignupRoute extends StatefulWidget {
@@ -178,80 +180,153 @@ class _SignupRouteState extends State<SignupRoute> {
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                signupTextField(
-                  _nameController,
-                  "Name",
-                  Icons.person_outline_outlined,
-                  Icons.clear,
-                  false,
-                  _nameFocusNode,
-                  _isNameError,
-                  "Name must be at least 2 characters long",
+                CustomTextField(
+                  controller: _nameController,
+                  labelText: "Name",
+                  prefixIcon: Icons.person_outline_outlined,
+                  suffixIcon: Icons.clear,
+                  obscureText: false,
+                  focusNode: _nameFocusNode,
+                  isError: _isNameError,
+                  errorMessage: "Name must be at least 2 characters long",
+                  onSuffixIconPressed: () {
+                    _nameController.clear();
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your name';
+                    }
+                    setState(() {
+                      _isNameError = false;
+                    });
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16.0),
-                signupTextField(
-                  _surnameController,
-                  "Surname",
-                  Icons.person_outline,
-                  Icons.clear,
-                  false,
-                  _surnameFocusNode,
-                  _isSurnameError,
-                  "Surname must be at least 2 characters long",
+                CustomTextField(
+                  controller: _surnameController,
+                  labelText: "Surname",
+                  prefixIcon: Icons.person_outline,
+                  suffixIcon: Icons.clear,
+                  obscureText: false,
+                  focusNode: _surnameFocusNode,
+                  isError: _isSurnameError,
+                  errorMessage: "Surname must be at least 2 characters long",
+                  onSuffixIconPressed: () {
+                    _surnameController.clear();
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your surname';
+                    }
+                    setState(() {
+                      _isSurnameError = false;
+                    });
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16.0),
-                signupTextField(
-                  _phoneController,
-                  "Phone number",
-                  Icons.phone_outlined,
-                  Icons.clear,
-                  false,
-                  _phoneFocusNode,
-                  _isPhoneError,
-                  "Phone number must be 10 digits",
+                CustomTextField(
+                  controller: _phoneController,
+                  labelText: "Phone number",
+                  prefixIcon: Icons.phone_outlined,
+                  suffixIcon: Icons.clear,
+                  obscureText: false,
+                  focusNode: _phoneFocusNode,
+                  isError: _isPhoneError,
+                  errorMessage: "Phone number must be 10 digits",
+                  onSuffixIconPressed: () {
+                    _phoneController.clear();
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    setState(() {
+                      _isPhoneError = false;
+                    });
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16.0),
-                signupTextField(
-                  _emailController,
-                  "Email",
-                  Icons.email_outlined,
-                  Icons.clear,
-                  false,
-                  _emailFocusNode,
-                  _isEmailError,
-                  "Invalid email format",
+                CustomTextField(
+                  controller: _emailController,
+                  labelText: "Email",
+                  prefixIcon: Icons.email_outlined,
+                  suffixIcon: Icons.clear,
+                  obscureText: false,
+                  focusNode: _emailFocusNode,
+                  isError: _isEmailError,
+                  errorMessage: "Invalid email format",
+                  onSuffixIconPressed: () {
+                    _emailController.clear();
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    setState(() {
+                      _isEmailError = false;
+                    });
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16.0),
-                signupTextField(
-                  _passwordController,
-                  "Password",
-                  Icons.lock_outline,
-                  _obscureText ? Icons.visibility : Icons.visibility_off,
-                  true,
-                  _passwordFocusNode,
-                  _isPasswordError,
-                  "Passwords do not match",
+                CustomTextField(
+                  controller: _passwordController,
+                  labelText: "Password",
+                  prefixIcon: Icons.lock_outline,
+                  suffixIcon:
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                  obscureText: _obscureText,
+                  focusNode: _passwordFocusNode,
+                  isError: _isPasswordError,
+                  errorMessage: "Passwords do not match",
+                  onSuffixIconPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    setState(() {
+                      _isPasswordError = false;
+                    });
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16.0),
-                signupTextField(
-                  _confirmPasswordController,
-                  "Confirm Password",
-                  Icons.lock_outline,
-                  _obscureText ? Icons.visibility : Icons.visibility_off,
-                  true,
-                  _confirmPasswordFocusNode,
-                  _isConfirmPasswordError,
-                  "Passwords do not match",
+                CustomTextField(
+                  controller: _confirmPasswordController,
+                  labelText: "Confirm Password",
+                  prefixIcon: Icons.lock_outline,
+                  suffixIcon:
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                  obscureText: _obscureText,
+                  focusNode: _confirmPasswordFocusNode,
+                  isError: _isConfirmPasswordError,
+                  errorMessage: "Passwords do not match",
+                  onSuffixIconPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    setState(() {
+                      _isConfirmPasswordError = false;
+                    });
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16.0),
                 Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: buttoncolor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      minimumSize: Size(312, 48),
-                    ),
+                  child: CustomButton(
+                    text: "Sign up",
                     onPressed: () {
                       if (_validateFields()) {
                         _signupUser(
@@ -263,112 +338,12 @@ class _SignupRouteState extends State<SignupRoute> {
                         );
                       }
                     },
-                    child: Text(
-                      "Sign up",
-                      style: TextStyle(
-                          color: fontcolor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600),
-                    ),
                   ),
                 )
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget signupTextField(
-    TextEditingController controller,
-    String labelText,
-    IconData prefixIcon,
-    IconData suffixIcon,
-    bool obscure,
-    FocusNode focusNode,
-    bool isError,
-    String errorMessage,
-  ) {
-    return Container(
-      width: 312,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            focusNode: focusNode,
-            controller: controller,
-            obscureText: (labelText == "Password" && _obscureText) ||
-                (labelText == "Confirm Password" && _obscureText && obscure),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: fill_color,
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-              prefixIcon: Icon(
-                prefixIcon,
-                color: iconcolor,
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  suffixIcon,
-                  color: iconcolor,
-                ),
-                onPressed: () {
-                  if (labelText == "Password" ||
-                      labelText == "Confirm Password") {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  } else {
-                    controller.clear();
-                  }
-                },
-              ),
-              labelText: labelText,
-              labelStyle: TextStyle(
-                  color: focusNode.hasFocus
-                      ? focusedBorder_color
-                      : isError
-                          ? error_color
-                          : unnecessary_colors,
-                  fontSize: 16),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: isError ? error_color : fill_color,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: focusedBorder_color, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: error_color, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: error_color, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return '$labelText is required';
-              }
-              return null;
-            },
-          ),
-          if (isError)
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                errorMessage,
-                style: TextStyle(color: error_color, fontSize: 12),
-              ),
-            ),
-        ],
       ),
     );
   }

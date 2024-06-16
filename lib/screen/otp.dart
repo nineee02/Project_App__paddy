@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -171,25 +172,11 @@ class OtpRoute extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: buttoncolor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  minimumSize: Size(312, 48),
-                ),
+              child: CustomButton(
+                text: "VERIFY AND PROCEED",
                 onPressed: () async {
                   await verifyOtp(context, _pinController.text);
                 },
-                child: Text(
-                  "VERIFY AND PROCEED",
-                  style: TextStyle(
-                    color: fontcolor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ),
             ),
           ],

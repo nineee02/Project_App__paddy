@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -133,27 +134,11 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
                     Container(
                       width: 312,
                       height: 48,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(buttoncolor),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        ),
+                      child: CustomButton(
+                        text: "Next",
                         onPressed: () {
                           context.router.replaceNamed('/home');
                         },
-                        child: Text(
-                          "Next",
-                          style: TextStyle(
-                            color: fontcolor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
                       ),
                     ),
                   ],

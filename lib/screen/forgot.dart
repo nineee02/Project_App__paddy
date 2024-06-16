@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:paddy_rice/router/routes.gr.dart';
+import 'package:paddy_rice/widgets/CustomButton.dart';
 
 final List<String> select_Value = [
   'Phone number',
@@ -93,9 +94,9 @@ class _ForgotRouteState extends State<ForgotRoute> {
     );
 
     if (response.statusCode == 200) {
-      return true; // User exists
+      return true;
     } else {
-      return false; // User does not exist
+      return false;
     }
   }
 
@@ -226,8 +227,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
                             width: 312,
                             decoration: BoxDecoration(
                               color: fill_color,
-                              borderRadius: BorderRadius.circular(
-                                  8), // Adjusted border radius
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           iconStyleData: IconStyleData(
@@ -278,32 +278,28 @@ class _ForgotRouteState extends State<ForgotRoute> {
                               width: 1,
                               color: _inputBorderColor,
                             ),
-                            borderRadius: BorderRadius.circular(
-                                8), // Adjusted border radius
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               width: 1,
                               color: focusedBorder_color,
                             ),
-                            borderRadius: BorderRadius.circular(
-                                8), // Adjusted border radius
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: error_color,
                               width: 1,
                             ),
-                            borderRadius: BorderRadius.circular(
-                                8), // Adjusted border radius
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: error_color,
                               width: 1,
                             ),
-                            borderRadius: BorderRadius.circular(
-                                8), // Adjusted border radius
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                         keyboardType: selectedValue == 'Phone number'
@@ -332,16 +328,8 @@ class _ForgotRouteState extends State<ForgotRoute> {
                     Container(
                       width: 312,
                       height: 48,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(buttoncolor),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
+                      child: CustomButton(
+                        text: "Next",
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             final inputType = selectedValue == 'Phone number'
@@ -359,14 +347,6 @@ class _ForgotRouteState extends State<ForgotRoute> {
                             _showErrorSnackBar('Please correct the errors.');
                           }
                         },
-                        child: Text(
-                          "Next",
-                          style: TextStyle(
-                            color: fontcolor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
                       ),
                     ),
                   ],
