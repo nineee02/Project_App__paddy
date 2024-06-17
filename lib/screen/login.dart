@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
 
 import 'package:http/http.dart' as http;
@@ -49,7 +50,7 @@ class _LoginRouteState extends State<LoginRoute> {
   }
 
   Future<void> _sendUserData(String emailOrPhone, String password) async {
-    final url = Uri.parse('http://10.0.2.2:3000/login');
+    final url = Uri.parse('${ApiConstants.baseUrl}/login');
     final response = await http.post(
       url,
       headers: <String, String>{
@@ -100,18 +101,20 @@ class _LoginRouteState extends State<LoginRoute> {
                 Text(
                   "Welcome",
                   style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 36,
-                      fontWeight: FontWeight.w500),
+                    color: fontcolor,
+                    fontSize: 36,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 SizedBox(height: 20.0),
                 Text(
                   "Paddy Rice Drying Silo \n Control Notification",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400),
+                    color: fontcolor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
                 SizedBox(height: 24.0),
                 Image.asset('lib/assets/icon/home.png',

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:paddy_rice/constants/api.dart';
 import 'dart:convert';
 
 import 'package:paddy_rice/constants/color.dart';
@@ -40,6 +41,35 @@ class _SignupRouteState extends State<SignupRoute> {
   FocusNode _confirmPasswordFocusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+
+    _nameFocusNode.addListener(() {
+      setState(() {});
+    });
+
+    _surnameFocusNode.addListener(() {
+      setState(() {});
+    });
+
+    _phoneFocusNode.addListener(() {
+      setState(() {});
+    });
+
+    _emailFocusNode.addListener(() {
+      setState(() {});
+    });
+
+    _passwordFocusNode.addListener(() {
+      setState(() {});
+    });
+
+    _confirmPasswordFocusNode.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
   void dispose() {
     _nameFocusNode.dispose();
     _surnameFocusNode.dispose();
@@ -52,7 +82,7 @@ class _SignupRouteState extends State<SignupRoute> {
 
   Future<void> _signupUser(String name, String surname, String phone,
       String email, String password) async {
-    final url = Uri.parse('http://10.0.2.2:3000/signup');
+    final url = Uri.parse('${ApiConstants.baseUrl}/signup');
     final response = await http.post(
       url,
       headers: <String, String>{
@@ -146,11 +176,18 @@ class _SignupRouteState extends State<SignupRoute> {
       appBar: AppBar(
         backgroundColor: maincolor,
         leading: IconButton(
-          onPressed: () {
-            context.router.replaceNamed('/login');
-          },
+          onPressed: () => context.router.replaceNamed('/login'),
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
+        title: Text(
+          "Create Account",
+          style: TextStyle(
+            color: fontcolor,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -161,15 +198,6 @@ class _SignupRouteState extends State<SignupRoute> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 16.0),
-                Center(
-                  child: Text(
-                    "Create Account",
-                    style: TextStyle(
-                        color: fontcolor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
                 Center(
                   child: Text(
                     "Create a new account",

@@ -52,6 +52,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: "Flutter Workshop",
+      theme: ThemeData(fontFamily: 'opensans'),
       debugShowCheckedModeBanner: false,
       locale: _locale,
       // hook up router to MaterialApp

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
@@ -88,7 +89,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
 
   Future<bool> checkUserExists(String type, String value) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/check_user_exists'),
+      Uri.parse('${ApiConstants.baseUrl}/check_user_exists'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'type': type, 'value': value}),
     );
@@ -109,7 +110,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
     }
 
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/send_otp'),
+      Uri.parse('${ApiConstants.baseUrl}/send_otp'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'type': type, 'value': value}),
     );

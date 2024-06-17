@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -19,7 +20,7 @@ class OtpRoute extends StatelessWidget {
 
   Future<void> resendOtp(BuildContext context) async {
     final String apiUrl =
-        'http://10.0.2.2:3000/resend_otp'; // Adjust URL as needed
+        '${ApiConstants.baseUrl}/resend_otp'; // Adjust URL as needed
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -49,7 +50,7 @@ class OtpRoute extends StatelessWidget {
 
   Future<void> verifyOtp(BuildContext context, String otp) async {
     final String apiUrl =
-        'http://10.0.2.2:3000/verify_otp'; // Adjust URL as needed
+        '${ApiConstants.baseUrl}/verify_otp'; // Adjust URL as needed
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
