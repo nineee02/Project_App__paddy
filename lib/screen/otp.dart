@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:paddy_rice/constants/api.dart';
+// import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
 
 @RoutePage()
 class OtpRoute extends StatelessWidget {
@@ -18,66 +18,66 @@ class OtpRoute extends StatelessWidget {
     required this.inputValue,
   }) : super(key: key);
 
-  Future<void> resendOtp(BuildContext context) async {
-    final String apiUrl =
-        '${ApiConstants.baseUrl}/resend_otp'; // Adjust URL as needed
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'contact': inputValue, 'type': inputType}),
-      );
+  // Future<void> resendOtp(BuildContext context) async {
+  //   final String apiUrl =
+  //       '${ApiConstants.baseUrl}/resend_otp'; // Adjust URL as needed
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(apiUrl),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode({'contact': inputValue, 'type': inputType}),
+  //     );
 
-      if (response.statusCode == 200) {
-        print("OTP resent successfully.");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('OTP resent successfully.')),
-        );
-      } else {
-        print("Failed to resend OTP. Status code: ${response.statusCode}");
-        print("Response body: ${response.body}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to resend OTP.')),
-        );
-      }
-    } catch (e) {
-      print("Error occurred: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error occurred while resending OTP.')),
-      );
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       print("OTP resent successfully.");
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('OTP resent successfully.')),
+  //       );
+  //     } else {
+  //       print("Failed to resend OTP. Status code: ${response.statusCode}");
+  //       print("Response body: ${response.body}");
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Failed to resend OTP.')),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     print("Error occurred: $e");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Error occurred while resending OTP.')),
+  //     );
+  //   }
+  // }
 
-  Future<void> verifyOtp(BuildContext context, String otp) async {
-    final String apiUrl =
-        '${ApiConstants.baseUrl}/verify_otp'; // Adjust URL as needed
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json'},
-        body:
-            jsonEncode({'otp': otp, 'contact': inputValue, 'type': inputType}),
-      );
+  // Future<void> verifyOtp(BuildContext context, String otp) async {
+  //   final String apiUrl =
+  //       '${ApiConstants.baseUrl}/verify_otp'; // Adjust URL as needed
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(apiUrl),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body:
+  //           jsonEncode({'otp': otp, 'contact': inputValue, 'type': inputType}),
+  //     );
 
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('OTP verified successfully.')),
-        );
-        context.router.replaceNamed('/change_password');
-      } else {
-        print("Failed to verify OTP. Status code: ${response.statusCode}");
-        print("Response body: ${response.body}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to verify OTP.')),
-        );
-      }
-    } catch (e) {
-      print("Error occurred: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error occurred while verifying OTP.')),
-      );
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('OTP verified successfully.')),
+  //       );
+  //       context.router.replaceNamed('/change_password');
+  //     } else {
+  //       print("Failed to verify OTP. Status code: ${response.statusCode}");
+  //       print("Response body: ${response.body}");
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Failed to verify OTP.')),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     print("Error occurred: $e");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Error occurred while verifying OTP.')),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +160,12 @@ class OtpRoute extends StatelessWidget {
             Center(
               child: TextButton(
                 onPressed: () async {
-                  await resendOtp(context);
+                  // await resendOtp(context);
+                  print('Resend OTP button pressed');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text('OTP resent successfully (simulated).')),
+                  );
                 },
                 child: Text(
                   "Didn't receive the OTP? Resend code",
@@ -176,7 +181,14 @@ class OtpRoute extends StatelessWidget {
               child: CustomButton(
                 text: "VERIFY AND PROCEED",
                 onPressed: () async {
-                  await verifyOtp(context, _pinController.text);
+                  // await verifyOtp(context, _pinController.text);
+                  print('OTP verification button pressed');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content:
+                            Text('OTP verified successfully (simulated).')),
+                  );
+                  context.router.replaceNamed('/change_password');
                 },
               ),
             ),

@@ -143,7 +143,6 @@ class _SwitchModState extends State<SwitchMod> {
     );
 
     return Switch(
-      // This bool value toggles the switch.
       value: light,
       overlayColor: overlayColor,
       trackColor: trackColor,

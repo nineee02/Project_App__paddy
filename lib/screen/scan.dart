@@ -43,10 +43,9 @@ class _ScanRouteState extends State<ScanRoute> {
   }
 
   void _openGallery(BuildContext context) async {
-    final ImagePicker picker = ImagePicker(); // Create a new instance here
+    final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      // Optionally handle the selected image file
       print('Selected image path: ${image.path}');
     }
   }
@@ -66,10 +65,11 @@ class _ScanRouteState extends State<ScanRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: maincolor,
       body: Stack(
         children: [
           Container(
-            color: maincolor, // Change this color to match your background
+            color: maincolor,
             child: QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
@@ -87,7 +87,7 @@ class _ScanRouteState extends State<ScanRoute> {
             left: 0,
             right: 0,
             child: AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: maincolor,
               elevation: 0,
               leading: IconButton(
                 onPressed: () => context.router.replaceNamed('/home'),
@@ -96,9 +96,10 @@ class _ScanRouteState extends State<ScanRoute> {
               title: Text(
                 "Scan",
                 style: TextStyle(
-                    color: fontcolor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500),
+                  color: fontcolor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
@@ -140,9 +141,11 @@ class _ScanRouteState extends State<ScanRoute> {
                 ),
                 FloatingActionButton(
                   onPressed: _toggleTorch,
-                  child: Icon(_torchIsOn
-                      ? Icons.flashlight_off_outlined
-                      : Icons.flashlight_on_outlined),
+                  child: Icon(
+                    _torchIsOn
+                        ? Icons.flashlight_off_outlined
+                        : Icons.flashlight_on_outlined,
+                  ),
                   backgroundColor: buttoncolor,
                 ),
               ],

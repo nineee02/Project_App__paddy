@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:paddy_rice/constants/api.dart';
+
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile {
   final String name;
@@ -17,31 +19,50 @@ class UserProfile {
     required this.email,
     required this.phone,
   });
-
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
-      name: json['name'],
-      surname: json['surname'],
-      email: json['email'],
-      phone: json['phone'],
-    );
-  }
 }
 
-class UserProfileService {
-  static Future<UserProfile> fetchUserProfile() async {
-    final response =
-        await http.get(Uri.parse('${ApiConstants.baseUrl}/profile'));
+Future<UserProfile> fetchUserProfile() async {
+  await Future.delayed(Duration(seconds: 2));
+  return UserProfile(
+    name: 'John',
+    surname: 'Doe',
+    email: 'john.doe@example.com',
+    phone: '1234567890',
+  );
 
-    if (response.statusCode == 200) {
-      return UserProfile.fromJson(jsonDecode(response.body));
-    } else {
-      print('Failed to load user profile: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      throw Exception('Failed to load user profile');
-    }
-  }
+  // factory UserProfile.fromJson(Map<String, dynamic> json) {
+  //   return UserProfile(
+  //     name: json['name'],
+  //     surname: json['surname'],
+  //     email: json['email'],
+  //     phone: json['phone'],
+  //   );
+  // }
 }
+
+// class UserProfileService {
+//   static Future<UserProfile> fetchUserProfile() async {
+//     final prefs = await SharedPreferences.getInstance();
+//     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+//     if (!isLoggedIn) {
+//       throw Exception('User is not logged in');
+//     }
+
+//     final response =
+//         await http.get(Uri.parse('${ApiConstants.baseUrl}/profile'), headers: {
+//       'Content-Type': 'application/json; charset=UTF-8',
+//     });
+
+//     if (response.statusCode == 200) {
+//       return UserProfile.fromJson(jsonDecode(response.body));
+//     } else {
+//       print('Failed to load user profile: ${response.statusCode}');
+//       print('Response body: ${response.body}');
+//       throw Exception('Failed to load user profile');
+//     }
+//   }
+// }
 
 @RoutePage()
 class ProfileRoute extends StatelessWidget {
@@ -83,7 +104,7 @@ class ProfileRoute extends StatelessWidget {
         },
       ),
       body: FutureBuilder<UserProfile>(
-        future: UserProfileService.fetchUserProfile(),
+        future: fetchUserProfile(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

@@ -1,7 +1,8 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+// import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 
@@ -22,7 +23,54 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
   bool _isConfirmPasswordObscured = true;
   String? _errorMessage;
 
-  void _changePassword() async {
+  // void _changePassword() async {
+  //   final String newPassword = _newPasswordController.text;
+  //   final String confirmPassword = _confirmPasswordController.text;
+
+  //   if (newPassword.isEmpty || confirmPassword.isEmpty) {
+  //     setState(() {
+  //       _errorMessage = 'Please fill in all fields';
+  //     });
+  //     return;
+  //   }
+
+  //   if (newPassword != confirmPassword) {
+  //     setState(() {
+  //       _errorMessage = 'Passwords do not match';
+  //     });
+  //     return;
+  //   }
+
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse('${ApiConstants.baseUrl}/change_password'),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Cookie': 'YOUR_SESSION_COOKIE_HERE',
+  //       },
+  //       body: jsonEncode({
+  //         'newPassword': newPassword,
+  //         'confirmPassword': confirmPassword,
+  //       }),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       setState(() {
+  //         _errorMessage = null;
+  //       });
+  //       context.router.replaceNamed('/login');
+  //     } else {
+  //       setState(() {
+  //         _errorMessage = response.body;
+  //       });
+  //     }
+  //   } catch (error) {
+  //     setState(() {
+  //       _errorMessage = 'An error occurred: $error';
+  //     });
+  //   }
+  // }
+  void _validateAndProceed() {
     final String newPassword = _newPasswordController.text;
     final String confirmPassword = _confirmPasswordController.text;
 
@@ -40,34 +88,16 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
       return;
     }
 
-    try {
-      final response = await http.post(
-        Uri.parse('http://10.0.2.2:3000/change_password'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': 'YOUR_SESSION_COOKIE_HERE', // แทนที่ด้วยคุกกี้เซสชันจริง
-        },
-        body: jsonEncode({
-          'newPassword': newPassword,
-          'confirmPassword': confirmPassword,
-        }),
-      );
+    setState(() {
+      _errorMessage = null;
+    });
 
-      if (response.statusCode == 200) {
-        setState(() {
-          _errorMessage = null;
-        });
-        context.router.replaceNamed('/login');
-      } else {
-        setState(() {
-          _errorMessage = response.body;
-        });
-      }
-    } catch (error) {
-      setState(() {
-        _errorMessage = 'An error occurred: $error';
-      });
-    }
+    // Replace with your desired action
+    print('Password reset successful (simulated).');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Password reset successful (simulated).')),
+    );
+    context.router.replaceNamed('/login');
   }
 
   @override
@@ -176,7 +206,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
               height: 48,
               child: CustomButton(
                 text: "Reset",
-                onPressed: _changePassword,
+                onPressed: _validateAndProceed,
               ),
             ),
             if (_errorMessage != null)

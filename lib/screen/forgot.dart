@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:paddy_rice/constants/api.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
 
 import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
@@ -87,45 +87,45 @@ class _ForgotRouteState extends State<ForgotRoute> {
     );
   }
 
-  Future<bool> checkUserExists(String type, String value) async {
-    final response = await http.post(
-      Uri.parse('${ApiConstants.baseUrl}/check_user_exists'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'type': type, 'value': value}),
-    );
+  // Future<bool> checkUserExists(String type, String value) async {
+  //   final response = await http.post(
+  //     Uri.parse('${ApiConstants.baseUrl}/check_user_exists'),
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: jsonEncode({'type': type, 'value': value}),
+  //   );
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
-  Future<void> sendOtp(String type, String value) async {
-    final userExists = await checkUserExists(type, value);
+  // Future<void> sendOtp(String type, String value) async {
+  //   final userExists = await checkUserExists(type, value);
 
-    if (!userExists) {
-      _showUserNotFoundDialog();
-      return;
-    }
+  //   if (!userExists) {
+  //     _showUserNotFoundDialog();
+  //     return;
+  //   }
 
-    final response = await http.post(
-      Uri.parse('${ApiConstants.baseUrl}/send_otp'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'type': type, 'value': value}),
-    );
+  //   final response = await http.post(
+  //     Uri.parse('${ApiConstants.baseUrl}/send_otp'),
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: jsonEncode({'type': type, 'value': value}),
+  //   );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print('OTP sent: ${data['otp']}');
-      context.router.push(OtpRoute(
-        inputType: type,
-        inputValue: value,
-      ));
-    } else {
-      _showErrorSnackBar('Failed to send OTP');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+  //     print('OTP sent: ${data['otp']}');
+  //     context.router.push(OtpRoute(
+  //       inputType: type,
+  //       inputValue: value,
+  //     ));
+  //   } else {
+  //     _showErrorSnackBar('Failed to send OTP');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -337,10 +337,16 @@ class _ForgotRouteState extends State<ForgotRoute> {
                                 ? 'phone'
                                 : 'email';
                             final inputValue = _controller.text;
+                            print(
+                                'Send OTP for $inputType: $inputValue (simulated).');
+                            context.router.push(OtpRoute(
+                              inputType: inputType,
+                              inputValue: inputValue,
+                            ));
 
-                            sendOtp(inputType, inputValue).catchError((error) {
-                              _showErrorSnackBar('Failed to send OTP');
-                            });
+                            // sendOtp(inputType, inputValue).catchError((error) {
+                            //   _showErrorSnackBar('Failed to send OTP');
+                            // });
                           } else {
                             setState(() {
                               _inputBorderColor = error_color;

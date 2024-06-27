@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:paddy_rice/constants/api.dart';
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'package:paddy_rice/constants/api.dart';
+// import 'dart:convert';
 
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
@@ -80,70 +80,70 @@ class _SignupRouteState extends State<SignupRoute> {
     super.dispose();
   }
 
-  Future<void> _signupUser(String name, String surname, String phone,
-      String email, String password) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}/signup');
-    final response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'name': name,
-        'surname': surname,
-        'phone': phone,
-        'email': email,
-        'password': password,
-      }),
-    );
+  // Future<void> _signupUser(String name, String surname, String phone,
+  //     String email, String password) async {
+  //   final url = Uri.parse('${ApiConstants.baseUrl}/signup');
+  //   final response = await http.post(
+  //     url,
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode(<String, String>{
+  //       'name': name,
+  //       'surname': surname,
+  //       'phone': phone,
+  //       'email': email,
+  //       'password': password,
+  //     }),
+  //   );
 
-    if (response.statusCode == 200) {
-      print('Registration successful');
-      _showSuccessDialog('Registration successful. Please log in.');
-    } else if (response.statusCode == 400) {
-      print('User already exists');
-      _showErrorDialog('User already exists. Please log in.');
-    } else {
-      throw Exception('Failed to register user');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     print('Registration successful');
+  //     _showSuccessDialog('Registration successful. Please log in.');
+  //   } else if (response.statusCode == 400) {
+  //     print('User already exists');
+  //     _showErrorDialog('User already exists. Please log in.');
+  //   } else {
+  //     throw Exception('Failed to register user');
+  //   }
+  // }
 
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Error'),
-        content: Text(message),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Okay'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-          )
-        ],
-      ),
-    );
-  }
+  // void _showErrorDialog(String message) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (ctx) => AlertDialog(
+  //       title: Text('Error'),
+  //       content: Text(message),
+  //       actions: <Widget>[
+  //         TextButton(
+  //           child: Text('Okay'),
+  //           onPressed: () {
+  //             Navigator.of(ctx).pop();
+  //           },
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  void _showSuccessDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Success'),
-        content: Text(message),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Okay'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              context.router.replaceNamed('/login');
-            },
-          )
-        ],
-      ),
-    );
-  }
+  // void _showSuccessDialog(String message) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (ctx) => AlertDialog(
+  //       title: Text('Success'),
+  //       content: Text(message),
+  //       actions: <Widget>[
+  //         TextButton(
+  //           child: Text('Okay'),
+  //           onPressed: () {
+  //             Navigator.of(ctx).pop();
+  //             context.router.replaceNamed('/login');
+  //           },
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   bool _validateFields() {
     setState(() {
@@ -357,13 +357,15 @@ class _SignupRouteState extends State<SignupRoute> {
                     text: "Sign up",
                     onPressed: () {
                       if (_validateFields()) {
-                        _signupUser(
-                          _nameController.text,
-                          _surnameController.text,
-                          _phoneController.text,
-                          _emailController.text,
-                          _passwordController.text,
-                        );
+                        // _signupUser(
+                        //   _nameController.text,
+                        //   _surnameController.text,
+                        //   _phoneController.text,
+                        //   _emailController.text,
+                        //   _passwordController.text,
+                        // );
+                        context.router.replaceNamed('/login');
+                        print('Signup button pressed');
                       }
                     },
                   ),
