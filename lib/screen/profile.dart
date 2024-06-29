@@ -22,7 +22,7 @@ class UserProfile {
 }
 
 Future<UserProfile> fetchUserProfile() async {
-  await Future.delayed(Duration(seconds: 2));
+  // await Future.delayed(Duration(seconds: 1));
   return UserProfile(
     name: 'John',
     surname: 'Doe',
@@ -156,7 +156,7 @@ class ProfileRoute extends StatelessWidget {
                                           color: fontcolor),
                                     ),
                                     Text(
-                                      "Senior Designer",
+                                      "${user.email}",
                                       style: TextStyle(
                                           fontSize: 16,
                                           color: unnecessary_colors),

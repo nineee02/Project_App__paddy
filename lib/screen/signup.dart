@@ -180,7 +180,7 @@ class _SignupRouteState extends State<SignupRoute> {
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
         title: Text(
-          "Create Account",
+          "Create New Account",
           style: TextStyle(
             color: fontcolor,
             fontSize: 20,
@@ -197,16 +197,16 @@ class _SignupRouteState extends State<SignupRoute> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 16.0),
-                Center(
-                  child: Text(
-                    "Create a new account",
-                    style: TextStyle(
-                        color: fontcolor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ),
+                // const SizedBox(height: 16.0),
+                // Center(
+                //   child: Text(
+                //     "Create a new account",
+                //     style: TextStyle(
+                //         color: fontcolor,
+                //         fontSize: 16,
+                //         fontWeight: FontWeight.w400),
+                //   ),
+                // ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   controller: _nameController,

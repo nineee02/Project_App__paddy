@@ -1,7 +1,9 @@
 // import 'dart:convert';
 // import 'package:http/http.dart' as http;
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 // import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
@@ -133,80 +135,89 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
               textAlign: TextAlign.center,
             ),
             SizedBox(
-              width: 312,
-              height: 48,
-              child: TextFormField(
-                controller: _newPasswordController,
-                obscureText: _isNewPasswordObscured,
-                decoration: InputDecoration(
-                  labelText: 'New Password',
-                  labelStyle: TextStyle(color: fontcolor),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: iconcolor),
-                  ),
-                  fillColor: fill_color,
-                  filled: true,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isNewPasswordObscured
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: iconcolor,
+              height: 8,
+            ),
+            Center(
+              child: SizedBox(
+                width: 312,
+                height: 48,
+                child: TextFormField(
+                  controller: _newPasswordController,
+                  obscureText: _isNewPasswordObscured,
+                  decoration: InputDecoration(
+                    labelText: 'New Password',
+                    labelStyle: TextStyle(color: fontcolor),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _isNewPasswordObscured = !_isNewPasswordObscured;
-                      });
-                    },
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: iconcolor),
+                    ),
+                    fillColor: fill_color,
+                    filled: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isNewPasswordObscured
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: iconcolor,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isNewPasswordObscured = !_isNewPasswordObscured;
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
             SizedBox(height: 16),
-            SizedBox(
-              width: 312,
-              height: 48,
-              child: TextFormField(
-                controller: _confirmPasswordController,
-                obscureText: _isConfirmPasswordObscured,
-                decoration: InputDecoration(
-                  labelText: 'Confirm Password',
-                  labelStyle: TextStyle(color: fontcolor),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: iconcolor),
-                  ),
-                  fillColor: fill_color,
-                  filled: true,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isConfirmPasswordObscured
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: iconcolor,
+            Center(
+              child: SizedBox(
+                width: 312,
+                height: 48,
+                child: TextFormField(
+                  controller: _confirmPasswordController,
+                  obscureText: _isConfirmPasswordObscured,
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                    labelStyle: TextStyle(color: fontcolor),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _isConfirmPasswordObscured =
-                            !_isConfirmPasswordObscured;
-                      });
-                    },
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: iconcolor),
+                    ),
+                    fillColor: fill_color,
+                    filled: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isConfirmPasswordObscured
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: iconcolor,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isConfirmPasswordObscured =
+                              !_isConfirmPasswordObscured;
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
             SizedBox(height: 16),
-            SizedBox(
-              width: 312,
-              height: 48,
-              child: CustomButton(
-                text: "Reset",
-                onPressed: _validateAndProceed,
+            Center(
+              child: SizedBox(
+                width: 312,
+                height: 48,
+                child: CustomButton(
+                  text: "Reset",
+                  onPressed: _validateAndProceed,
+                ),
               ),
             ),
             if (_errorMessage != null)

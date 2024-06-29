@@ -4,6 +4,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:icapps_torch_compat/icapps_torch_compat.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 @RoutePage()
 class ScanRoute extends StatefulWidget {
@@ -22,7 +23,18 @@ class _ScanRouteState extends State<ScanRoute> {
   @override
   void initState() {
     super.initState();
-    // Optionally start the camera here if needed
+    _requestCameraPermission();
+  }
+
+  Future<void> _requestCameraPermission() async {
+    final status = await Permission.camera.request();
+    if (status != PermissionStatus.granted) {
+      // Handle the case where the user denied the permission
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Camera permission is required to scan QR codes')),
+      );
+    }
   }
 
   @override
@@ -50,8 +62,7 @@ class _ScanRouteState extends State<ScanRoute> {
     }
   }
 
-  // Function to toggle the torch
-  void _toggleTorch() async {
+  Future<void> _toggleTorch() async {
     if (_torchIsOn) {
       await TorchCompat.turnOff();
     } else {
@@ -79,6 +90,7 @@ class _ScanRouteState extends State<ScanRoute> {
                 borderLength: 30,
                 borderWidth: 10,
                 cutOutSize: 300,
+                overlayColor: maincolor.withOpacity(0.5),
               ),
             ),
           ),
@@ -87,7 +99,7 @@ class _ScanRouteState extends State<ScanRoute> {
             left: 0,
             right: 0,
             child: AppBar(
-              backgroundColor: maincolor,
+              backgroundColor: maincolor.withOpacity(0.3),
               elevation: 0,
               leading: IconButton(
                 onPressed: () => context.router.replaceNamed('/home'),
@@ -105,26 +117,29 @@ class _ScanRouteState extends State<ScanRoute> {
           ),
           Align(
             alignment: Alignment.center,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    context.router.replaceNamed('/addDevice');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: fontcolor,
-                    backgroundColor: buttoncolor,
-                  ),
-                  child: Text(
-                    "No QR code available",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 376.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      context.router.replaceNamed('/addDevice');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: fontcolor,
+                      backgroundColor: buttoncolor,
+                    ),
+                    child: Text(
+                      "No QR code available",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Positioned(
