@@ -132,10 +132,11 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
           children: [
             Text(
               'Your New Password Must Be Different \n from Previously Used Password',
+              style: TextStyle(color: fontcolor, fontSize: 14.0),
               textAlign: TextAlign.center,
             ),
             SizedBox(
-              height: 8,
+              height: 16.0,
             ),
             Center(
               child: SizedBox(
@@ -211,13 +212,9 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
             ),
             SizedBox(height: 16),
             Center(
-              child: SizedBox(
-                width: 312,
-                height: 48,
-                child: CustomButton(
-                  text: "Reset",
-                  onPressed: _validateAndProceed,
-                ),
+              child: CustomButton(
+                text: "Reset",
+                onPressed: _validateAndProceed,
               ),
             ),
             if (_errorMessage != null)

@@ -84,6 +84,21 @@ class OtpRoute extends StatelessWidget {
     TextEditingController _pinController = TextEditingController();
     String contactInfo = inputType == 'phone' ? inputValue : inputValue;
 
+    void _verifyOtp() {
+      if (_pinController.text.length == 4) {
+        // Replace with actual verification logic
+        print('OTP verification button pressed');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('OTP verified successfully (simulated).')),
+        );
+        context.router.replaceNamed('/change_password');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please enter the complete OTP.')),
+        );
+      }
+    }
+
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
@@ -93,7 +108,7 @@ class OtpRoute extends StatelessWidget {
           onPressed: () => context.router.replaceNamed('/forgot'),
         ),
         title: Text(
-          "OTP Verification",
+          "Verification code",
           style: TextStyle(
             color: fontcolor,
             fontSize: 20,
@@ -106,57 +121,51 @@ class OtpRoute extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Align content to start
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Icon(
-                inputType == 'phone' ? Icons.phone : Icons.email,
-                size: 100,
-                color: iconcolor,
-              ),
-            ),
             SizedBox(height: 20),
             Center(
               child: Text(
-                "Please enter the 6 digit verification code sent to $contactInfo",
+                "We have sent the code verification \nto $contactInfo.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: fontcolor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                    color: fontcolor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
               ),
             ),
             SizedBox(height: 20),
-            PinCodeTextField(
-              appContext: context,
-              length: 6,
-              controller: _pinController,
-              pinTheme: PinTheme(
-                shape: PinCodeFieldShape.box,
-                borderRadius: BorderRadius.circular(5),
-                fieldHeight: 50,
-                fieldWidth: 40,
-                activeColor: Colors.white,
-                selectedColor: iconcolor,
-                inactiveColor: Colors.grey,
-                activeFillColor: fill_color,
-                selectedFillColor: fill_color,
-                inactiveFillColor: fill_color,
-              ),
-              keyboardType: TextInputType.number,
-              boxShadows: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  color: Colors.black12,
-                  blurRadius: 10,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 72.0),
+              child: PinCodeTextField(
+                appContext: context,
+                length: 4,
+                controller: _pinController,
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(5),
+                  fieldHeight: 50,
+                  fieldWidth: 40,
+                  activeColor: Colors.white,
+                  selectedColor: iconcolor,
+                  inactiveColor: Colors.grey,
+                  activeFillColor: fill_color,
+                  selectedFillColor: fill_color,
+                  inactiveFillColor: fill_color,
                 ),
-              ],
-              onChanged: (value) {},
-              enableActiveFill: true,
+                keyboardType: TextInputType.number,
+                boxShadows: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    color: Colors.black12,
+                    blurRadius: 10,
+                  ),
+                ],
+                onChanged: (value) {},
+                enableActiveFill: true,
+              ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 4.0),
             Center(
               child: TextButton(
                 onPressed: () async {
@@ -176,20 +185,21 @@ class OtpRoute extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 4.0),
             Center(
               child: CustomButton(
                 text: "VERIFY AND PROCEED",
-                onPressed: () async {
-                  // await verifyOtp(context, _pinController.text);
-                  print('OTP verification button pressed');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content:
-                            Text('OTP verified successfully (simulated).')),
-                  );
-                  context.router.replaceNamed('/change_password');
-                },
+                onPressed: _verifyOtp,
+                // onPressed: () async {
+                //   // await verifyOtp(context, _pinController.text);
+                //   print('OTP verification button pressed');
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     SnackBar(
+                //         content:
+                //             Text('OTP verified successfully (simulated).')),
+                //   );
+                //   context.router.replaceNamed('/change_password');
+                // },
               ),
             ),
           ],

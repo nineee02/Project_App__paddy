@@ -197,6 +197,14 @@ class _SignupRouteState extends State<SignupRoute> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: 16.0,
+                ),
+                Image.asset(
+                  'lib/assets/icon/home.png',
+                  height: 152.0,
+                  width: 152.0,
+                ),
                 // const SizedBox(height: 16.0),
                 // Center(
                 //   child: Text(

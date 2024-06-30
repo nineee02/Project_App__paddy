@@ -99,7 +99,7 @@ class _ScanRouteState extends State<ScanRoute> {
             left: 0,
             right: 0,
             child: AppBar(
-              backgroundColor: maincolor.withOpacity(0.3),
+              backgroundColor: Colors.transparent,
               elevation: 0,
               leading: IconButton(
                 onPressed: () => context.router.replaceNamed('/home'),

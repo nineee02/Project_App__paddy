@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 @RoutePage()
 class AddDeviceRoute extends StatefulWidget {
@@ -12,32 +13,69 @@ class AddDeviceRoute extends StatefulWidget {
 }
 
 class _AddDeviceRouteState extends State<AddDeviceRoute> {
+  List<BluetoothDevice> _devices = [];
   FlutterBlue flutterBlue = FlutterBlue.instance;
-  List<BluetoothDevice> devicesList = [];
   bool isScanning = false;
 
   @override
   void initState() {
     super.initState();
-    startScan();
+    _requestPermissions();
   }
 
-  void startScan() {
+  Future<void> _requestPermissions() async {
+    await [
+      Permission.bluetooth,
+      Permission.location,
+    ].request();
+
+    if (await Permission.location.isGranted) {
+      _scanDevices();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Location permission is required to scan for devices'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _scanDevices() async {
     setState(() {
       isScanning = true;
-      devicesList.clear();
+      _devices.clear();
     });
+
     flutterBlue.startScan(timeout: Duration(seconds: 4));
 
     flutterBlue.scanResults.listen((results) {
       for (ScanResult result in results) {
-        if (!devicesList.any((device) => device.id == result.device.id)) {
+        if (!_devices.any((device) => device.id == result.device.id)) {
           setState(() {
-            devicesList.add(result.device);
+            _devices.add(result.device);
           });
         }
       }
     }).onDone(() => setState(() => isScanning = false));
+  }
+
+  void connectToDevice(BluetoothDevice device) async {
+    try {
+      await device.connect();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Connected to ${device.name}")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to connect: ${e.toString()}")),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    flutterBlue.stopScan();
+    super.dispose();
   }
 
   @override
@@ -61,95 +99,24 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Discover nearby devices',
-                style: TextStyle(fontSize: 16, color: fontcolor),
-              ),
-              const SizedBox(height: 16),
-              isScanning
-                  ? LinearProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: startScan,
-                      child: Text('Scan for Devices'),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: fontcolor,
-                        backgroundColor: buttoncolor,
-                      ),
-                    ),
-              const SizedBox(height: 16),
-              Column(
-                children: devicesList.map((device) {
-                  return ListTile(
-                    title: Text(device.name),
-                    subtitle: Text(device.id.toString()),
-                    onTap: () => connectToDevice(device),
-                    trailing: Icon(Icons.bluetooth, color: iconcolor),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 16),
-              Divider(),
-              ListTile(
-                title: Text(
-                  'Add devices manually',
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: fontcolor),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 10,
-                children: [
-                  DeviceCategoryButton(icon: Icons.videocam, label: 'Camera'),
-                  // Add more DeviceCategoryButton as needed
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void connectToDevice(BluetoothDevice device) async {
-    try {
-      await device.connect();
-      context.router.replaceNamed('/selectWifi');
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to connect: ${e.toString()}")));
-    }
-  }
-}
-
-class DeviceCategoryButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const DeviceCategoryButton(
-      {Key? key, required this.icon, required this.label})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () {
-        context.router.replaceNamed('/selectWifi');
-      },
-      icon: Icon(icon, size: 24),
-      label: Text(label),
-      style: ElevatedButton.styleFrom(
-        foregroundColor: fontcolor,
-        backgroundColor: buttoncolor,
-        textStyle: TextStyle(color: iconcolor),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
+      body: isScanning
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: _devices.length,
+              itemBuilder: (context, index) {
+                BluetoothDevice device = _devices[index];
+                return ListTile(
+                  title: Text(device.name),
+                  subtitle: Text(device.id.toString()),
+                  trailing: ElevatedButton(
+                    onPressed: () {
+                      connectToDevice(device);
+                    },
+                    child: Text("Connect"),
+                  ),
+                );
+              },
+            ),
     );
   }
 }
