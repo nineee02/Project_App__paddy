@@ -100,7 +100,10 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
         ],
       ),
       body: isScanning
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(iconcolor),
+            ))
           : ListView.builder(
               itemCount: _devices.length,
               itemBuilder: (context, index) {

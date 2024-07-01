@@ -57,6 +57,7 @@ dependencies:
   http: ^1.2.1
   provider: ^6.1.2
   mqtt_client: ^10.2.1
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
