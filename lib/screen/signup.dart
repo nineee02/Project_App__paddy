@@ -205,16 +205,6 @@ class _SignupRouteState extends State<SignupRoute> {
                   height: 152.0,
                   width: 152.0,
                 ),
-                // const SizedBox(height: 16.0),
-                // Center(
-                //   child: Text(
-                //     "Create a new account",
-                //     style: TextStyle(
-                //         color: fontcolor,
-                //         fontSize: 16,
-                //         fontWeight: FontWeight.w400),
-                //   ),
-                // ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   controller: _nameController,

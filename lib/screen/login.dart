@@ -69,10 +69,13 @@ class _LoginRouteState extends State<LoginRoute> {
     });
 
     if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      final userId = responseData['userId'];
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
+      await prefs.setInt('userId', userId);
 
-      print('Login successful');
+      print('Login successful, user ID: $userId');
       context.router.replaceNamed('/home');
     } else {
       if (response.statusCode == 401) {

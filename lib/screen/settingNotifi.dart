@@ -86,8 +86,8 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
                           return null;
                         },
                       ),
-                      thumbColor:
-                          const MaterialStatePropertyAll<Color>(Colors.black),
+                      thumbColor: const MaterialStatePropertyAll<Color>(
+                          Color.fromRGBO(77, 22, 0, 1)),
                       overlayColor: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.selected)) {

@@ -1,10 +1,32 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'notification_service.dart'; // Import notification service
 
 @RoutePage()
-class NotifiRoute extends StatelessWidget {
+class NotifiRoute extends StatefulWidget {
   const NotifiRoute({super.key});
+
+  @override
+  _NotifiRouteState createState() => _NotifiRouteState();
+}
+
+class _NotifiRouteState extends State<NotifiRoute> {
+  final NotificationService _notificationService = NotificationService();
+
+  @override
+  void initState() {
+    super.initState();
+    _notificationService.initialize(); // Initialize notification service
+  }
+
+  void _sendNotification() {
+    _notificationService.showNotification(
+      id: 0,
+      title: 'New Notification',
+      body: 'This is a test notification',
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +82,11 @@ class NotifiRoute extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 24),
+              ElevatedButton(
+                onPressed:
+                    _sendNotification, // Send notification on button press
+                child: Text('Send Test Notification'),
+              ),
             ],
           ),
         ),

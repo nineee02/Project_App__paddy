@@ -43,10 +43,6 @@ class AppRouter extends $AppRouter {
             page: SelectWifiRoute.page,
             transitionsBuilder: TransitionsBuilders.fadeIn),
         CustomRoute(
-            path: '/device',
-            page: DeviceRoute.page,
-            transitionsBuilder: TransitionsBuilders.fadeIn),
-        CustomRoute(
             path: '/settingNotifi',
             page: SettingNotifiRoute.page,
             transitionsBuilder: TransitionsBuilders.fadeIn),
@@ -65,6 +61,10 @@ class AppRouter extends $AppRouter {
         CustomRoute(
             path: '/change_password',
             page: ChangePasswordRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/change_device_name',
+            page: ChangeDeviceNameRoute.page,
             transitionsBuilder: TransitionsBuilders.fadeIn),
       ];
 }

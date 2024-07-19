@@ -1,10 +1,10 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:paddy_rice/constants/color.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:icapps_torch_compat/icapps_torch_compat.dart';
+import 'package:torch_light/torch_light.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:paddy_rice/constants/color.dart';
 
 @RoutePage()
 class ScanRoute extends StatefulWidget {
@@ -29,7 +29,6 @@ class _ScanRouteState extends State<ScanRoute> {
   Future<void> _requestCameraPermission() async {
     final status = await Permission.camera.request();
     if (status != PermissionStatus.granted) {
-      // Handle the case where the user denied the permission
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Camera permission is required to scan QR codes')),
@@ -63,14 +62,23 @@ class _ScanRouteState extends State<ScanRoute> {
   }
 
   Future<void> _toggleTorch() async {
-    if (_torchIsOn) {
-      await TorchCompat.turnOff();
-    } else {
-      await TorchCompat.turnOn();
+    try {
+      if (_torchIsOn) {
+        await TorchLight.disableTorch();
+      } else {
+        await TorchLight.enableTorch();
+      }
+      setState(() {
+        _torchIsOn = !_torchIsOn;
+      });
+    } on Exception catch (e) {
+      print('Could not toggle torch: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not toggle torch: $e'),
+        ),
+      );
     }
-    setState(() {
-      _torchIsOn = !_torchIsOn;
-    });
   }
 
   @override
@@ -85,7 +93,7 @@ class _ScanRouteState extends State<ScanRoute> {
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
               overlay: QrScannerOverlayShape(
-                borderColor: Colors.red,
+                borderColor: iconcolor,
                 borderRadius: 10,
                 borderLength: 30,
                 borderWidth: 10,

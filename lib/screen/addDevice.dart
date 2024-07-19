@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:paddy_rice/widgets/model.dart';
 
 @RoutePage()
 class AddDeviceRoute extends StatefulWidget {
@@ -64,6 +66,11 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
       await device.connect();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Connected to ${device.name}")),
+      );
+      context.router.push(
+        SelectWifiRoute(
+          device: Device(device.name, device.id.toString(), false),
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

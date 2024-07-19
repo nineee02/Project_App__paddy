@@ -9,11 +9,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i16;
-import 'package:flutter/material.dart' as _i17;
+import 'package:flutter/material.dart' as _i18;
 import 'package:paddy_rice/screen/addDevice.dart' as _i1;
-import 'package:paddy_rice/screen/changepassword.dart' as _i2;
-import 'package:paddy_rice/screen/device.dart' as _i4;
-import 'package:paddy_rice/screen/deviceNotifiSetting.dart' as _i3;
+import 'package:paddy_rice/screen/changDeviceName.dart' as _i2;
+import 'package:paddy_rice/screen/changepassword.dart' as _i3;
+import 'package:paddy_rice/screen/deviceNotifiSetting.dart' as _i4;
 import 'package:paddy_rice/screen/edit_profile.dart' as _i5;
 import 'package:paddy_rice/screen/forgot.dart' as _i6;
 import 'package:paddy_rice/screen/home.dart' as _i7;
@@ -25,6 +25,7 @@ import 'package:paddy_rice/screen/scan.dart' as _i12;
 import 'package:paddy_rice/screen/selectWifi.dart' as _i13;
 import 'package:paddy_rice/screen/settingNotifi.dart' as _i14;
 import 'package:paddy_rice/screen/signup.dart' as _i15;
+import 'package:paddy_rice/widgets/model.dart' as _i17;
 
 abstract class $AppRouter extends _i16.RootStackRouter {
   $AppRouter({super.navigatorKey});
@@ -37,22 +38,23 @@ abstract class $AppRouter extends _i16.RootStackRouter {
         child: const _i1.AddDeviceRoute(),
       );
     },
+    ChangeDeviceNameRoute.name: (routeData) {
+      final args = routeData.argsAs<ChangeDeviceNameRouteArgs>();
+      return _i16.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i2.ChangeDeviceNameRoute(device: args.device),
+      );
+    },
     ChangePasswordRoute.name: (routeData) {
       return _i16.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i2.ChangePasswordRoute(),
+        child: const _i3.ChangePasswordRoute(),
       );
     },
     DeviceNotifiSettingRoute.name: (routeData) {
       return _i16.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i3.DeviceNotifiSettingRoute(),
-      );
-    },
-    DeviceRoute.name: (routeData) {
-      return _i16.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i4.DeviceRoute(),
+        child: const _i4.DeviceNotifiSettingRoute(),
       );
     },
     EditProfileRoute.name: (routeData) {
@@ -109,9 +111,13 @@ abstract class $AppRouter extends _i16.RootStackRouter {
       );
     },
     SelectWifiRoute.name: (routeData) {
+      final args = routeData.argsAs<SelectWifiRouteArgs>();
       return _i16.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i13.SelectWifiRoute(),
+        child: _i13.SelectWifiRoute(
+          device: args.device,
+          key: args.key,
+        ),
       );
     },
     SettingNotifiRoute.name: (routeData) {
@@ -144,7 +150,37 @@ class AddDeviceRoute extends _i16.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i2.ChangePasswordRoute]
+/// [_i2.ChangeDeviceNameRoute]
+class ChangeDeviceNameRoute
+    extends _i16.PageRouteInfo<ChangeDeviceNameRouteArgs> {
+  ChangeDeviceNameRoute({
+    required _i17.Device device,
+    List<_i16.PageRouteInfo>? children,
+  }) : super(
+          ChangeDeviceNameRoute.name,
+          args: ChangeDeviceNameRouteArgs(device: device),
+          initialChildren: children,
+        );
+
+  static const String name = 'ChangeDeviceNameRoute';
+
+  static const _i16.PageInfo<ChangeDeviceNameRouteArgs> page =
+      _i16.PageInfo<ChangeDeviceNameRouteArgs>(name);
+}
+
+class ChangeDeviceNameRouteArgs {
+  const ChangeDeviceNameRouteArgs({required this.device});
+
+  final _i17.Device device;
+
+  @override
+  String toString() {
+    return 'ChangeDeviceNameRouteArgs{device: $device}';
+  }
+}
+
+/// generated route for
+/// [_i3.ChangePasswordRoute]
 class ChangePasswordRoute extends _i16.PageRouteInfo<void> {
   const ChangePasswordRoute({List<_i16.PageRouteInfo>? children})
       : super(
@@ -158,7 +194,7 @@ class ChangePasswordRoute extends _i16.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i3.DeviceNotifiSettingRoute]
+/// [_i4.DeviceNotifiSettingRoute]
 class DeviceNotifiSettingRoute extends _i16.PageRouteInfo<void> {
   const DeviceNotifiSettingRoute({List<_i16.PageRouteInfo>? children})
       : super(
@@ -167,20 +203,6 @@ class DeviceNotifiSettingRoute extends _i16.PageRouteInfo<void> {
         );
 
   static const String name = 'DeviceNotifiSettingRoute';
-
-  static const _i16.PageInfo<void> page = _i16.PageInfo<void>(name);
-}
-
-/// generated route for
-/// [_i4.DeviceRoute]
-class DeviceRoute extends _i16.PageRouteInfo<void> {
-  const DeviceRoute({List<_i16.PageRouteInfo>? children})
-      : super(
-          DeviceRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'DeviceRoute';
 
   static const _i16.PageInfo<void> page = _i16.PageInfo<void>(name);
 }
@@ -259,7 +281,7 @@ class NotifiRoute extends _i16.PageRouteInfo<void> {
 /// [_i10.OtpRoute]
 class OtpRoute extends _i16.PageRouteInfo<OtpRouteArgs> {
   OtpRoute({
-    _i17.Key? key,
+    _i18.Key? key,
     required String inputType,
     required String inputValue,
     List<_i16.PageRouteInfo>? children,
@@ -286,7 +308,7 @@ class OtpRouteArgs {
     required this.inputValue,
   });
 
-  final _i17.Key? key;
+  final _i18.Key? key;
 
   final String inputType;
 
@@ -328,16 +350,40 @@ class ScanRoute extends _i16.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i13.SelectWifiRoute]
-class SelectWifiRoute extends _i16.PageRouteInfo<void> {
-  const SelectWifiRoute({List<_i16.PageRouteInfo>? children})
-      : super(
+class SelectWifiRoute extends _i16.PageRouteInfo<SelectWifiRouteArgs> {
+  SelectWifiRoute({
+    required _i17.Device device,
+    _i18.Key? key,
+    List<_i16.PageRouteInfo>? children,
+  }) : super(
           SelectWifiRoute.name,
+          args: SelectWifiRouteArgs(
+            device: device,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'SelectWifiRoute';
 
-  static const _i16.PageInfo<void> page = _i16.PageInfo<void>(name);
+  static const _i16.PageInfo<SelectWifiRouteArgs> page =
+      _i16.PageInfo<SelectWifiRouteArgs>(name);
+}
+
+class SelectWifiRouteArgs {
+  const SelectWifiRouteArgs({
+    required this.device,
+    this.key,
+  });
+
+  final _i17.Device device;
+
+  final _i18.Key? key;
+
+  @override
+  String toString() {
+    return 'SelectWifiRouteArgs{device: $device, key: $key}';
+  }
 }
 
 /// generated route for
