@@ -91,13 +91,16 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
-        backgroundColor: maincolor,
-        leading: IconButton(
-          onPressed: () => context.router.replaceNamed('/addDevice'),
-          icon: Icon(Icons.arrow_back, color: iconcolor),
-        ),
-        title: Text("Select Wi-Fi network", style: TextStyle(color: fontcolor)),
-      ),
+          backgroundColor: maincolor,
+          leading: IconButton(
+            onPressed: () => context.router.replaceNamed('/addDevice'),
+            icon: Icon(Icons.arrow_back, color: iconcolor),
+          ),
+          title: Text(
+            "Select Wi-Fi network",
+            style: TextStyle(color: fontcolor),
+          ),
+          centerTitle: true),
       body: Stack(
         children: [
           Positioned(

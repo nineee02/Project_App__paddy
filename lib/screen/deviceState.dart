@@ -38,17 +38,22 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
-        backgroundColor: maincolor,
-        title: Text(widget.device.name),
-        actions: [
-          IconButton(
+          backgroundColor: maincolor,
+          title: Text(
+            widget.device.name,
+            style: TextStyle(
+                color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
+          ),
+          actions: [
+            IconButton(
               onPressed: () {},
               icon: Icon(
                 Icons.settings,
                 color: iconcolor,
-              ))
-        ],
-      ),
+              ),
+            ),
+          ],
+          centerTitle: true),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -64,8 +69,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
                 onChanged: (value) {
                   deviceName = value;
                 },
-                controller: TextEditingController(
-                    text: deviceName), // แสดงค่าเดิมใน TextField
+                controller: TextEditingController(text: deviceName),
               ),
             ),
             Padding(
@@ -79,8 +83,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
                 onChanged: (value) {
                   frontTemp = double.parse(value);
                 },
-                controller: TextEditingController(
-                    text: frontTemp.toString()), // แสดงค่าเดิมใน TextField
+                controller: TextEditingController(text: frontTemp.toString()),
               ),
             ),
             Padding(
@@ -94,8 +97,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
                 onChanged: (value) {
                   backTemp = double.parse(value);
                 },
-                controller: TextEditingController(
-                    text: backTemp.toString()), // แสดงค่าเดิมใน TextField
+                controller: TextEditingController(text: backTemp.toString()),
               ),
             ),
             ElevatedButton(

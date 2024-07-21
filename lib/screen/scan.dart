@@ -107,21 +107,21 @@ class _ScanRouteState extends State<ScanRoute> {
             left: 0,
             right: 0,
             child: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                onPressed: () => context.router.replaceNamed('/home'),
-                icon: Icon(Icons.arrow_back, color: iconcolor),
-              ),
-              title: Text(
-                "Scan",
-                style: TextStyle(
-                  color: fontcolor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: IconButton(
+                  onPressed: () => context.router.replaceNamed('/home'),
+                  icon: Icon(Icons.arrow_back, color: iconcolor),
                 ),
-              ),
-            ),
+                title: Text(
+                  "Scan",
+                  style: TextStyle(
+                    color: fontcolor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                centerTitle: true),
           ),
           Align(
             alignment: Alignment.center,

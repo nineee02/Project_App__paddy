@@ -11,18 +11,18 @@ class DeviceNotifiSettingRoute extends StatelessWidget {
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
-        backgroundColor: maincolor,
-        leading: (IconButton(
-            onPressed: () {
-              context.router.replaceNamed('/settingNotifi');
-            },
-            icon: Icon(Icons.arrow_back))),
-        title: Text(
-          "Device Notification Management",
-          style: TextStyle(
-              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
-        ),
-      ),
+          backgroundColor: maincolor,
+          leading: (IconButton(
+              onPressed: () {
+                context.router.replaceNamed('/settingNotifi');
+              },
+              icon: Icon(Icons.arrow_back))),
+          title: Text(
+            "Device Notification Management",
+            style: TextStyle(
+                color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
+          ),
+          centerTitle: true),
       body: Center(
         child: Container(
           child: Column(
