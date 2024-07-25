@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/screen/deviceState.dart';
-import 'package:paddy_rice/screen/selectWifi.dart';
 import 'package:paddy_rice/widgets/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,11 +64,7 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
         backgroundColor: maincolor,
         title: Text(
           "Silo",
-          style: TextStyle(
-            color: fontcolor,
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-          ),
+          style: appBarFont,
         ),
         actions: [
           IconButton(
@@ -305,28 +301,6 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
                 },
                 child: Text(
                   isEditMode ? "Done" : "Edit",
-                  style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final result = await Navigator.push<Device>(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SelectWifiRoute(
-                          device: Device(
-                              'Dummy', 'id', false)), // Pass a dummy device
-                    ),
-                  );
-                  if (result != null) {
-                    addDevice(result);
-                  }
-                },
-                child: Text(
-                  "Select Wifi",
                   style: TextStyle(
                       color: fontcolor,
                       fontSize: 16,

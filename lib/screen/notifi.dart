@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 import 'notification_service.dart'; // Import notification service
 
 @RoutePage()
@@ -45,11 +46,7 @@ class _NotifiRouteState extends State<NotifiRoute> {
         title: Text(
           "Notification",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: fontcolor,
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-          ),
+          style: appBarFont,
         ),
         centerTitle: true,
         actions: [

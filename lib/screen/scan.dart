@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:torch_light/torch_light.dart';
@@ -107,21 +108,18 @@ class _ScanRouteState extends State<ScanRoute> {
             left: 0,
             right: 0,
             child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: IconButton(
-                  onPressed: () => context.router.replaceNamed('/home'),
-                  icon: Icon(Icons.arrow_back, color: iconcolor),
-                ),
-                title: Text(
-                  "Scan",
-                  style: TextStyle(
-                    color: fontcolor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                centerTitle: true),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                onPressed: () => context.router.replaceNamed('/home'),
+                icon: Icon(Icons.arrow_back, color: iconcolor),
+              ),
+              title: Text(
+                "Scan",
+                style: appBarFont,
+              ),
+              centerTitle: true,
+            ),
           ),
           Align(
             alignment: Alignment.center,

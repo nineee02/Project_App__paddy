@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/model.dart';
 
 class DeviceSateRoute extends StatefulWidget {
@@ -41,8 +42,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
           backgroundColor: maincolor,
           title: Text(
             widget.device.name,
-            style: TextStyle(
-                color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
+            style: appBarFont,
           ),
           actions: [
             IconButton(

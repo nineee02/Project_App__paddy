@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 
 @RoutePage()
 class DeviceNotifiSettingRoute extends StatelessWidget {
@@ -19,8 +20,7 @@ class DeviceNotifiSettingRoute extends StatelessWidget {
               icon: Icon(Icons.arrow_back))),
           title: Text(
             "Device Notification Management",
-            style: TextStyle(
-                color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500),
+            style: appBarFont,
           ),
           centerTitle: true),
       body: Center(
@@ -117,7 +117,7 @@ class _SwitchModState extends State<SwitchMod> {
         MaterialStateProperty.resolveWith<Color?>(
       (Set<MaterialState> states) {
         if (states.contains(MaterialState.selected)) {
-          return Color.fromRGBO(27, 191, 0, 1);
+          return Color(0xFF80C080);
           // return Colors.amber;
         }
         return null;
@@ -128,7 +128,7 @@ class _SwitchModState extends State<SwitchMod> {
       (Set<MaterialState> states) {
         // Material color when switch is selected.
         if (states.contains(MaterialState.selected)) {
-          return Color.fromRGBO(27, 191, 0, 1).withOpacity(0.54);
+          return Color(0xFF80C080).withOpacity(0.54);
           // return Colors.amber.withOpacity(0.54);
         }
         // Material color when switch is disabled.

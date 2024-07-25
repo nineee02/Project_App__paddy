@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'dart:convert'; // For utf8 encoding
 import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:mqtt_client/mqtt_client.dart';
-import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/model.dart';
 import 'package:wifi_scan/wifi_scan.dart';
@@ -12,7 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 @RoutePage()
 class SelectWifiRoute extends StatefulWidget {
-  final Device device; // Add this line to define the required parameter
+  final Device device;
 
   const SelectWifiRoute({required this.device, Key? key}) : super(key: key);
 
@@ -29,11 +30,13 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
   Color _inputBorderColor = fill_color;
   bool _obscureText = true;
   FocusNode _passwordFocusNode = FocusNode();
+  BluetoothCharacteristic? writeCharacteristic;
 
   @override
   void initState() {
     super.initState();
     initWifiScan();
+    connectToDevice(widget.device.bluetoothDevice);
   }
 
   @override
@@ -41,6 +44,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
     subscription?.cancel();
     passwordController.dispose();
     _passwordFocusNode.dispose();
+    widget.device.bluetoothDevice?.disconnect();
     super.dispose();
   }
 
@@ -60,30 +64,40 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
     }
   }
 
-  Future<void> sendWifiCredentials(String ssid, String password) async {
-    final client = MqttServerClient('your_mqtt_broker_ip', '');
-    client.port = 1883;
-    client.logging(on: true);
-
-    final connMessage = MqttConnectMessage()
-        .withClientIdentifier('FlutterClient')
-        .startClean()
-        .withWillQos(MqttQos.atLeastOnce);
-    client.connectionMessage = connMessage;
-
-    try {
-      await client.connect();
-    } catch (e) {
-      print('Exception: $e');
-      client.disconnect();
+  void connectToDevice(BluetoothDevice? device) async {
+    if (device == null) {
+      print('No Bluetooth device to connect');
+      return;
     }
 
-    final builder = MqttClientPayloadBuilder();
-    builder.addString('$ssid,$password');
+    try {
+      await device.connect();
+      final List<BluetoothService> services = await device.discoverServices();
+      for (BluetoothService service in services) {
+        for (BluetoothCharacteristic characteristic
+            in service.characteristics) {
+          if (characteristic.properties.write) {
+            setState(() {
+              writeCharacteristic = characteristic;
+            });
+            break;
+          }
+        }
+        if (writeCharacteristic != null) break;
+      }
+    } catch (e) {
+      print('Error connecting to device: $e');
+    }
+  }
 
-    client.publishMessage('esp32/wifi', MqttQos.exactlyOnce, builder.payload!);
-
-    client.disconnect();
+  Future<void> sendWifiCredentials(String ssid, String password) async {
+    if (writeCharacteristic != null) {
+      await writeCharacteristic!.write(utf8.encode("SSID:$ssid\n"));
+      await writeCharacteristic!.write(utf8.encode("PASS:$password\n"));
+      print('Sent Wi-Fi credentials');
+    } else {
+      print('Write characteristic not found');
+    }
   }
 
   @override
@@ -98,7 +112,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
           ),
           title: Text(
             "Select Wi-Fi network",
-            style: TextStyle(color: fontcolor),
+            style: appBarFont,
           ),
           centerTitle: true),
       body: Stack(

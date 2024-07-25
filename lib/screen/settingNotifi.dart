@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 
 @RoutePage()
 class SettingNotifiRoute extends StatefulWidget {
@@ -41,8 +42,7 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
         ),
         title: Text(
           "Notification setting",
-          style: TextStyle(
-              color: fontcolor, fontSize: 20, fontWeight: FontWeight.w600),
+          style: appBarFont,
         ),
         centerTitle: true,
       ),
@@ -81,7 +81,7 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
                       trackColor: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.selected)) {
-                            return Color.fromRGBO(27, 191, 0, 1);
+                            return Color(0xFF80C080);
                           }
                           return null;
                         },
@@ -91,8 +91,7 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
                       overlayColor: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.selected)) {
-                            return Color.fromRGBO(27, 191, 0, 1)
-                                .withOpacity(0.54);
+                            return Color(0xFF80C080).withOpacity(0.54);
                           }
                           if (states.contains(MaterialState.disabled)) {
                             return Colors.grey.shade400;

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/model.dart';
 
 @RoutePage()
@@ -15,7 +16,10 @@ class ChangeDeviceNameRoute extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Change Device Name'),
+        title: Text(
+          'Change Device Name',
+          style: appBarFont,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

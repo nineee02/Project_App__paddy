@@ -5,10 +5,12 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 import 'package:paddy_rice/constants/api.dart';
 import 'package:http/http.dart' as http;
+import 'package:paddy_rice/constants/font_size.dart';
 import 'dart:convert';
 
 import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
+import 'package:paddy_rice/widgets/shDialog.dart';
 
 final List<String> select_Value = [
   'Phone number',
@@ -63,73 +65,82 @@ class _ForgotRouteState extends State<ForgotRoute> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: maincolor,
-          title: Text(
-            'User not found',
-            style: TextStyle(
-                color: fontcolor, fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          content: Text(
-            'User not found. Would you like to sign up or enter a different number?',
-            style: TextStyle(color: fontcolor, fontSize: 16),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Sign Up'),
-              onPressed: () {
-                context.router.replaceNamed('/signup'); // Change to /signup
-              },
-            ),
-            TextButton(
-              child: Text('Enter Different Number'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _controller.clear();
-              },
-            ),
-          ],
+        return ShDialog(
+          title: 'User not found',
+          content:
+              'User not found. Would you like to sign up or enter a different number?',
+          parentContext: context,
+          confirmButtonText: 'Sign Up',
+          cancelButtonText: 'Not now',
+          onConfirm: () {
+            context.router.replaceNamed('/signup');
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+          },
         );
       },
     );
   }
 
   Future<bool> checkUserExists(String type, String value) async {
-    final response = await http.post(
-      Uri.parse('${ApiConstants.baseUrl}/check_user_exists'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'type': type, 'value': value}),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiConstants.baseUrl}/check_user_exists'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'type': type, 'value': value}),
+      );
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
+      if (response.statusCode == 200) {
+        print('User exists');
+        return true;
+      } else {
+        print('User not found');
+        return false;
+      }
+    } catch (e) {
+      print('Error: $e');
       return false;
     }
   }
 
   Future<void> sendOtp(String type, String value) async {
-    final userExists = await checkUserExists(type, value);
+    try {
+      final userExists = await checkUserExists(type, value);
 
-    if (!userExists) {
-      _showUserNotFoundDialog();
-      return;
-    }
+      if (!userExists) {
+        _showUserNotFoundDialog();
+        return;
+      }
 
-    final response = await http.post(
-      Uri.parse('${ApiConstants.baseUrl}/send_otp'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'type': type, 'value': value}),
-    );
+      final response = await http.post(
+        Uri.parse('${ApiConstants.baseUrl}/send_otp'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'type': type, 'value': value}),
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print('OTP sent: ${data['otp']}');
-      context.router.push(OtpRoute(
-        inputType: type,
-        inputValue: value,
-      ));
-    } else {
+      if (response.statusCode == 200) {
+        // Log response body
+        print('Response body: ${response.body}');
+
+        // Decode response body safely
+        try {
+          final data = jsonDecode(response.body);
+          print('OTP sent: ${data['otp']}');
+          context.router.push(OtpRoute(
+            inputType: type,
+            inputValue: value,
+          ));
+        } catch (e) {
+          print('Error decoding JSON: $e');
+          _showErrorSnackBar('Failed to parse server response');
+        }
+      } else {
+        print('Failed to send OTP');
+        _showErrorSnackBar('Failed to send OTP');
+      }
+    } catch (e) {
+      print('Error: $e');
       _showErrorSnackBar('Failed to send OTP');
     }
   }
@@ -148,11 +159,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
         title: Text(
           "Forgot Password",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: fontcolor,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
+          style: appBarFont,
         ),
         centerTitle: true,
       ),
@@ -337,7 +344,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
                       width: 312,
                       height: 48,
                       child: CustomButton(
-                        text: "Next",
+                        text: "Continue",
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             final inputType = selectedValue == 'Phone number'

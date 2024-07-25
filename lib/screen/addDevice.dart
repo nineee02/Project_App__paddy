@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:paddy_rice/widgets/model.dart';
@@ -95,9 +96,7 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
           onPressed: () => context.router.replaceNamed('/home'),
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
-        title: Text("Add Device",
-            style: TextStyle(
-                color: fontcolor, fontSize: 20, fontWeight: FontWeight.w500)),
+        title: Text("Add Device", style: appBarFont),
         centerTitle: true,
         actions: [
           IconButton(

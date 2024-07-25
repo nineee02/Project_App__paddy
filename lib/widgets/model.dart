@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 
 class Device {
   String name;
@@ -6,9 +7,10 @@ class Device {
   final bool status;
   double frontTemp;
   double backTemp;
+  BluetoothDevice? bluetoothDevice;
 
   Device(this.name, this.id, this.status,
-      {this.frontTemp = 0.0, this.backTemp = 0.0});
+      {this.frontTemp = 0.0, this.backTemp = 0.0, this.bluetoothDevice});
 }
 
 class DeviceModel extends ChangeNotifier {

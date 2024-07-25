@@ -109,7 +109,7 @@ class _LoginRouteState extends State<LoginRoute> {
                   style: TextStyle(
                     color: fontcolor,
                     fontSize: 36,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: 20.0),

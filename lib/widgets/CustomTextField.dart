@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -83,7 +84,7 @@ class CustomTextField extends StatelessWidget {
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
                 errorMessage,
-                style: TextStyle(color: error_color, fontSize: 12),
+                style: errorFont,
               ),
             ),
         ],

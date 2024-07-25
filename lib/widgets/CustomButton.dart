@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -20,11 +21,7 @@ class CustomButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         text,
-        style: TextStyle(
-          color: fontcolor,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
+        style: buttonFont,
       ),
     );
   }

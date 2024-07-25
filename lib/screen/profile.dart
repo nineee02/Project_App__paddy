@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/api.dart';
 
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile {
@@ -64,8 +65,7 @@ class ProfileRoute extends StatelessWidget {
         backgroundColor: maincolor,
         title: Text(
           "My Profile",
-          style: TextStyle(
-              color: fontcolor, fontSize: 22, fontWeight: FontWeight.bold),
+          style: appBarFont,
         ),
         centerTitle: true,
         elevation: 0,
@@ -139,14 +139,14 @@ class ProfileRoute extends StatelessWidget {
                                     Text(
                                       "${user.name} ${user.surname}",
                                       style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: fontcolor),
                                     ),
                                     Text(
                                       "${user.email}",
                                       style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           color: unnecessary_colors),
                                     ),
                                   ],
@@ -161,21 +161,33 @@ class ProfileRoute extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   ListTile(
-                    leading: Icon(Icons.email, color: Colors.black),
-                    title: Text(user.email),
-                    trailing: Icon(Icons.chevron_right),
+                    leading: Icon(Icons.email, color: iconcolor),
+                    title: Text(
+                      user.email,
+                      style: bodyFont,
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: iconcolor,
+                    ),
                     onTap: () {},
                   ),
                   ListTile(
-                    leading: Icon(Icons.phone, color: Colors.black),
-                    title: Text(user.phone),
-                    trailing: Icon(Icons.chevron_right),
+                    leading: Icon(Icons.phone, color: iconcolor),
+                    title: Text(
+                      user.phone,
+                      style: bodyFont,
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: iconcolor,
+                    ),
                     onTap: () {},
                   ),
                   Spacer(),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
+                      foregroundColor: const Color.fromARGB(255, 255, 253, 253),
                       backgroundColor: Colors.red,
                     ),
                     onPressed: () => context.router.replaceNamed('/login'),

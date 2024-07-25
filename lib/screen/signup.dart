@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:paddy_rice/constants/api.dart';
 import 'dart:convert';
-
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/CustomTextField.dart';
+import 'package:paddy_rice/widgets/shDialog.dart';
 
 @RoutePage()
 class SignupRoute extends StatefulWidget {
@@ -111,37 +112,43 @@ class _SignupRouteState extends State<SignupRoute> {
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Error'),
-        content: Text(message),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Okay'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-          )
-        ],
-      ),
+      builder: (BuildContext context) {
+        return ShDialog(
+          title: 'Error',
+          content: message,
+          parentContext: context,
+          confirmButtonText: 'Okay',
+          cancelButtonText: '',
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
     );
   }
 
   void _showSuccessDialog(String message) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Success'),
-        content: Text(message),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Okay'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              context.router.replaceNamed('/login');
-            },
-          )
-        ],
-      ),
+      builder: (BuildContext context) {
+        return ShDialog(
+          title: 'Success',
+          content: message,
+          parentContext: context,
+          confirmButtonText: 'Okay',
+          cancelButtonText: '',
+          onConfirm: () {
+            Navigator.of(context).pop();
+            context.router.replaceNamed('/login');
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
     );
   }
 
@@ -181,11 +188,7 @@ class _SignupRouteState extends State<SignupRoute> {
         ),
         title: Text(
           "Create New Account",
-          style: TextStyle(
-            color: fontcolor,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
+          style: appBarFont,
         ),
         centerTitle: true,
       ),

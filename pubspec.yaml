@@ -61,6 +61,8 @@ dependencies:
   torch_light: ^1.1.0
   flutter_local_notifications: ^17.2.1+2
   path_provider: ^2.1.3
+  otp_autofill: ^3.0.2
+  flutter_bluetooth_serial: ^0.4.0
 
 dev_dependencies:
   flutter_test:
