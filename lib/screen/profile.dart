@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:auto_route/auto_route.dart';
-import 'package:paddy_rice/constants/api.dart';
-
 import 'package:paddy_rice/constants/color.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/font_size.dart';
+import 'package:paddy_rice/constants/api.dart';
+import 'package:paddy_rice/widgets/shDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class UserProfile {
   final String name;
@@ -56,6 +56,28 @@ Future<UserProfile> fetchUserProfile() async {
 @RoutePage()
 class ProfileRoute extends StatelessWidget {
   const ProfileRoute({super.key});
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ShDialog(
+          title: 'Log Out',
+          content: 'Are you sure you want to log out?',
+          parentContext: context,
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Not Now',
+          onConfirm: () {
+            Navigator.of(context).pop();
+            context.router.replaceNamed('/login');
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +133,6 @@ class ProfileRoute extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
                   Align(
                     alignment: Alignment.center,
                     child: GestureDetector(
@@ -159,7 +180,7 @@ class ProfileRoute extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 16),
                   ListTile(
                     leading: Icon(Icons.email, color: iconcolor),
                     title: Text(
@@ -190,7 +211,7 @@ class ProfileRoute extends StatelessWidget {
                       foregroundColor: const Color.fromARGB(255, 255, 253, 253),
                       backgroundColor: Colors.red,
                     ),
-                    onPressed: () => context.router.replaceNamed('/login'),
+                    onPressed: () => _showLogoutDialog(context),
                     child: Text('Log Out'),
                   ),
                   SizedBox(height: 20),

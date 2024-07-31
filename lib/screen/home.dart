@@ -338,21 +338,24 @@ abstract class MenuItems {
       MenuItem(text: 'Scan', icon: Icons.qr_code_scanner_outlined);
 
   static Widget buildItem(MenuItem item) {
-    return Row(
-      children: [
-        Icon(item.icon, color: iconcolor, size: 24),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: Text(
-            item.text,
-            style: const TextStyle(
-              color: Color.fromRGBO(77, 22, 0, 1),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(item.icon, color: iconcolor, size: 24),
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Text(
+              item.text,
+              style: const TextStyle(
+                color: Color.fromRGBO(77, 22, 0, 1),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

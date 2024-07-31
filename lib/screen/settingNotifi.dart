@@ -59,9 +59,10 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
             const SizedBox(height: 16),
             InkWell(
               onTap: toggleNotification,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                 height: 48,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,17 +107,28 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
             ),
             const SizedBox(height: 16),
             if (showManagement)
-              ListTile(
-                title: Text(
-                  "Device Notification Management",
-                  style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
-                ),
-                trailing: Icon(Icons.chevron_right, color: iconcolor),
+              InkWell(
                 onTap: () =>
                     context.router.replaceNamed('/deviceNotifiSetting'),
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 8.0),
+                  height: 48,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Device Notification Management",
+                        style: TextStyle(
+                            color: fontcolor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      Icon(Icons.chevron_right, color: iconcolor),
+                    ],
+                  ),
+                ),
               ),
           ],
         ),

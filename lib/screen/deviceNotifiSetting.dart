@@ -13,88 +13,62 @@ class DeviceNotifiSettingRoute extends StatelessWidget {
       backgroundColor: maincolor,
       appBar: AppBar(
           backgroundColor: maincolor,
-          leading: (IconButton(
-              onPressed: () {
-                context.router.replaceNamed('/settingNotifi');
-              },
-              icon: Icon(Icons.arrow_back))),
+          leading: IconButton(
+            onPressed: () {
+              context.router.replaceNamed('/settingNotifi');
+            },
+            icon: Icon(Icons.arrow_back, color: iconcolor),
+          ),
           title: Text(
             "Device Notification Management",
             style: appBarFont,
           ),
           centerTitle: true),
-      body: Center(
-        child: Container(
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.only(left: 24.0, top: 40.0),
-                child: Row(children: [
-                  Text(
-                    "Silo",
-                    style: TextStyle(
-                        color: fontcolor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ]),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 24.0, top: 16),
-                child: Row(
-                  children: [
-                    Text(
-                      "Device notification",
-                      style: TextStyle(
-                          color: fontcolor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      width: 150,
-                    ),
-                    SwitchMod(),
-                  ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 40),
+            Row(
+              children: [
+                Text(
+                  "Silo",
+                  style: TextStyle(
+                      color: fontcolor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 24.0, top: 16),
-                child: Row(
-                  children: [
-                    Text(
-                      "Temperature alert",
-                      style: TextStyle(
-                          color: fontcolor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      width: 150,
-                    ),
-                    SwitchMod(),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 24.0, top: 16),
-                child: Row(
-                  children: [
-                    Text(
-                      "Humidity alert",
-                      style: TextStyle(
-                          color: fontcolor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      width: 150,
-                    ),
-                    SwitchMod(),
-                  ],
-                ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            buildSwitchTile("Device Notification"),
+            const SizedBox(height: 16),
+            buildSwitchTile("Temperature Alert"),
+            const SizedBox(height: 16),
+            buildSwitchTile("Humidity Alert"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildSwitchTile(String title) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+        height: 48.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                  color: fontcolor, fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            SwitchMod(),
+          ],
         ),
       ),
     );
@@ -118,7 +92,6 @@ class _SwitchModState extends State<SwitchMod> {
       (Set<MaterialState> states) {
         if (states.contains(MaterialState.selected)) {
           return Color(0xFF80C080);
-          // return Colors.amber;
         }
         return null;
       },
@@ -126,18 +99,12 @@ class _SwitchModState extends State<SwitchMod> {
     final MaterialStateProperty<Color?> overlayColor =
         MaterialStateProperty.resolveWith<Color?>(
       (Set<MaterialState> states) {
-        // Material color when switch is selected.
         if (states.contains(MaterialState.selected)) {
           return Color(0xFF80C080).withOpacity(0.54);
-          // return Colors.amber.withOpacity(0.54);
         }
-        // Material color when switch is disabled.
         if (states.contains(MaterialState.disabled)) {
           return Colors.grey.shade400;
         }
-        // Otherwise return null to set default material color
-        // for remaining states such as when the switch is
-        // hovered, or focused.
         return null;
       },
     );
@@ -148,7 +115,6 @@ class _SwitchModState extends State<SwitchMod> {
       trackColor: trackColor,
       thumbColor: const MaterialStatePropertyAll<Color>(Colors.black),
       onChanged: (bool value) {
-        // This is called when the user toggles the switch.
         setState(() {
           light = value;
         });

@@ -6,25 +6,27 @@ class NotificationService {
 
   Future<void> initialize() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings(
-            'app_icon'); // Ensure you have an icon named 'app_icon' in your Android project
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  Future<void> showNotification(
-      {required int id, required String title, required String body}) async {
+  Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
+      'your channel id',
+      'your channel name',
+      channelDescription: 'your channel description',
       importance: Importance.max,
       priority: Priority.high,
+      showWhen: false,
     );
 
     const NotificationDetails platformChannelSpecifics =

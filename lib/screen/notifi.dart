@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
-import 'notification_service.dart'; // Import notification service
+import 'notification_service.dart';
 
 @RoutePage()
 class NotifiRoute extends StatefulWidget {
@@ -18,7 +18,7 @@ class _NotifiRouteState extends State<NotifiRoute> {
   @override
   void initState() {
     super.initState();
-    _notificationService.initialize(); // Initialize notification service
+    _notificationService.initialize();
   }
 
   void _sendNotification() {
@@ -80,8 +80,7 @@ class _NotifiRouteState extends State<NotifiRoute> {
               ),
               SizedBox(height: 24),
               ElevatedButton(
-                onPressed:
-                    _sendNotification, // Send notification on button press
+                onPressed: _sendNotification,
                 child: Text('Send Test Notification'),
               ),
             ],
