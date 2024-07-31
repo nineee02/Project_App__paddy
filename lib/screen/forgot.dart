@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
@@ -28,7 +29,6 @@ class ForgotRoute extends StatefulWidget {
 class _ForgotRouteState extends State<ForgotRoute> {
   final _formKey = GlobalKey<FormState>();
   String? selectedValue = "Phone number";
-  String hintText = "Please enter your phone number";
   final TextEditingController _controller = TextEditingController();
 
   Color _inputBorderColor = fill_color;
@@ -189,186 +189,188 @@ class _ForgotRouteState extends State<ForgotRoute> {
               ),
             ),
           ),
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Please Enter Your Email or Phone To \n Receive a Verification Code',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: fontcolor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      width: 312,
-                      height: 48,
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton2<String>(
-                          isExpanded: true,
-                          items: select_Value
-                              .map((String item) => DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(
-                                      item,
-                                      style: TextStyle(
-                                          fontSize: 16, color: fontcolor),
-                                    ),
-                                  ))
-                              .toList(),
-                          value: selectedValue,
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedValue = value;
-                              if (value == 'Phone number') {
-                                hintText = "Please enter your phone number";
-                                _controller.clear();
-                              } else {
-                                hintText = "Please enter your Email";
-                                _controller.clear();
+          Column(
+            children: [
+              Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Please Enter Your Email or Phone To \nReceive a Verification Code',
+                          style: TextStyle(
+                            color: fontcolor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          width: 312,
+                          height: 48,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2<String>(
+                              isExpanded: true,
+                              items: select_Value
+                                  .map(
+                                      (String item) => DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: fontcolor),
+                                            ),
+                                          ))
+                                  .toList(),
+                              value: selectedValue,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedValue = value;
+                                  if (value == 'Phone number') {
+                                    _controller.clear();
+                                  } else {
+                                    _controller.clear();
+                                  }
+                                });
+                              },
+                              buttonStyleData: ButtonStyleData(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                width: 312,
+                                decoration: BoxDecoration(
+                                  color: fill_color,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              iconStyleData: IconStyleData(
+                                icon: Icon(Icons.unfold_more_rounded),
+                                iconSize: 24,
+                                iconEnabledColor: iconcolor,
+                              ),
+                              dropdownStyleData: DropdownStyleData(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: fill_color,
+                                ),
+                              ),
+                              menuItemStyleData: MenuItemStyleData(
+                                height: 40,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Container(
+                          width: 312,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: TextFormField(
+                            focusNode: _inputFocusNode,
+                            controller: _controller,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: fill_color,
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              labelText: selectedValue == 'Phone number'
+                                  ? 'Phone Number'
+                                  : 'Email',
+                              labelStyle: TextStyle(
+                                color: _labelColor,
+                                fontSize: 16,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: _inputBorderColor,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: focusedBorder_color,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: error_color,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: error_color,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            keyboardType: selectedValue == 'Phone number'
+                                ? TextInputType.phone
+                                : TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This field is required';
                               }
-                            });
-                          },
-                          buttonStyleData: ButtonStyleData(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            width: 312,
-                            decoration: BoxDecoration(
-                              color: fill_color,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          iconStyleData: IconStyleData(
-                            icon: Icon(Icons.unfold_more_rounded),
-                            iconSize: 24,
-                            iconEnabledColor: iconcolor,
-                          ),
-                          dropdownStyleData: DropdownStyleData(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              color: fill_color,
-                            ),
-                          ),
-                          menuItemStyleData: MenuItemStyleData(
-                            height: 40,
+                              if (selectedValue == 'Phone number') {
+                                final phoneRegex = RegExp(r'^[0-9]{10}$');
+                                if (!phoneRegex.hasMatch(value)) {
+                                  return 'Phone number must be 10 digits';
+                                }
+                              } else {
+                                final emailRegex =
+                                    RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+                                if (!emailRegex.hasMatch(value)) {
+                                  return 'Invalid email format';
+                                }
+                              }
+                              return null;
+                            },
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Container(
-                      width: 312,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: TextFormField(
-                        focusNode: _inputFocusNode,
-                        controller: _controller,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: fill_color,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                          labelText: selectedValue == 'Phone number'
-                              ? 'Phone Number'
-                              : 'Email',
-                          hintText: hintText,
-                          hintStyle: TextStyle(
-                            color: unnecessary_colors,
-                            fontSize: 16,
-                          ),
-                          labelStyle: TextStyle(
-                            color: _labelColor,
-                            fontSize: 16,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: _inputBorderColor,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: focusedBorder_color,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: error_color,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: error_color,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
+                        SizedBox(height: 16),
+                        Container(
+                          width: 312,
+                          height: 48,
+                          child: CustomButton(
+                            text: "Continue",
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                final inputType =
+                                    selectedValue == 'Phone number'
+                                        ? 'phone'
+                                        : 'email';
+                                final inputValue = _controller.text;
+                                print(
+                                    'Send OTP for $inputType: $inputValue (simulated).');
+                                sendOtp(inputType, inputValue)
+                                    .catchError((error) {
+                                  _showErrorSnackBar('Failed to send OTP');
+                                });
+                              } else {
+                                setState(() {
+                                  _inputBorderColor = error_color;
+                                });
+                                _showErrorSnackBar(
+                                    'Please correct the errors.');
+                              }
+                            },
                           ),
                         ),
-                        keyboardType: selectedValue == 'Phone number'
-                            ? TextInputType.phone
-                            : TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'This field is required';
-                          }
-                          if (selectedValue == 'Phone number') {
-                            final phoneRegex = RegExp(r'^[0-9]{10}$');
-                            if (!phoneRegex.hasMatch(value)) {
-                              return 'Phone number must be 10 digits';
-                            }
-                          } else {
-                            final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-                            if (!emailRegex.hasMatch(value)) {
-                              return 'Invalid email format';
-                            }
-                          }
-                          return null;
-                        },
-                      ),
+                      ],
                     ),
-                    SizedBox(height: 16),
-                    Container(
-                      width: 312,
-                      height: 48,
-                      child: CustomButton(
-                        text: "Continue",
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            final inputType = selectedValue == 'Phone number'
-                                ? 'phone'
-                                : 'email';
-                            final inputValue = _controller.text;
-                            print(
-                                'Send OTP for $inputType: $inputValue (simulated).');
-                            sendOtp(inputType, inputValue).catchError((error) {
-                              _showErrorSnackBar('Failed to send OTP');
-                            });
-                          } else {
-                            setState(() {
-                              _inputBorderColor = error_color;
-                            });
-                            _showErrorSnackBar('Please correct the errors.');
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ],
       ),
