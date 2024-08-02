@@ -1,11 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:paddy_rice/constants/api.dart';
+
 import 'package:paddy_rice/constants/color.dart';
 
 @RoutePage()
@@ -24,16 +21,11 @@ class _EditProfileRouteState extends State<EditProfileRoute> {
   TextEditingController _phoneController = TextEditingController();
   FocusNode _nameFocusNode = FocusNode();
 
-  String? originalName;
-  String? originalSurname;
-  String? originalEmail;
-  String? originalPhone;
   Color _labelColor = Colors.grey;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
 
     _nameFocusNode.addListener(() {
       setState(() {
@@ -50,66 +42,6 @@ class _EditProfileRouteState extends State<EditProfileRoute> {
     _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      originalName = prefs.getString('name');
-      originalSurname = prefs.getString('surname');
-      originalEmail = prefs.getString('email');
-      originalPhone = prefs.getString('phone');
-
-      _nameController.text = originalName ?? '';
-      _surnameController.text = originalSurname ?? '';
-      _emailController.text = originalEmail ?? '';
-      _phoneController.text = originalPhone ?? '';
-    });
-  }
-
-  Future<void> _updateProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getInt('userId');
-    if (userId == null) {
-      throw Exception('No user ID found');
-    }
-
-    Map<String, String> updatedFields = {};
-
-    if (_nameController.text != originalName) {
-      updatedFields['name'] = _nameController.text;
-    }
-    if (_surnameController.text != originalSurname) {
-      updatedFields['surname'] = _surnameController.text;
-    }
-    if (_emailController.text != originalEmail) {
-      updatedFields['email'] = _emailController.text;
-    }
-    if (_phoneController.text != originalPhone) {
-      updatedFields['phone'] = _phoneController.text;
-    }
-
-    if (updatedFields.isEmpty) {
-      print('No changes to update');
-      return;
-    }
-
-    final response = await http.put(
-      Uri.parse('${ApiConstants.baseUrl}/edit_profile/$userId'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(updatedFields),
-    );
-
-    if (response.statusCode == 200) {
-      print('Profile updated successfully');
-      // Update the local storage
-      updatedFields.forEach((key, value) async {
-        await prefs.setString(key, value);
-      });
-      context.router.replaceNamed('/profile');
-    } else {
-      print('Failed to update profile');
-    }
   }
 
   @override
@@ -138,7 +70,6 @@ class _EditProfileRouteState extends State<EditProfileRoute> {
           child: Form(
             key: _formKey,
             child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
@@ -329,7 +260,7 @@ class _EditProfileRouteState extends State<EditProfileRoute> {
                   text: "Save Changes",
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      _updateProfile();
+                      // Implement save changes functionality here
                     }
                   },
                 ),

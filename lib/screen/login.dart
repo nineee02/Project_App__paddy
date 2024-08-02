@@ -1,14 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
-
-import 'package:paddy_rice/constants/api.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/CustomTextField.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class LoginRoute extends StatefulWidget {
@@ -47,49 +41,6 @@ class _LoginRouteState extends State<LoginRoute> {
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     super.dispose();
-  }
-
-  Future<void> _sendUserData(String emailOrPhone, String password) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}/login');
-    print('Attempting to connect to $url');
-    final response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'emailOrPhone': emailOrPhone,
-        'password': password,
-      }),
-    );
-
-    setState(() {
-      _isEmailError = false;
-      _isPasswordError = false;
-    });
-
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      final userId = responseData['userId'];
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
-      await prefs.setInt('userId', userId);
-
-      print('Login successful, user ID: $userId');
-      context.router.replaceNamed('/home');
-    } else {
-      if (response.statusCode == 401) {
-        setState(() {
-          _isPasswordError = true;
-        });
-      } else if (response.statusCode == 404) {
-        setState(() {
-          _isEmailError = true;
-        });
-      } else {
-        print('Error: ${response.statusCode}');
-      }
-    }
   }
 
   @override
@@ -194,9 +145,8 @@ class _LoginRouteState extends State<LoginRoute> {
                   text: "Sign in",
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      _sendUserData(
-                          _emailController.text, _passwordController.text);
                       print('Login button pressed');
+                      context.router.replaceNamed('/home');
                     }
                   },
                 ),

@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/font_size.dart';
-import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/shDialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class UserProfile {
   final String name;
@@ -21,37 +17,6 @@ class UserProfile {
     required this.email,
     required this.phone,
   });
-
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
-      name: json['Name'],
-      surname: json['Surname'],
-      email: json['Email'],
-      phone: json['PhoneNumber'],
-    );
-  }
-}
-
-Future<UserProfile> fetchUserProfile() async {
-  final prefs = await SharedPreferences.getInstance();
-  final userId = prefs.getInt('userId');
-  if (userId == null) {
-    throw Exception('No user ID found');
-  }
-
-  final response = await http.get(
-    Uri.parse('${ApiConstants.baseUrl}/profile/$userId'),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  );
-
-  if (response.statusCode == 200) {
-    return UserProfile.fromJson(json.decode(response.body));
-  } else {
-    print('Error: ${response.statusCode}');
-    throw Exception('Failed to load user profile');
-  }
 }
 
 @RoutePage()
@@ -82,6 +47,14 @@ class ProfileRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Simulated user profile data
+    final user = UserProfile(
+      name: 'John',
+      surname: 'Doe',
+      email: 'john.doe@example.com',
+      phone: '123-456-7890',
+    );
+
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
@@ -105,24 +78,7 @@ class ProfileRoute extends StatelessWidget {
           }
         },
       ),
-      body: FutureBuilder<UserProfile>(
-        future: fetchUserProfile(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}',
-                  style: TextStyle(color: Colors.red)),
-            );
-          } else if (!snapshot.hasData) {
-            return Center(child: Text('No profile data found'));
-          } else {
-            final user = snapshot.data!;
-            return ProfileContent(user: user, onLogout: _showLogoutDialog);
-          }
-        },
-      ),
+      body: ProfileContent(user: user, onLogout: _showLogoutDialog),
     );
   }
 }
@@ -285,6 +241,7 @@ class _ChangePasswordTileState extends State<ChangePasswordTile> {
                 CustomButton(
                   text: "Change Password",
                   onPressed: () {
+                    // Add password change logic here if needed
                     context.router.replaceNamed('/profile');
                   },
                 ),

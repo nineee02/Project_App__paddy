@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-
-import 'package:paddy_rice/constants/api.dart';
-import 'package:http/http.dart' as http;
 import 'package:paddy_rice/constants/font_size.dart';
-import 'dart:convert';
-
 import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/shDialog.dart';
@@ -81,68 +76,6 @@ class _ForgotRouteState extends State<ForgotRoute> {
         );
       },
     );
-  }
-
-  Future<bool> checkUserExists(String type, String value) async {
-    try {
-      final response = await http.post(
-        Uri.parse('${ApiConstants.baseUrl}/check_user_exists'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'type': type, 'value': value}),
-      );
-
-      if (response.statusCode == 200) {
-        print('User exists');
-        return true;
-      } else {
-        print('User not found');
-        return false;
-      }
-    } catch (e) {
-      print('Error: $e');
-      return false;
-    }
-  }
-
-  Future<void> sendOtp(String type, String value) async {
-    try {
-      final userExists = await checkUserExists(type, value);
-
-      if (!userExists) {
-        _showUserNotFoundDialog();
-        return;
-      }
-
-      final response = await http.post(
-        Uri.parse('${ApiConstants.baseUrl}/send_otp'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'type': type, 'value': value}),
-      );
-
-      if (response.statusCode == 200) {
-        // Log response body
-        print('Response body: ${response.body}');
-
-        // Decode response body safely
-        try {
-          final data = jsonDecode(response.body);
-          print('OTP sent: ${data['otp']}');
-          context.router.push(OtpRoute(
-            inputType: type,
-            inputValue: value,
-          ));
-        } catch (e) {
-          print('Error decoding JSON: $e');
-          _showErrorSnackBar('Failed to parse server response');
-        }
-      } else {
-        print('Failed to send OTP');
-        _showErrorSnackBar('Failed to send OTP');
-      }
-    } catch (e) {
-      print('Error: $e');
-      _showErrorSnackBar('Failed to send OTP');
-    }
   }
 
   @override
@@ -231,11 +164,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
                               onChanged: (String? value) {
                                 setState(() {
                                   selectedValue = value;
-                                  if (value == 'Phone number') {
-                                    _controller.clear();
-                                  } else {
-                                    _controller.clear();
-                                  }
+                                  _controller.clear();
                                 });
                               },
                               buttonStyleData: ButtonStyleData(
@@ -342,19 +271,21 @@ class _ForgotRouteState extends State<ForgotRoute> {
                           height: 48,
                           child: CustomButton(
                             text: "Continue",
-                            onPressed: () async {
+                            onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 final inputType =
                                     selectedValue == 'Phone number'
                                         ? 'phone'
                                         : 'email';
                                 final inputValue = _controller.text;
+
                                 print(
-                                    'Send OTP for $inputType: $inputValue (simulated).');
-                                sendOtp(inputType, inputValue)
-                                    .catchError((error) {
-                                  _showErrorSnackBar('Failed to send OTP');
-                                });
+                                    "Navigating to /otp with $inputType: $inputValue");
+                                context.router.push(
+                                  OtpRoute(
+                                      inputType: inputType,
+                                      inputValue: inputValue),
+                                );
                               } else {
                                 setState(() {
                                   _inputBorderColor = error_color;

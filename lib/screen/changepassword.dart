@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
-import 'package:paddy_rice/constants/api.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
@@ -21,62 +18,35 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   bool _isNewPasswordObscured = true, _isConfirmPasswordObscured = true;
-  String? _errorMessage;
-
-  void _changePassword() async {
-    final newPassword = _newPasswordController.text;
-    final confirmPassword = _confirmPasswordController.text;
-
-    if (newPassword.isEmpty || confirmPassword.isEmpty) {
-      setState(() => _errorMessage = 'Please fill in all fields');
-      return;
-    }
-    if (newPassword != confirmPassword) {
-      setState(() => _errorMessage = 'Passwords do not match');
-      return;
-    }
-
-    try {
-      final response = await http.post(
-        Uri.parse('${ApiConstants.baseUrl}/change_password'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': 'YOUR_SESSION_COOKIE_HERE',
-        },
-        body: jsonEncode({
-          'newPassword': newPassword,
-          'confirmPassword': confirmPassword,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        setState(() => _errorMessage = null);
-        context.router.replaceNamed('/login');
-      } else {
-        setState(() => _errorMessage = response.body);
-      }
-    } catch (error) {
-      setState(() => _errorMessage = 'An error occurred: $error');
-    }
-  }
+  String? _newPasswordError, _confirmPasswordError;
 
   void _validateAndProceed() {
     final newPassword = _newPasswordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
-    if (newPassword.isEmpty || confirmPassword.isEmpty) {
-      setState(() => _errorMessage = 'Please fill in all fields');
-      return;
-    }
-    if (newPassword != confirmPassword) {
-      setState(() => _errorMessage = 'Passwords do not match');
-      return;
-    }
+    setState(() {
+      _newPasswordError = null;
+      _confirmPasswordError = null;
 
-    setState(() => _errorMessage = null);
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password reset successful (simulated).')));
-    context.router.replaceNamed('/login');
+      if (newPassword.isEmpty) {
+        _newPasswordError = 'Please enter a new password';
+      }
+      if (confirmPassword.isEmpty) {
+        _confirmPasswordError = 'Please confirm your password';
+      }
+      if (newPassword.isNotEmpty &&
+          confirmPassword.isNotEmpty &&
+          newPassword != confirmPassword) {
+        _confirmPasswordError = 'Passwords do not match';
+      }
+
+      if (_newPasswordError == null && _confirmPasswordError == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Password reset successful (simulated).')),
+        );
+        context.router.replaceNamed('/login');
+      }
+    });
   }
 
   @override
@@ -135,14 +105,20 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 16.0),
-                      _buildPasswordField(_newPasswordController,
-                          'New Password', _isNewPasswordObscured, () {
+                      _buildPasswordField(
+                          _newPasswordController,
+                          'New Password',
+                          _isNewPasswordObscured,
+                          _newPasswordError, () {
                         setState(() =>
                             _isNewPasswordObscured = !_isNewPasswordObscured);
                       }),
                       SizedBox(height: 16),
-                      _buildPasswordField(_confirmPasswordController,
-                          'Confirm Password', _isConfirmPasswordObscured, () {
+                      _buildPasswordField(
+                          _confirmPasswordController,
+                          'Confirm Password',
+                          _isConfirmPasswordObscured,
+                          _confirmPasswordError, () {
                         setState(() => _isConfirmPasswordObscured =
                             !_isConfirmPasswordObscured);
                       }),
@@ -153,53 +129,69 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                           onPressed: _validateAndProceed,
                         ),
                       ),
-                      if (_errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            _errorMessage!,
-                            style: TextStyle(color: error_color),
-                          ),
-                        ),
                     ],
                   ),
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 
   Widget _buildPasswordField(TextEditingController controller, String labelText,
-      bool isObscured, VoidCallback onToggle) {
-    return Center(
-      child: SizedBox(
-        width: 312,
-        height: 48,
-        child: TextFormField(
-          controller: controller,
-          obscureText: isObscured,
-          decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: TextStyle(color: fontcolor),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: iconcolor),
-            ),
-            fillColor: fill_color,
-            filled: true,
-            suffixIcon: IconButton(
-              icon: Icon(isObscured ? Icons.visibility : Icons.visibility_off,
-                  color: iconcolor),
-              onPressed: onToggle,
+      bool isObscured, String? errorText, VoidCallback onToggle) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: SizedBox(
+            width: 312,
+            height: 48,
+            child: TextFormField(
+              controller: controller,
+              obscureText: isObscured,
+              decoration: InputDecoration(
+                labelText: labelText,
+                labelStyle: TextStyle(color: fontcolor),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: iconcolor, width: 2),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: error_color, width: 2),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: error_color, width: 2),
+                ),
+                fillColor: fill_color,
+                filled: true,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                      isObscured ? Icons.visibility : Icons.visibility_off,
+                      color: iconcolor),
+                  onPressed: onToggle,
+                ),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+              ),
             ),
           ),
         ),
-      ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.only(left: 32, top: 8),
+            child: Text(
+              errorText ?? '', // Display an empty string if there is no error
+              style: TextStyle(color: error_color, fontSize: 12),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
