@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:paddy_rice/constants/font_size.dart';
+import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:paddy_rice/constants/api.dart';
@@ -324,24 +325,13 @@ class _EditProfileRouteState extends State<EditProfileRoute> {
                   ),
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(
+                CustomButton(
+                  text: "Save Changes",
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _updateProfile();
                     }
                   },
-                  child: Text(
-                    'Save Changes',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: fontcolor,
-                    backgroundColor: buttoncolor,
-                    padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                  ),
                 ),
               ],
             ),

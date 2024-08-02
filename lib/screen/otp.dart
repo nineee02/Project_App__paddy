@@ -87,7 +87,6 @@ class OtpRoute extends StatelessWidget {
 
     void _verifyOtp() {
       if (_pinController.text.length == 4) {
-        // Replace with actual verification logic
         print('OTP verification button pressed');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('OTP verified successfully (simulated).')),
