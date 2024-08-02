@@ -165,9 +165,12 @@ class ChangePasswordTile extends StatefulWidget {
 }
 
 class _ChangePasswordTileState extends State<ChangePasswordTile> {
-  TextEditingController _currentPasswordController = TextEditingController();
-  TextEditingController _newPasswordController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
   bool _isCurrentPasswordObscured = true;
   bool _isNewPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
@@ -195,13 +198,26 @@ class _ChangePasswordTileState extends State<ChangePasswordTile> {
           heightFactor: 0.9,
           child: Container(
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
-                  height: 20,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Change Password",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: fontcolor)),
+                    IconButton(
+                      icon: Icon(Icons.close, color: iconcolor),
+                      onPressed: () =>
+                          Navigator.of(context).pop(), // Close the bottom sheet
+                    ),
+                  ],
                 ),
+                SizedBox(height: 20),
                 _buildPasswordField(
                   controller: _currentPasswordController,
                   labelText: "Current Password",
@@ -231,18 +247,18 @@ class _ChangePasswordTileState extends State<ChangePasswordTile> {
                   labelText: "Confirm New Password",
                   isObscured: _isConfirmPasswordObscured,
                   onToggle: () {
-                    setState(() => _isConfirmPasswordObscured =
-                        !_isConfirmPasswordObscured);
+                    setState(() {
+                      _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
+                    });
                   },
                   isError: _isPasswordError,
                   errorMessage: _errorMessage,
                 ),
                 SizedBox(height: 20),
                 CustomButton(
-                  text: "Change Password",
+                  text: "Reset",
                   onPressed: () {
-                    // Add password change logic here if needed
-                    context.router.replaceNamed('/profile');
+                    _validatePasswords();
                   },
                 ),
               ],
@@ -251,6 +267,31 @@ class _ChangePasswordTileState extends State<ChangePasswordTile> {
         );
       },
     );
+  }
+
+  void _validatePasswords() {
+    setState(() {
+      _isPasswordError = false;
+      _errorMessage = '';
+
+      if (_currentPasswordController.text.isEmpty ||
+          _newPasswordController.text.isEmpty ||
+          _confirmPasswordController.text.isEmpty) {
+        _isPasswordError = true;
+        _errorMessage = 'Please fill out all fields';
+      } else if (_newPasswordController.text !=
+          _confirmPasswordController.text) {
+        _isPasswordError = true;
+        _errorMessage = 'Passwords do not match';
+      } else {
+        // Simulate password change success
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Password changed successfully (simulated).')),
+        );
+        Navigator.of(context).pop(); // Close the bottom sheet
+        context.router.replaceNamed('/profile');
+      }
+    });
   }
 
   Widget _buildPasswordField({
@@ -279,6 +320,7 @@ class _ChangePasswordTileState extends State<ChangePasswordTile> {
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: focusedBorder_color),
               ),
+              errorText: isError ? errorMessage : null,
               suffixIcon: IconButton(
                 icon: Icon(
                   isObscured ? Icons.visibility : Icons.visibility_off,
@@ -289,14 +331,6 @@ class _ChangePasswordTileState extends State<ChangePasswordTile> {
             ),
           ),
         ),
-        if (isError)
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-            child: Text(
-              errorMessage,
-              style: TextStyle(color: Colors.red, fontSize: 12),
-            ),
-          ),
       ],
     );
   }

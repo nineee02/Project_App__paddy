@@ -1,6 +1,5 @@
-import 'package:flutter/widgets.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
@@ -17,36 +16,18 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  bool _isNewPasswordObscured = true, _isConfirmPasswordObscured = true;
-  String? _newPasswordError, _confirmPasswordError;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool _isNewPasswordObscured = true;
+  bool _isConfirmPasswordObscured = true;
 
   void _validateAndProceed() {
-    final newPassword = _newPasswordController.text;
-    final confirmPassword = _confirmPasswordController.text;
-
-    setState(() {
-      _newPasswordError = null;
-      _confirmPasswordError = null;
-
-      if (newPassword.isEmpty) {
-        _newPasswordError = 'Please enter a new password';
-      }
-      if (confirmPassword.isEmpty) {
-        _confirmPasswordError = 'Please confirm your password';
-      }
-      if (newPassword.isNotEmpty &&
-          confirmPassword.isNotEmpty &&
-          newPassword != confirmPassword) {
-        _confirmPasswordError = 'Passwords do not match';
-      }
-
-      if (_newPasswordError == null && _confirmPasswordError == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Password reset successful (simulated).')),
-        );
-        context.router.replaceNamed('/login');
-      }
-    });
+    if (_formKey.currentState?.validate() ?? false) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password reset successful (simulated).')),
+      );
+      context.router.replaceNamed('/login');
+    }
   }
 
   @override
@@ -92,44 +73,52 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
               Center(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Your new password must be different \nfrom any previously used passwords.',
-                        style: TextStyle(
-                            color: fontcolor,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w400),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 16.0),
-                      _buildPasswordField(
-                          _newPasswordController,
-                          'New Password',
-                          _isNewPasswordObscured,
-                          _newPasswordError, () {
-                        setState(() =>
-                            _isNewPasswordObscured = !_isNewPasswordObscured);
-                      }),
-                      SizedBox(height: 16),
-                      _buildPasswordField(
-                          _confirmPasswordController,
-                          'Confirm Password',
-                          _isConfirmPasswordObscured,
-                          _confirmPasswordError, () {
-                        setState(() => _isConfirmPasswordObscured =
-                            !_isConfirmPasswordObscured);
-                      }),
-                      SizedBox(height: 16),
-                      Center(
-                        child: CustomButton(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Your new password must be different \nfrom any previously used passwords.',
+                          style: TextStyle(
+                              color: fontcolor,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w400),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 16.0),
+                        _buildPasswordField(
+                          controller: _newPasswordController,
+                          labelText: 'New Password',
+                          isObscured: _isNewPasswordObscured,
+                          emptyErrorText: 'Please enter a new password',
+                          onToggle: () {
+                            setState(() {
+                              _isNewPasswordObscured = !_isNewPasswordObscured;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 16.0),
+                        _buildPasswordField(
+                          controller: _confirmPasswordController,
+                          labelText: 'Confirm Password',
+                          isObscured: _isConfirmPasswordObscured,
+                          emptyErrorText: 'Please confirm your password',
+                          onToggle: () {
+                            setState(() {
+                              _isConfirmPasswordObscured =
+                                  !_isConfirmPasswordObscured;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 16.0),
+                        CustomButton(
                           text: "Reset",
                           onPressed: _validateAndProceed,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -140,58 +129,55 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
     );
   }
 
-  Widget _buildPasswordField(TextEditingController controller, String labelText,
-      bool isObscured, String? errorText, VoidCallback onToggle) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: SizedBox(
-            width: 312,
-            height: 48,
-            child: TextFormField(
-              controller: controller,
-              obscureText: isObscured,
-              decoration: InputDecoration(
-                labelText: labelText,
-                labelStyle: TextStyle(color: fontcolor),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey, width: 1),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: iconcolor, width: 2),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: error_color, width: 2),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: error_color, width: 2),
-                ),
-                fillColor: fill_color,
-                filled: true,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                      isObscured ? Icons.visibility : Icons.visibility_off,
-                      color: iconcolor),
-                  onPressed: onToggle,
-                ),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-              ),
+  Widget _buildPasswordField({
+    required TextEditingController controller,
+    required String labelText,
+    required bool isObscured,
+    required String emptyErrorText,
+    required VoidCallback onToggle,
+  }) {
+    return Container(
+      width: 312,
+      child: TextFormField(
+        controller: controller,
+        obscureText: isObscured,
+        decoration: InputDecoration(
+          labelText: labelText,
+          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          labelStyle: TextStyle(color: fontcolor),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: iconcolor, width: 2),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: error_color, width: 2),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: error_color, width: 2),
+          ),
+          fillColor: fill_color,
+          filled: true,
+          suffixIcon: IconButton(
+            icon: Icon(
+              isObscured ? Icons.visibility : Icons.visibility_off,
+              color: iconcolor,
             ),
+            onPressed: onToggle,
           ),
         ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsets.only(left: 32, top: 8),
-            child: Text(
-              errorText ?? '', // Display an empty string if there is no error
-              style: TextStyle(color: error_color, fontSize: 12),
-            ),
-          ),
-        ),
-      ],
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return emptyErrorText;
+          }
+          if (labelText == 'Confirm Password' &&
+              value != _newPasswordController.text) {
+            return 'Passwords do not match';
+          }
+          return null;
+        },
+      ),
     );
   }
 }
