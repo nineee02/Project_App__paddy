@@ -1,17 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:paddy_rice/constants/color.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
+import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:paddy_rice/widgets/shDialog.dart';
-
-final List<String> select_Value = [
-  'Phone number',
-  'Email',
-];
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class ForgotRoute extends StatefulWidget {
@@ -23,7 +18,6 @@ class ForgotRoute extends StatefulWidget {
 
 class _ForgotRouteState extends State<ForgotRoute> {
   final _formKey = GlobalKey<FormState>();
-  String? selectedValue = "Phone number";
   final TextEditingController _controller = TextEditingController();
 
   Color _inputBorderColor = fill_color;
@@ -61,12 +55,11 @@ class _ForgotRouteState extends State<ForgotRoute> {
       context: context,
       builder: (BuildContext context) {
         return ShDialog(
-          title: 'User not found',
-          content:
-              'User not found. Would you like to sign up or enter a different number?',
+          title: S.of(context)!.user_not_found,
+          content: S.of(context)!.user_not_found_prompt,
           parentContext: context,
-          confirmButtonText: 'Sign Up',
-          cancelButtonText: 'Not now',
+          confirmButtonText: S.of(context)!.sign_up,
+          cancelButtonText: S.of(context)!.not_now,
           onConfirm: () {
             context.router.replaceNamed('/signup');
           },
@@ -76,6 +69,28 @@ class _ForgotRouteState extends State<ForgotRoute> {
         );
       },
     );
+  }
+
+  bool _checkUserExists(String email) {
+    List<String> existingUsers = ['user@example.com'];
+    return existingUsers.contains(email);
+  }
+
+  void _validateAndContinue() {
+    if (_formKey.currentState?.validate() ?? false) {
+      final inputValue = _controller.text;
+
+      if (_checkUserExists(inputValue)) {
+        context.router.push(OtpRoute(inputValue: inputValue));
+      } else {
+        _showUserNotFoundDialog();
+      }
+    } else {
+      setState(() {
+        _inputBorderColor = error_color;
+      });
+      _showErrorSnackBar(S.of(context)!.correct_errors);
+    }
   }
 
   @override
@@ -90,7 +105,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
         title: Text(
-          "Forgot Password",
+          S.of(context)!.forgot_password,
           textAlign: TextAlign.center,
           style: appBarFont,
         ),
@@ -106,22 +121,12 @@ class _ForgotRouteState extends State<ForgotRoute> {
               width: 456,
               height: 456,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: fill_color,
                 shape: BoxShape.circle,
               ),
             ),
           ),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  opacity: 0.5,
-                  image: AssetImage('lib/assets/icon/home.png'),
-                  alignment: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
+          DecoratedImage(),
           Column(
             children: [
               Center(
@@ -130,69 +135,24 @@ class _ForgotRouteState extends State<ForgotRoute> {
                   child: Form(
                     key: _formKey,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Please Enter Your Email or Phone To \nReceive a Verification Code',
-                          style: TextStyle(
-                            color: fontcolor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Container(
-                          width: 312,
-                          height: 48,
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton2<String>(
-                              isExpanded: true,
-                              items: select_Value
-                                  .map(
-                                      (String item) => DropdownMenuItem<String>(
-                                            value: item,
-                                            child: Text(
-                                              item,
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: fontcolor),
-                                            ),
-                                          ))
-                                  .toList(),
-                              value: selectedValue,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  selectedValue = value;
-                                  _controller.clear();
-                                });
-                              },
-                              buttonStyleData: ButtonStyleData(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                width: 312,
-                                decoration: BoxDecoration(
-                                  color: fill_color,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              iconStyleData: IconStyleData(
-                                icon: Icon(Icons.unfold_more_rounded),
-                                iconSize: 24,
-                                iconEnabledColor: iconcolor,
-                              ),
-                              dropdownStyleData: DropdownStyleData(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  color: fill_color,
-                                ),
-                              ),
-                              menuItemStyleData: MenuItemStyleData(
-                                height: 40,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              S.of(context)!.enter_email_verification,
+                              style: TextStyle(
+                                color: fontcolor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Container(
                           width: 312,
                           decoration: BoxDecoration(
@@ -206,9 +166,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
                               fillColor: fill_color,
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 12, horizontal: 16),
-                              labelText: selectedValue == 'Phone number'
-                                  ? 'Phone Number'
-                                  : 'Email',
+                              labelText: S.of(context)!.email,
                               labelStyle: TextStyle(
                                 color: _labelColor,
                                 fontSize: 16,
@@ -242,24 +200,15 @@ class _ForgotRouteState extends State<ForgotRoute> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            keyboardType: selectedValue == 'Phone number'
-                                ? TextInputType.phone
-                                : TextInputType.emailAddress,
+                            keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'This field is required';
+                                return S.of(context)!.enter_email_verification;
                               }
-                              if (selectedValue == 'Phone number') {
-                                final phoneRegex = RegExp(r'^[0-9]{10}$');
-                                if (!phoneRegex.hasMatch(value)) {
-                                  return 'Phone number must be 10 digits';
-                                }
-                              } else {
-                                final emailRegex =
-                                    RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-                                if (!emailRegex.hasMatch(value)) {
-                                  return 'Invalid email format';
-                                }
+                              final emailRegex =
+                                  RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+                              if (!emailRegex.hasMatch(value)) {
+                                return S.of(context)!.invalid_email_format;
                               }
                               return null;
                             },
@@ -270,30 +219,8 @@ class _ForgotRouteState extends State<ForgotRoute> {
                           width: 312,
                           height: 48,
                           child: CustomButton(
-                            text: "Continue",
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                final inputType =
-                                    selectedValue == 'Phone number'
-                                        ? 'phone'
-                                        : 'email';
-                                final inputValue = _controller.text;
-
-                                print(
-                                    "Navigating to /otp with $inputType: $inputValue");
-                                context.router.push(
-                                  OtpRoute(
-                                      inputType: inputType,
-                                      inputValue: inputValue),
-                                );
-                              } else {
-                                setState(() {
-                                  _inputBorderColor = error_color;
-                                });
-                                _showErrorSnackBar(
-                                    'Please correct the errors.');
-                              }
-                            },
+                            text: S.of(context)!.continue_text,
+                            onPressed: _validateAndContinue,
                           ),
                         ),
                       ],

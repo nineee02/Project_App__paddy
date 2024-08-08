@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert'; // For utf8 encoding
+import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,7 @@ import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/model.dart';
 import 'package:wifi_scan/wifi_scan.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class SelectWifiRoute extends StatefulWidget {
@@ -100,21 +101,55 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
     }
   }
 
+  bool validateInputs() {
+    final localizations = S.of(context)!;
+    if (selectedWifi == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(localizations.please_select_wifi),
+        ),
+      );
+      return false;
+    }
+
+    if (passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(localizations.please_enter_password),
+        ),
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  void onSubmit() {
+    if (validateInputs()) {
+      final ssid = selectedWifi!;
+      final password = passwordController.text;
+      sendWifiCredentials(ssid, password);
+      context.router.replaceNamed('/bottom_navigation');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = S.of(context)!;
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
-          backgroundColor: maincolor,
-          leading: IconButton(
-            onPressed: () => context.router.replaceNamed('/addDevice'),
-            icon: Icon(Icons.arrow_back, color: iconcolor),
-          ),
-          title: Text(
-            "Select Wi-Fi network",
-            style: appBarFont,
-          ),
-          centerTitle: true),
+        backgroundColor: maincolor,
+        leading: IconButton(
+          onPressed: () => context.router.replaceNamed('/addDevice'),
+          icon: Icon(Icons.arrow_back, color: iconcolor),
+        ),
+        title: Text(
+          localizations.select_wifi_network,
+          style: appBarFont,
+        ),
+        centerTitle: true,
+      ),
       body: Stack(
         children: [
           Positioned(
@@ -137,7 +172,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "This device only supports 2.4GHz Wi-Fi",
+                  localizations.this_device_supports,
                   style: TextStyle(fontSize: 16, color: fontcolor),
                   textAlign: TextAlign.center,
                 ),
@@ -191,7 +226,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
                               height: 40,
                             ),
                             hint: Text(
-                              "Select Wi-Fi network",
+                              localizations.select_wifi_network_hint,
                               style: TextStyle(
                                   fontSize: 16, color: unnecessary_colors),
                             ),
@@ -211,7 +246,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
                             fillColor: fill_color,
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 12, horizontal: 16),
-                            labelText: "Enter password",
+                            labelText: localizations.enter_password,
                             labelStyle: TextStyle(
                               color: _passwordFocusNode.hasFocus
                                   ? Colors.brown
@@ -272,24 +307,8 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
                         width: 312,
                         height: 48,
                         child: CustomButton(
-                          text: "Next",
-                          onPressed: () {
-                            final ssid = selectedWifi;
-                            final password = passwordController.text;
-                            if (ssid != null && password.isNotEmpty) {
-                              sendWifiCredentials(ssid, password);
-                              // ส่งข้อมูล Wi-Fi กลับไปยัง HomeRoute
-                              Navigator.pop(
-                                  context, Device(ssid, 'unique-id', true));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                      'Please select a Wi-Fi network and enter the password.'),
-                                ),
-                              );
-                            }
-                          },
+                          text: localizations.next,
+                          onPressed: onSubmit,
                         ),
                       ),
                     ],

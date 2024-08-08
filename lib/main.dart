@@ -57,8 +57,8 @@ class _MyAppState extends State<MyApp> {
       locale: _locale,
       // hook up router to MaterialApp
       routerConfig: _appRouter.config(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: S.localizationsDelegates,
+      supportedLocales: S.supportedLocales,
     );
   }
 }

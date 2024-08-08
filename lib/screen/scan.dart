@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:image_picker/image_picker.dart';
@@ -111,11 +112,12 @@ class _ScanRouteState extends State<ScanRoute> {
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: IconButton(
-                onPressed: () => context.router.replaceNamed('/home'),
+                onPressed: () =>
+                    context.router.replaceNamed('/bottom_navigation'),
                 icon: Icon(Icons.arrow_back, color: iconcolor),
               ),
               title: Text(
-                "Scan",
+                S.of(context)!.scan,
                 style: appBarFont,
               ),
               centerTitle: true,
@@ -137,7 +139,7 @@ class _ScanRouteState extends State<ScanRoute> {
                       backgroundColor: buttoncolor,
                     ),
                     child: Text(
-                      "No QR code available",
+                      S.of(context)!.no_qr_code,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,

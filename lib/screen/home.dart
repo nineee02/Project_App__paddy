@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/screen/deviceState.dart';
+import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:paddy_rice/widgets/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,8 +19,10 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
-  List<Device> devices = [];
-  bool isEditMode = false;
+  List<Device> devices = [
+    Device(name: "Device 1", id: "1", status: false),
+    Device(name: "Device 2", id: "2", status: true),
+  ];
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -28,15 +33,15 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
   }
 
   void addDevice(Device device) {
-    setState(() {
-      devices.add(device);
-    });
+    if (devices.any((d) => d.name == device.name)) {
+      _showErrorSnackBar(S.of(context)!.device_already_exists);
+      return;
+    }
+    setState(() => devices.add(device));
   }
 
   void removeDevice(int index) {
-    setState(() {
-      devices.removeAt(index);
-    });
+    setState(() => devices.removeAt(index));
   }
 
   void onDeviceTap(Device device) async {
@@ -57,53 +62,72 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
     }
   }
 
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: error_color),
+    );
+  }
+
+  Color _getDeviceStatusColor(bool status) {
+    return status ? Color(0xFF80C080) : Color.fromRGBO(237, 76, 47, 1);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = S.of(context);
+    MenuItems.init(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: maincolor,
-        title: Text(
-          "Silo",
-          style: appBarFont,
-        ),
+        title: Text(localizations!.title, style: appBarFont),
         actions: [
           IconButton(
-            onPressed: () {
-              context.router.replaceNamed('/notifi');
-            },
-            icon: Icon(
-              Icons.notifications_outlined,
-              size: 24,
-              color: iconcolor,
+            onPressed: () => context.router.replaceNamed('/notifi'),
+            icon: Stack(
+              children: <Widget>[
+                Icon(Icons.notifications_outlined, size: 24, color: iconcolor),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(237, 76, 47, 1),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          Container(
+          Padding(
             padding: EdgeInsets.only(right: 16),
             child: DropdownButtonHideUnderline(
               child: DropdownButton2(
-                customButton: Icon(
-                  Icons.add_circle_outline,
-                  size: 24,
-                  color: iconcolor,
-                ),
+                customButton: Icon(Icons.more_vert, size: 24, color: iconcolor),
                 items: [
-                  ...MenuItems.firstItems.map(
-                    (item) => DropdownMenuItem<MenuItem>(
-                      value: item,
-                      child: MenuItems.buildItem(item),
-                    ),
-                  ),
+                  ...MenuItems.firstItems
+                      .map((item) => DropdownMenuItem<MenuItem>(
+                            value: item,
+                            child: MenuItems.buildItem(item),
+                          )),
                   const DropdownMenuItem<Divider>(
                       enabled: false, child: Divider()),
-                  ...MenuItems.secondItems.map(
-                    (item) => DropdownMenuItem<MenuItem>(
-                      value: item,
-                      child: MenuItems.buildItem(item),
-                    ),
-                  ),
+                  ...MenuItems.secondItems
+                      .map((item) => DropdownMenuItem<MenuItem>(
+                            value: item,
+                            child: MenuItems.buildItem(item),
+                          )),
                 ],
                 onChanged: (value) {
-                  MenuItems.onChanged(context, value! as MenuItem);
+                  final menuItem = value as MenuItem;
+                  if (menuItem.text == localizations.bluetooth) {
+                    context.router.replaceNamed('/addDevice');
+                  } else if (menuItem.text == localizations.qr_code) {
+                    context.router.replaceNamed('/scan');
+                  }
                 },
                 dropdownStyleData: DropdownStyleData(
                   width: 160,
@@ -127,189 +151,222 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            label: "Profile",
+      backgroundColor: maincolor,
+      body: Stack(
+        children: [
+          DecoratedImage(),
+          Center(
+            child: Column(
+              children: [
+                DecoratedImage(),
+                SizedBox(height: 24),
+                devices.isEmpty
+                    ? _buildNoDevices(localizations)
+                    : Expanded(child: _buildDeviceList(localizations)),
+              ],
+            ),
           ),
         ],
-        selectedItemColor: iconcolor,
-        unselectedItemColor: Color.fromRGBO(217, 217, 217, 1),
-        onTap: (int index) {
-          if (index == 0) {
-            context.router.replaceNamed('/home');
-          } else if (index == 1) {
-            context.router.replaceNamed('/profile');
-          }
-        },
       ),
-      backgroundColor: maincolor,
-      body: Center(
-        child: Container(
-          child: Column(
-            children: [
-              SizedBox(height: 24),
-              devices.isEmpty
-                  ? Container(
-                      width: 316,
-                      height: 135,
-                      decoration: BoxDecoration(
-                        color: fill_color,
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Opacity(
-                            opacity: 0.5,
-                            child: Image.asset(
-                              'lib/assets/icon/home.png',
-                              height: 94,
-                              fit: BoxFit.contain,
+    );
+  }
+
+  Widget _buildNoDevices(S localizations) {
+    return Container(
+      width: 316,
+      height: 135,
+      decoration: BoxDecoration(
+        color: fill_color,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Opacity(
+            opacity: 0.5,
+            child: Image.asset(
+              'lib/assets/icon/home.png',
+              height: 94,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Divider(
+            height: 1.0,
+            color: Color.fromRGBO(215, 215, 215, 1),
+            thickness: 1,
+            indent: 20,
+            endIndent: 20,
+          ),
+          Text(
+            localizations.no_devices,
+            style: TextStyle(
+              color: Color.fromRGBO(137, 137, 137, 1),
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDeviceList(S localizations) {
+    return Container(
+      width: 352,
+      child: ListView.builder(
+        itemCount: devices.length,
+        itemBuilder: (context, index) {
+          final device = devices[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Container(
+              width: 352,
+              height: 152,
+              decoration: BoxDecoration(
+                color: fill_color,
+                borderRadius: BorderRadius.circular(16),
+                border: Border(
+                  left: BorderSide(
+                    color: _getDeviceStatusColor(device.status),
+                    width: 8,
+                  ),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          device.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Container(
+                          width: 16,
+                          height: 16,
+                          decoration: BoxDecoration(
+                            color: _getDeviceStatusColor(device.status),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: ClipRRect(
+                        child: Slidable(
+                          key: ValueKey(device),
+                          endActionPane: ActionPane(
+                            motion: const StretchMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) => onDeviceTap(device),
+                                backgroundColor:
+                                    Color.fromRGBO(247, 145, 19, 1),
+                                foregroundColor: fill_color,
+                                icon: Icons.settings,
+                                label: localizations.setting,
+                              ),
+                              SlidableAction(
+                                onPressed: (context) => removeDevice(index),
+                                backgroundColor: Color.fromRGBO(237, 76, 47, 1),
+                                foregroundColor: fill_color,
+                                icon: Icons.delete,
+                                label: localizations.delete,
+                              ),
+                            ],
+                          ),
+                          child: Container(
+                            width: 352,
+                            height: 88,
+                            decoration: BoxDecoration(
+                              color: fill_color,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const SizedBox(height: 8.0),
+                                            Text(
+                                              localizations.temp,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${localizations.front}: 24° / ${device.frontTemp}°",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${localizations.back}: 24° / ${device.backTemp}°",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              localizations.moisture,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 12.0),
+                                            Text(
+                                              "14 %",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          Divider(
-                            height: 1.0,
-                            color: Color.fromRGBO(215, 215, 215, 1),
-                            thickness: 1,
-                            indent: 20,
-                            endIndent: 20,
-                          ),
-                          Text(
-                            "No devices",
-                            style: TextStyle(
-                                color: Color.fromRGBO(137, 137, 137, 1),
-                                fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Expanded(
-                      child: Container(
-                        width: 316,
-                        height: 135,
-                        child: ListView.builder(
-                          itemCount: devices.length,
-                          itemBuilder: (context, index) {
-                            final device = devices[index];
-                            return GestureDetector(
-                              onTap: () => onDeviceTap(device),
-                              child: Container(
-                                width: 316,
-                                height: 135,
-                                margin: EdgeInsets.symmetric(vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: fill_color,
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
-                                      child: Row(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                device.name,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                "front",
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.thermostat,
-                                                    size: 14,
-                                                  ),
-                                                  Text(
-                                                    "42° / ${device.frontTemp}°",
-                                                    style:
-                                                        TextStyle(fontSize: 24),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Spacer(),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "back",
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.thermostat,
-                                                    size: 14,
-                                                  ),
-                                                  Text(
-                                                    "23° / ${device.backTemp}°",
-                                                    style:
-                                                        TextStyle(fontSize: 24),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Spacer(),
-                                        ],
-                                      ),
-                                    ),
-                                    if (isEditMode)
-                                      IconButton(
-                                        icon: Icon(Icons.delete),
-                                        onPressed: () => removeDevice(index),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
                         ),
                       ),
                     ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isEditMode = !isEditMode;
-                  });
-                },
-                child: Text(
-                  isEditMode ? "Done" : "Edit",
-                  style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -326,16 +383,21 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  static const List<MenuItem> firstItems = [
-    devices,
-    scan_qr,
-  ];
-  static const List<MenuItem> secondItems = [];
+  static late MenuItem devices;
+  static late MenuItem scan_qr;
 
-  static const devices =
-      MenuItem(text: 'Add devices', icon: Icons.extension_outlined);
-  static const scan_qr =
-      MenuItem(text: 'Scan', icon: Icons.qr_code_scanner_outlined);
+  static late List<MenuItem> firstItems;
+  static late List<MenuItem> secondItems;
+
+  static void init(BuildContext context) {
+    final localizations = S.of(context)!;
+    devices = MenuItem(text: localizations.bluetooth, icon: Icons.bluetooth);
+    scan_qr =
+        MenuItem(text: localizations.qr_code, icon: Icons.qr_code_2_outlined);
+
+    firstItems = [devices, scan_qr];
+    secondItems = [];
+  }
 
   static Widget buildItem(MenuItem item) {
     return Container(
@@ -343,30 +405,15 @@ abstract class MenuItems {
       child: Row(
         children: [
           Icon(item.icon, color: iconcolor, size: 24),
-          const SizedBox(
-            width: 10,
-          ),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
               item.text,
-              style: const TextStyle(
-                color: Color.fromRGBO(77, 22, 0, 1),
-              ),
+              style: const TextStyle(color: Color.fromRGBO(77, 22, 0, 1)),
             ),
           ),
         ],
       ),
     );
-  }
-
-  static void onChanged(BuildContext context, MenuItem item) {
-    switch (item) {
-      case MenuItems.devices:
-        context.router.replaceNamed('/addDevice');
-        break;
-      case MenuItems.scan_qr:
-        context.router.replaceNamed('/scan');
-        break;
-    }
   }
 }

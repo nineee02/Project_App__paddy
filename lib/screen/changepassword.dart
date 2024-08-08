@@ -3,6 +3,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
+import 'package:paddy_rice/widgets/CustomTextFieldNoiconfront.dart';
+import 'package:paddy_rice/widgets/decorated_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class ChangePasswordRoute extends StatefulWidget {
@@ -20,6 +23,8 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
 
   bool _isNewPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
+  String? _newPasswordError;
+  String? _confirmPasswordError;
 
   void _validateAndProceed() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -27,6 +32,37 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
         SnackBar(content: Text('Password reset successful (simulated).')),
       );
       context.router.replaceNamed('/login');
+    }
+  }
+
+  void _validatePasswords() {
+    setState(() {
+      _newPasswordError = null;
+      _confirmPasswordError = null;
+    });
+
+    if (_newPasswordController.text.isEmpty) {
+      setState(() {
+        _newPasswordError = S.of(context)!.please_enter_new_password;
+      });
+    } else if (_newPasswordController.text.length < 6) {
+      setState(() {
+        _newPasswordError = S.of(context)!.password_too_short;
+      });
+    }
+
+    if (_confirmPasswordController.text.isEmpty) {
+      setState(() {
+        _confirmPasswordError = S.of(context)!.please_confirm_your_password;
+      });
+    } else if (_newPasswordController.text != _confirmPasswordController.text) {
+      setState(() {
+        _confirmPasswordError = S.of(context)!.passwords_do_not_match;
+      });
+    }
+
+    if (_newPasswordError == null && _confirmPasswordError == null) {
+      _validateAndProceed();
     }
   }
 
@@ -40,7 +76,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
           icon: Icon(Icons.arrow_back, color: iconcolor),
           onPressed: () => context.router.replaceNamed('/otp'),
         ),
-        title: Text("Create New Password", style: appBarFont),
+        title: Text(S.of(context)!.create_new_account, style: appBarFont),
         centerTitle: true,
       ),
       body: Stack(
@@ -52,22 +88,12 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
               width: 456,
               height: 456,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: fill_color,
                 shape: BoxShape.circle,
               ),
             ),
           ),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  opacity: 0.5,
-                  image: AssetImage('lib/assets/icon/home.png'),
-                  alignment: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
+          DecoratedImage(),
           Column(
             children: [
               Center(
@@ -79,33 +105,44 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Your new password must be different \nfrom any previously used passwords.',
-                          style: TextStyle(
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 40),
+                          child: Text(
+                            S.of(context)!.new_password_instruction,
+                            style: TextStyle(
                               color: fontcolor,
                               fontSize: 16.0,
-                              fontWeight: FontWeight.w400),
-                          textAlign: TextAlign.center,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
                         ),
                         SizedBox(height: 16.0),
-                        _buildPasswordField(
+                        TextFieldCustom(
                           controller: _newPasswordController,
-                          labelText: 'New Password',
-                          isObscured: _isNewPasswordObscured,
-                          emptyErrorText: 'Please enter a new password',
-                          onToggle: () {
+                          labelText: S.of(context)!.new_password,
+                          suffixIcon: _isNewPasswordObscured
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          obscureText: _isNewPasswordObscured,
+                          isError: _newPasswordError != null,
+                          errorMessage: _newPasswordError ?? '',
+                          onSuffixIconPressed: () {
                             setState(() {
                               _isNewPasswordObscured = !_isNewPasswordObscured;
                             });
                           },
                         ),
                         SizedBox(height: 16.0),
-                        _buildPasswordField(
+                        TextFieldCustom(
                           controller: _confirmPasswordController,
-                          labelText: 'Confirm Password',
-                          isObscured: _isConfirmPasswordObscured,
-                          emptyErrorText: 'Please confirm your password',
-                          onToggle: () {
+                          labelText: S.of(context)!.confirm_password,
+                          suffixIcon: _isConfirmPasswordObscured
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          obscureText: _isConfirmPasswordObscured,
+                          isError: _confirmPasswordError != null,
+                          errorMessage: _confirmPasswordError ?? '',
+                          onSuffixIconPressed: () {
                             setState(() {
                               _isConfirmPasswordObscured =
                                   !_isConfirmPasswordObscured;
@@ -114,8 +151,8 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                         ),
                         SizedBox(height: 16.0),
                         CustomButton(
-                          text: "Reset",
-                          onPressed: _validateAndProceed,
+                          text: S.of(context)!.reset,
+                          onPressed: _validatePasswords,
                         ),
                       ],
                     ),
@@ -125,58 +162,6 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildPasswordField({
-    required TextEditingController controller,
-    required String labelText,
-    required bool isObscured,
-    required String emptyErrorText,
-    required VoidCallback onToggle,
-  }) {
-    return Container(
-      width: 312,
-      child: TextFormField(
-        controller: controller,
-        obscureText: isObscured,
-        decoration: InputDecoration(
-          labelText: labelText,
-          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          labelStyle: TextStyle(color: fontcolor),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey, width: 1),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: iconcolor, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: error_color, width: 2),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: error_color, width: 2),
-          ),
-          fillColor: fill_color,
-          filled: true,
-          suffixIcon: IconButton(
-            icon: Icon(
-              isObscured ? Icons.visibility : Icons.visibility_off,
-              color: iconcolor,
-            ),
-            onPressed: onToggle,
-          ),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return emptyErrorText;
-          }
-          if (labelText == 'Confirm Password' &&
-              value != _newPasswordController.text) {
-            return 'Passwords do not match';
-          }
-          return null;
-        },
       ),
     );
   }

@@ -66,5 +66,9 @@ class AppRouter extends $AppRouter {
             path: '/change_device_name',
             page: ChangeDeviceNameRoute.page,
             transitionsBuilder: TransitionsBuilders.fadeIn),
+        CustomRoute(
+            path: '/bottom_navigation',
+            page: BottomNavigationRoute.page,
+            transitionsBuilder: TransitionsBuilders.fadeIn),
       ];
 }

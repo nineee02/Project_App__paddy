@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
+import 'package:paddy_rice/widgets/decorated_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class SettingNotifiRoute extends StatefulWidget {
@@ -41,97 +43,106 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
         title: Text(
-          "Notification setting",
+          S.of(context)!.notification_setting,
           style: appBarFont,
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Device messages",
-              style: TextStyle(
-                  color: fontcolor, fontSize: 12, fontWeight: FontWeight.w400),
-            ),
-            const SizedBox(height: 16),
-            InkWell(
-              onTap: toggleNotification,
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                height: 48,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Device Notification",
-                      style: TextStyle(
-                          color: fontcolor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    Switch(
-                      value: isNotificationEnabled,
-                      onChanged: (bool value) {
-                        toggleNotification();
-                      },
-                      trackColor: MaterialStateProperty.resolveWith<Color?>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Color(0xFF80C080);
-                          }
-                          return null;
-                        },
-                      ),
-                      thumbColor: const MaterialStatePropertyAll<Color>(
-                          Color.fromRGBO(77, 22, 0, 1)),
-                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Color(0xFF80C080).withOpacity(0.54);
-                          }
-                          if (states.contains(MaterialState.disabled)) {
-                            return Colors.grey.shade400;
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ],
+      body: Stack(
+        children: [
+          DecoratedImage(),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  S.of(context)!.device_messages,
+                  style: TextStyle(
+                      color: fontcolor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400),
                 ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (showManagement)
-              InkWell(
-                onTap: () =>
-                    context.router.replaceNamed('/deviceNotifiSetting'),
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 8.0),
-                  height: 48,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Device Notification Management",
-                        style: TextStyle(
-                            color: fontcolor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      Icon(Icons.chevron_right, color: iconcolor),
-                    ],
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: toggleNotification,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 0),
+                    height: 48,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          S.of(context)!.device_notification,
+                          style: TextStyle(
+                              color: fontcolor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        Switch(
+                          value: isNotificationEnabled,
+                          onChanged: (bool value) {
+                            toggleNotification();
+                          },
+                          trackColor: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return Color(0xFF80C080);
+                              }
+                              return null;
+                            },
+                          ),
+                          thumbColor: const MaterialStatePropertyAll<Color>(
+                              Color.fromRGBO(77, 22, 0, 1)),
+                          overlayColor:
+                              MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return Color(0xFF80C080).withOpacity(0.54);
+                              }
+                              if (states.contains(MaterialState.disabled)) {
+                                return Colors.grey.shade400;
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-          ],
-        ),
+                const SizedBox(height: 16),
+                if (showManagement)
+                  InkWell(
+                    onTap: () =>
+                        context.router.replaceNamed('/deviceNotifiSetting'),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 0),
+                      height: 48,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            S.of(context)!.device_notification_management,
+                            style: TextStyle(
+                                color: fontcolor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Icon(Icons.chevron_right, color: iconcolor),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

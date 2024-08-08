@@ -9,8 +9,14 @@ class Device {
   double backTemp;
   BluetoothDevice? bluetoothDevice;
 
-  Device(this.name, this.id, this.status,
-      {this.frontTemp = 0.0, this.backTemp = 0.0, this.bluetoothDevice});
+  Device({
+    required this.name,
+    required this.id,
+    required this.status,
+    this.frontTemp = 0.0,
+    this.backTemp = 0.0,
+    this.bluetoothDevice,
+  });
 }
 
 class DeviceModel extends ChangeNotifier {

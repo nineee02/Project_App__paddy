@@ -1,33 +1,38 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
+import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 @RoutePage()
 class OtpRoute extends StatelessWidget {
-  final String inputType;
   final String inputValue;
 
   const OtpRoute({
     Key? key,
-    required this.inputType,
     required this.inputValue,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     TextEditingController _pinController = TextEditingController();
-    String contactInfo = inputType == 'phone' ? inputValue : inputValue;
 
     void _verifyOtp() {
-      if (_pinController.text.length == 4) {
-        print('OTP verification button pressed');
-        context.router.pushNamed('/change_password');
-      } else {
-        print('Invalid OTP length');
-      }
+      // if (_pinController.text.length == 4) {
+      // print('OTP verification button pressed');
+      context.router.replaceNamed('/change_password');
+      // } else {
+      //   print('Invalid OTP length');
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text(S.of(context)!.enter_valid_otp),
+      //       backgroundColor: error_color,
+      //     ),
+      //   );
+      // }
     }
 
     return Scaffold(
@@ -39,7 +44,7 @@ class OtpRoute extends StatelessWidget {
           onPressed: () => context.router.replaceNamed('/forgot'),
         ),
         title: Text(
-          "Verify $inputType",
+          S.of(context)!.verify_email,
           style: appBarFont,
         ),
         centerTitle: true,
@@ -53,22 +58,12 @@ class OtpRoute extends StatelessWidget {
               width: 456,
               height: 456,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: fill_color,
                 shape: BoxShape.circle,
               ),
             ),
           ),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  opacity: 0.5,
-                  image: AssetImage('lib/assets/icon/home.png'),
-                  alignment: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
+          DecoratedImage(),
           Column(
             children: [
               Center(
@@ -81,7 +76,7 @@ class OtpRoute extends StatelessWidget {
                       SizedBox(height: 20),
                       Center(
                         child: Text(
-                          "We have sent the code verification \nto $contactInfo.",
+                          S.of(context)!.verification_code_sent(inputValue),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: fontcolor,
@@ -127,12 +122,12 @@ class OtpRoute extends StatelessWidget {
                             print('Resend OTP button pressed');
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                  content: Text(
-                                      'OTP resent successfully (simulated).')),
+                                content: Text(S.of(context)!.resend_otp),
+                              ),
                             );
                           },
                           child: Text(
-                            "Didn't receive the OTP? Resend code",
+                            S.of(context)!.resend_otp,
                             style: TextStyle(
                               color: unnecessary_colors,
                               decoration: TextDecoration.underline,
@@ -143,12 +138,9 @@ class OtpRoute extends StatelessWidget {
                       SizedBox(height: 4.0),
                       Center(
                         child: CustomButton(
-                            text: "Verify and Create Password",
-                            onPressed: () {
-                              context.router.replaceNamed('/change_password');
-                            }
-                            // _verifyOtp,
-                            ),
+                          text: S.of(context)!.verify_create_password,
+                          onPressed: _verifyOtp,
+                        ),
                       ),
                     ],
                   ),

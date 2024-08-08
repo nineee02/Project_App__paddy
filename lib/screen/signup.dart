@@ -5,6 +5,7 @@ import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/CustomTextField.dart';
 import 'package:paddy_rice/widgets/shDialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class SignupRoute extends StatefulWidget {
@@ -83,10 +84,10 @@ class _SignupRouteState extends State<SignupRoute> {
       context: context,
       builder: (BuildContext context) {
         return ShDialog(
-          title: 'Error',
+          title: S.of(context)!.error,
           content: message,
           parentContext: context,
-          confirmButtonText: 'Okay',
+          confirmButtonText: S.of(context)!.ok,
           cancelButtonText: '',
           onConfirm: () {
             Navigator.of(context).pop();
@@ -104,10 +105,10 @@ class _SignupRouteState extends State<SignupRoute> {
       context: context,
       builder: (BuildContext context) {
         return ShDialog(
-          title: 'Success',
+          title: S.of(context)!.success,
           content: message,
           parentContext: context,
-          confirmButtonText: 'Okay',
+          confirmButtonText: S.of(context)!.ok,
           cancelButtonText: '',
           onConfirm: () {
             Navigator.of(context).pop();
@@ -134,12 +135,35 @@ class _SignupRouteState extends State<SignupRoute> {
           _passwordController.text != _confirmPasswordController.text;
     });
 
+    if (_isEmailError || _isPhoneError) {
+      _showErrorDialog('Email or phone number already exists.');
+      return false;
+    }
+
     return !(_isNameError ||
         _isSurnameError ||
         _isPhoneError ||
         _isEmailError ||
         _isPasswordError ||
         _isConfirmPasswordError);
+  }
+
+  void signup() {
+    if (_validateFields()) {
+      if (_checkIfEmailOrPhoneExists(
+          _emailController.text, _phoneController.text)) {
+        _showErrorDialog('Email or phone number already exists.');
+      } else {
+        _showSuccessDialog(S.of(context)!.success_message);
+      }
+    }
+  }
+
+  bool _checkIfEmailOrPhoneExists(String email, String phone) {
+    List<String> existingEmails = ['user@example.com'];
+    List<String> existingPhones = ['1231231231'];
+
+    return existingEmails.contains(email) || existingPhones.contains(phone);
   }
 
   final phoneRegex = RegExp(r'^[0-9]{10}$');
@@ -156,7 +180,7 @@ class _SignupRouteState extends State<SignupRoute> {
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
         title: Text(
-          "Create New Account",
+          S.of(context)!.create_new_account,
           style: appBarFont,
         ),
         centerTitle: true,
@@ -180,19 +204,18 @@ class _SignupRouteState extends State<SignupRoute> {
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   controller: _nameController,
-                  labelText: "Name",
+                  labelText: S.of(context)!.name,
                   prefixIcon: Icons.person_outline_outlined,
                   suffixIcon: Icons.clear,
                   obscureText: false,
-                  focusNode: _nameFocusNode,
                   isError: _isNameError,
-                  errorMessage: "Name must be at least 2 characters long",
+                  // errorMessage: S.of(context)!.name_error,
                   onSuffixIconPressed: () {
                     _nameController.clear();
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
+                      return S.of(context)!.name_error;
                     }
                     setState(() {
                       _isNameError = false;
@@ -203,19 +226,18 @@ class _SignupRouteState extends State<SignupRoute> {
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   controller: _surnameController,
-                  labelText: "Surname",
+                  labelText: S.of(context)!.surname,
                   prefixIcon: Icons.person_outline,
                   suffixIcon: Icons.clear,
                   obscureText: false,
-                  focusNode: _surnameFocusNode,
                   isError: _isSurnameError,
-                  errorMessage: "Surname must be at least 2 characters long",
+                  // errorMessage: S.of(context)!.surname_error,
                   onSuffixIconPressed: () {
                     _surnameController.clear();
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your surname';
+                      return S.of(context)!.surname_error;
                     }
                     setState(() {
                       _isSurnameError = false;
@@ -226,19 +248,18 @@ class _SignupRouteState extends State<SignupRoute> {
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   controller: _phoneController,
-                  labelText: "Phone number",
+                  labelText: S.of(context)!.phone_number,
                   prefixIcon: Icons.phone_outlined,
                   suffixIcon: Icons.clear,
                   obscureText: false,
-                  focusNode: _phoneFocusNode,
                   isError: _isPhoneError,
-                  errorMessage: "Phone number must be 10 digits",
+                  // errorMessage: S.of(context)!.phone_error,
                   onSuffixIconPressed: () {
                     _phoneController.clear();
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
+                      return S.of(context)!.phone_error;
                     }
                     setState(() {
                       _isPhoneError = false;
@@ -249,19 +270,18 @@ class _SignupRouteState extends State<SignupRoute> {
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   controller: _emailController,
-                  labelText: "Email",
+                  labelText: S.of(context)!.email,
                   prefixIcon: Icons.email_outlined,
                   suffixIcon: Icons.clear,
                   obscureText: false,
-                  focusNode: _emailFocusNode,
                   isError: _isEmailError,
-                  errorMessage: "Invalid email format",
+                  // errorMessage: S.of(context)!.email_error,
                   onSuffixIconPressed: () {
                     _emailController.clear();
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return S.of(context)!.email_error;
                     }
                     setState(() {
                       _isEmailError = false;
@@ -272,14 +292,13 @@ class _SignupRouteState extends State<SignupRoute> {
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   controller: _passwordController,
-                  labelText: "Password",
+                  labelText: S.of(context)!.password,
                   prefixIcon: Icons.lock_outline,
                   suffixIcon:
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                   obscureText: _obscureText,
-                  focusNode: _passwordFocusNode,
                   isError: _isPasswordError,
-                  errorMessage: "Passwords do not match",
+                  // errorMessage: S.of(context)!.password_error,
                   onSuffixIconPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
@@ -287,7 +306,7 @@ class _SignupRouteState extends State<SignupRoute> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
+                      return S.of(context)!.email_error;
                     }
                     setState(() {
                       _isPasswordError = false;
@@ -298,14 +317,13 @@ class _SignupRouteState extends State<SignupRoute> {
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   controller: _confirmPasswordController,
-                  labelText: "Confirm Password",
+                  labelText: S.of(context)!.confirm_password,
                   prefixIcon: Icons.lock_outline,
                   suffixIcon:
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                   obscureText: _obscureText,
-                  focusNode: _confirmPasswordFocusNode,
                   isError: _isConfirmPasswordError,
-                  errorMessage: "Passwords do not match",
+                  // errorMessage: S.of(context)!.password_error,
                   onSuffixIconPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
@@ -313,7 +331,7 @@ class _SignupRouteState extends State<SignupRoute> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
+                      return S.of(context)!.password_error;
                     }
                     setState(() {
                       _isConfirmPasswordError = false;
@@ -324,13 +342,10 @@ class _SignupRouteState extends State<SignupRoute> {
                 const SizedBox(height: 16.0),
                 Center(
                   child: CustomButton(
-                    text: "Sign up",
+                    text: S.of(context)!.save,
                     onPressed: () {
-                      if (_validateFields()) {
-                        _showSuccessDialog(
-                            'Registration successful. Please log in.');
-                        print('Signup button pressed');
-                      }
+                      signup();
+                      print('Signup button pressed');
                     },
                   ),
                 )

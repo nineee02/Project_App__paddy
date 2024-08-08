@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
-import 'notification_service.dart';
+import 'package:paddy_rice/widgets/decorated_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class NotifiRoute extends StatefulWidget {
@@ -13,20 +15,67 @@ class NotifiRoute extends StatefulWidget {
 }
 
 class _NotifiRouteState extends State<NotifiRoute> {
-  final NotificationService _notificationService = NotificationService();
+  List<NotificationItem> notifications = [];
+  late Map<String, List<NotificationItem>> groupedNotifications;
 
   @override
   void initState() {
     super.initState();
-    _notificationService.initialize();
+    // Do not initialize notifications here
   }
 
-  void _sendNotification() {
-    _notificationService.showNotification(
-      id: 0,
-      title: 'New Notification',
-      body: 'This is a test notification',
-    );
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final localizations = S.of(context);
+    notifications = [
+      NotificationItem("2024-07-19", "01:45 pm", localizations!.temp_front,
+          localizations.temp_exceeds),
+      NotificationItem("2024-08-19", "03:10 pm", localizations.temp_front,
+          localizations.temp_exceeds),
+      NotificationItem("2024-08-18", "10:32 am", localizations.temp_back,
+          localizations.temp_exceeds),
+      NotificationItem("2024-08-18", "11:40 am", localizations.temp_front,
+          localizations.temp_exceeds),
+      NotificationItem("2024-08-18", "04:23 pm", localizations.humidity,
+          localizations.monitor_dryness),
+    ];
+    groupedNotifications = groupNotificationsByDate();
+  }
+
+  Map<String, List<NotificationItem>> groupNotificationsByDate() {
+    Map<String, List<NotificationItem>> map = {};
+    for (var notification in notifications) {
+      (map[notification.date] ??= []).add(notification);
+    }
+    return map;
+  }
+
+  bool validateNotifications() {
+    if (notifications.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.of(context)!.no_notifications)),
+      );
+      return false;
+    }
+    return true;
+  }
+
+  String formatDate(String date) {
+    final DateTime dateTime = DateTime.parse(date);
+    final locale = Localizations.localeOf(context).toString();
+    final DateFormat formatter = DateFormat.yMMMMd(locale);
+
+    String formattedDate = formatter.format(dateTime);
+
+    if (locale == 'th') {
+      final buddhistYear = dateTime.year + 543;
+      formattedDate = formattedDate
+          .replaceAll('${dateTime.year}', '$buddhistYear')
+          .replaceAll('ค.ศ.', 'พ.ศ.');
+    }
+
+    return formattedDate;
   }
 
   @override
@@ -35,58 +84,77 @@ class _NotifiRouteState extends State<NotifiRoute> {
       appBar: AppBar(
         backgroundColor: maincolor,
         leading: IconButton(
-          onPressed: () {
-            context.router.replaceNamed('/home');
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: iconcolor,
-          ),
+          onPressed: () => context.router.replaceNamed('/bottom_navigation'),
+          icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
-        title: Text(
-          "Notification",
-          textAlign: TextAlign.center,
-          style: appBarFont,
-        ),
+        title: Text(S.of(context)!.notification, style: appBarFont),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
-              context.router.replaceNamed('/settingNotifi');
-            },
-            icon: Icon(
-              Icons.settings,
-              color: iconcolor,
-            ),
+            onPressed: () => context.router.replaceNamed('/settingNotifi'),
+            icon: Icon(Icons.settings, color: iconcolor),
           ),
         ],
       ),
       backgroundColor: maincolor,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 16),
-              Text(
-                "You have no new notifications",
-                style: TextStyle(
-                  color: fontcolor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _sendNotification,
-                child: Text('Send Test Notification'),
-              ),
-            ],
-          ),
+      body: Stack(
+        children: [
+          DecoratedImage(),
+          if (validateNotifications())
+            ListView(
+              children: groupedNotifications.entries.map((entry) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: Text(
+                        formatDate(entry.key),
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: fontcolor),
+                      ),
+                    ),
+                    ...entry.value
+                        .map((e) =>
+                            notificationCard(e.time, e.title, e.description))
+                        .toList(),
+                  ],
+                );
+              }).toList(),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget notificationCard(String time, String title, String description) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      color: fill_color,
+      child: ListTile(
+        title: Text(title,
+            style: TextStyle(color: fontcolor, fontWeight: FontWeight.bold)),
+        subtitle: Text(description),
+        leading: Container(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Text(time, style: TextStyle(color: fontcolor, fontSize: 16)),
         ),
       ),
     );
   }
+}
+
+class NotificationItem {
+  String date;
+  String time;
+  String title;
+  String description;
+
+  NotificationItem(this.date, this.time, this.title, this.description);
 }

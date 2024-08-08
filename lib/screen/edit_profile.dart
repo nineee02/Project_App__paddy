@@ -55,7 +55,7 @@ class _EditProfileRouteState extends State<EditProfileRoute> {
             Icons.arrow_back,
             color: iconcolor,
           ),
-          onPressed: () => context.router.replaceNamed('/profile'),
+          onPressed: () => context.router.replaceNamed('/bottom_navigation'),
         ),
         title: Text(
           "Edit Profile",
@@ -72,21 +72,6 @@ class _EditProfileRouteState extends State<EditProfileRoute> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    // Implement photo upload functionality here
-                  },
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.grey.shade200,
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: 32,
-                      color: Colors.grey.shade800,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 24),
                 Container(
                   width: 312,
                   decoration: BoxDecoration(

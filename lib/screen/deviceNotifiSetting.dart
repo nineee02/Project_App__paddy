@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
+import 'package:paddy_rice/widgets/decorated_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class DeviceNotifiSettingRoute extends StatelessWidget {
@@ -10,54 +12,59 @@ class DeviceNotifiSettingRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: maincolor,
-      appBar: AppBar(
-          backgroundColor: maincolor,
-          leading: IconButton(
-            onPressed: () {
-              context.router.replaceNamed('/settingNotifi');
-            },
-            icon: Icon(Icons.arrow_back, color: iconcolor),
-          ),
-          title: Text(
-            "Device Notification Management",
-            style: appBarFont,
-          ),
-          centerTitle: true),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 40),
-            Row(
-              children: [
-                Text(
-                  "Silo",
-                  style: TextStyle(
-                      color: fontcolor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400),
-                ),
-              ],
+        backgroundColor: maincolor,
+        appBar: AppBar(
+            backgroundColor: maincolor,
+            leading: IconButton(
+              onPressed: () {
+                context.router.replaceNamed('/settingNotifi');
+              },
+              icon: Icon(Icons.arrow_back, color: iconcolor),
             ),
-            const SizedBox(height: 16),
-            buildSwitchTile("Device Notification"),
-            const SizedBox(height: 16),
-            buildSwitchTile("Temperature Alert"),
-            const SizedBox(height: 16),
-            buildSwitchTile("Humidity Alert"),
+            title: Text(
+              S.of(context)!.device_notification_management,
+              style: appBarFont,
+            ),
+            centerTitle: true),
+        body: Stack(
+          children: [
+            DecoratedImage(),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 40),
+                  Row(
+                    children: [
+                      Text(
+                        S.of(context)!.title,
+                        style: TextStyle(
+                            color: fontcolor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  buildSwitchTile(S.of(context)!.device_notification),
+                  const SizedBox(height: 16),
+                  buildSwitchTile(S.of(context)!.temp_alert),
+                  const SizedBox(height: 16),
+                  buildSwitchTile(S.of(context)!.humi_alert),
+                ],
+              ),
+            ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 
   Widget buildSwitchTile(String title) {
     return InkWell(
       borderRadius: BorderRadius.circular(8.0),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
         height: 48.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

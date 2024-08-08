@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/CustomTextField.dart';
@@ -15,32 +16,41 @@ class LoginRoute extends StatefulWidget {
 class _LoginRouteState extends State<LoginRoute> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-  TextEditingController _emailController = TextEditingController();
+  TextEditingController _emailOrPhoneController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  bool _isEmailError = false;
+  bool _isEmailOrPhoneError = false;
   bool _isPasswordError = false;
 
-  FocusNode _emailFocusNode = FocusNode();
-  FocusNode _passwordFocusNode = FocusNode();
+  void login() {
+    String emailOrPhone = _emailOrPhoneController.text;
+    String password = _passwordController.text;
 
-  @override
-  void initState() {
-    super.initState();
-
-    _emailFocusNode.addListener(() {
-      setState(() {});
-    });
-
-    _passwordFocusNode.addListener(() {
-      setState(() {});
-    });
+    if ((emailOrPhone == 'user@example.com' || emailOrPhone == '1231231231') &&
+        password == 'password123') {
+      context.router.replaceNamed('/bottom_navigation');
+    } else {
+      setState(() {
+        _isEmailOrPhoneError =
+            emailOrPhone != 'user@example.com' && emailOrPhone != '1234567890';
+        _isPasswordError = password != 'password123';
+      });
+    }
   }
 
-  @override
-  void dispose() {
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
-    super.dispose();
+  void _clearEmailOrPhoneError() {
+    if (_isEmailOrPhoneError) {
+      setState(() {
+        _isEmailOrPhoneError = false;
+      });
+    }
+  }
+
+  void _clearPasswordError() {
+    if (_isPasswordError) {
+      setState(() {
+        _isPasswordError = false;
+      });
+    }
   }
 
   @override
@@ -56,7 +66,7 @@ class _LoginRouteState extends State<LoginRoute> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Welcome",
+                  S.of(context)!.welcome,
                   style: TextStyle(
                     color: fontcolor,
                     fontSize: 36,
@@ -65,7 +75,9 @@ class _LoginRouteState extends State<LoginRoute> {
                 ),
                 SizedBox(height: 20.0),
                 Text(
-                  "Paddy Rice Drying Silo \n Control Notification",
+                  S.of(context)!.login_description,
+                  softWrap: true,
+                  maxLines: 2,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: fontcolor,
@@ -78,50 +90,44 @@ class _LoginRouteState extends State<LoginRoute> {
                     height: 214, width: 214),
                 SizedBox(height: 24.0),
                 CustomTextField(
-                  controller: _emailController,
-                  labelText: "Email or Phone number",
+                  controller: _emailOrPhoneController,
+                  labelText: S.of(context)!.email_or_phone,
                   prefixIcon: Icons.person_outline,
                   suffixIcon: Icons.clear,
                   obscureText: false,
-                  focusNode: _emailFocusNode,
-                  isError: _isEmailError,
-                  errorMessage: 'User not found. Please sign up.',
+                  isError: _isEmailOrPhoneError,
+                  // errorMessage: S.of(context)!.user_not_found_prompt,
                   onSuffixIconPressed: () {
-                    _emailController.clear();
+                    _emailOrPhoneController.clear();
                   },
+                  onChanged: (value) => _clearEmailOrPhoneError(),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email or phone number';
+                      return S.of(context)!.user_not_found_prompt;
                     }
-                    setState(() {
-                      _isEmailError = false;
-                    });
                     return null;
                   },
                 ),
                 SizedBox(height: 16.0),
                 CustomTextField(
                   controller: _passwordController,
-                  labelText: "Password",
+                  labelText: S.of(context)!.password,
                   prefixIcon: Icons.lock_outline,
                   suffixIcon:
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                   obscureText: _obscureText,
-                  focusNode: _passwordFocusNode,
                   isError: _isPasswordError,
-                  errorMessage: 'Invalid password. Please try again.',
+                  // errorMessage: S.of(context)!.incorrect_password,
                   onSuffixIconPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
                     });
                   },
+                  onChanged: (value) => _clearPasswordError(), // Add this line
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
+                      return S.of(context)!.incorrect_password;
                     }
-                    setState(() {
-                      _isPasswordError = false;
-                    });
                     return null;
                   },
                 ),
@@ -129,11 +135,11 @@ class _LoginRouteState extends State<LoginRoute> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 48),
+                    padding: EdgeInsets.symmetric(horizontal: 24),
                     child: TextButton(
                       onPressed: () => context.router.replaceNamed('/forgot'),
                       child: Text(
-                        "Forgot Password?",
+                        S.of(context)!.forgot_password,
                         style:
                             TextStyle(color: unnecessary_colors, fontSize: 12),
                       ),
@@ -142,11 +148,10 @@ class _LoginRouteState extends State<LoginRoute> {
                 ),
                 SizedBox(height: 8.0),
                 CustomButton(
-                  text: "Sign in",
+                  text: S.of(context)!.sign_in,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      print('Login button pressed');
-                      context.router.replaceNamed('/home');
+                      login();
                     }
                   },
                 ),
@@ -154,12 +159,12 @@ class _LoginRouteState extends State<LoginRoute> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 48),
+                    padding: EdgeInsets.symmetric(horizontal: 24),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "Don’t have an account? ",
+                          S.of(context)!.no_account_prompt,
                           style: TextStyle(
                             color: unnecessary_colors,
                             fontSize: 12,
@@ -170,7 +175,7 @@ class _LoginRouteState extends State<LoginRoute> {
                           onPressed: () =>
                               context.router.replaceNamed('/signup'),
                           child: Text(
-                            "Sign up",
+                            S.of(context)!.sign_up,
                             style: TextStyle(
                                 color: fontcolor,
                                 decoration: TextDecoration.underline,

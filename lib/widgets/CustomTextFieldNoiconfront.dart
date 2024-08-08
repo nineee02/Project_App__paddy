@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
-// import 'package:paddy_rice/constants/font_size.dart';
+import 'package:paddy_rice/constants/font_size.dart';
 
-class CustomTextField extends StatefulWidget {
+class TextFieldCustom extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
-  final IconData prefixIcon;
   final IconData suffixIcon;
   final bool obscureText;
   final bool isError;
-  // final String errorMessage;
+  final String errorMessage;
   final void Function()? onSuffixIconPressed;
   final String? Function(String?)? validator;
-  final void Function(String)? onChanged; // Add this line
 
-  CustomTextField({
+  TextFieldCustom({
     required this.controller,
     required this.labelText,
-    required this.prefixIcon,
     required this.suffixIcon,
     this.obscureText = false,
     required this.isError,
-    // required this.errorMessage,
+    required this.errorMessage,
     this.onSuffixIconPressed,
     this.validator,
-    this.onChanged, // Add this line
   });
 
   @override
-  _CustomTextFieldState createState() => _CustomTextFieldState();
+  _TextFieldCustomState createState() => _TextFieldCustomState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class _TextFieldCustomState extends State<TextFieldCustom> {
   late FocusNode _focusNode;
   bool _isFocused = false;
   bool _hasText = false;
@@ -54,9 +50,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
     setState(() {
       _hasText = widget.controller.text.isNotEmpty;
     });
-    if (widget.onChanged != null) {
-      widget.onChanged!(widget.controller.text); // Call the callback here
-    }
   }
 
   @override
@@ -84,7 +77,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
               fillColor: fill_color,
               contentPadding:
                   EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              prefixIcon: Icon(widget.prefixIcon, color: iconcolor),
               suffixIcon: (_isFocused || _hasText)
                   ? IconButton(
                       icon: Icon(widget.suffixIcon, color: iconcolor),
@@ -121,15 +113,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ),
             ),
           ),
-          // if (widget.isError)
-          //   Padding(
-          //     padding: const EdgeInsets.only(
-          //         top: 4.0, left: 16.0), // Add padding here
-          //     child: Text(
-          //       // widget.errorMessage,
-          //       // style: errorFont,
-          //     ),
-          //   ),
+          if (widget.isError)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0, left: 16),
+              child: Text(
+                widget.errorMessage,
+                style: errorFont,
+              ),
+            ),
         ],
       ),
     );

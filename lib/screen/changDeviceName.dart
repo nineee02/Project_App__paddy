@@ -1,5 +1,5 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/model.dart';
 
@@ -32,8 +32,11 @@ class ChangeDeviceNameRoute extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                final newDevice =
-                    Device(nameController.text, device.id, device.status);
+                final newDevice = Device(
+                  name: nameController.text,
+                  id: device.id,
+                  status: device.status,
+                );
                 Navigator.pop(context, newDevice);
               },
               child: Text('Save'),
