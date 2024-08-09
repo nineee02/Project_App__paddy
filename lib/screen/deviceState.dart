@@ -28,6 +28,8 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
   bool _isDeviceNameError = false;
   bool _isFrontTempError = false;
   bool _isBackTempError = false;
+  bool _isTempChanged = false;
+  bool _isButtonEnabled = false;
 
   @override
   void initState() {
@@ -39,9 +41,32 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
     _deviceNameController.text = deviceName;
     _frontTempController.text = frontTemp.toString();
     _backTempController.text = backTemp.toString();
+
+    _deviceNameController.addListener(_updateButtonState);
+  }
+
+  void _updateButtonState() {
+    setState(() {
+      _isButtonEnabled = (_deviceNameController.text.isNotEmpty &&
+              _deviceNameController.text != widget.device.name) ||
+          _isTempChanged;
+    });
+  }
+
+  void _handleUpdateSettings() {
+    if (_isButtonEnabled) {
+      updateDeviceSettings();
+    }
   }
 
   void updateDeviceSettings() {
+    if (deviceName.isEmpty) {
+      setState(() {
+        _isDeviceNameError = true;
+      });
+      return;
+    }
+
     if (_formKey.currentState?.validate() ?? false) {
       setState(() {
         widget.device.name = deviceName;
@@ -55,28 +80,36 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
   void incrementFrontTemp() {
     setState(() {
       frontTemp += 1;
+      _isTempChanged = true;
       _frontTempController.text = frontTemp.toString();
+      _updateButtonState();
     });
   }
 
   void decrementFrontTemp() {
     setState(() {
       frontTemp -= 1;
+      _isTempChanged = true;
       _frontTempController.text = frontTemp.toString();
+      _updateButtonState();
     });
   }
 
   void incrementBackTemp() {
     setState(() {
       backTemp += 1;
+      _isTempChanged = true;
       _backTempController.text = backTemp.toString();
+      _updateButtonState();
     });
   }
 
   void decrementBackTemp() {
     setState(() {
       backTemp -= 1;
+      _isTempChanged = true;
       _backTempController.text = backTemp.toString();
+      _updateButtonState();
     });
   }
 
@@ -123,6 +156,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
                           setState(() {
                             deviceName = value;
                             _isDeviceNameError = value.isEmpty;
+                            _updateButtonState();
                           });
                         },
                       ),
@@ -167,7 +201,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
                       const SizedBox(height: 20),
                       CustomButton(
                         text: S.of(context)!.update_settings,
-                        onPressed: updateDeviceSettings,
+                        onPressed: _handleUpdateSettings,
                       ),
                     ],
                   ),
@@ -206,9 +240,8 @@ class TemperatureInput extends StatelessWidget {
       width: 312,
       height: 48,
       decoration: BoxDecoration(
-        color: fill_color,
-        borderRadius: BorderRadius.circular(8),
-      ),
+          color: fill_color,
+          borderRadius: BorderRadius.all(Radius.circular(8))),
       child: Row(
         children: [
           Padding(
@@ -318,10 +351,6 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
   Widget build(BuildContext context) {
     return Container(
       width: 312,
-      decoration: BoxDecoration(
-        color: fill_color,
-        borderRadius: BorderRadius.circular(8),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

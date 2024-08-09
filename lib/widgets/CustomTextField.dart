@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
-// import 'package:paddy_rice/constants/font_size.dart';
+
+/// The line `import 'package:paddy_rice/constants/font_size.dart';` is importing a Dart file named
+/// `font_size.dart` from the `constants` directory within the `paddy_rice` package. This file likely
+/// contains predefined font sizes that are used within the `CustomTextField` widget or other parts of
+/// the application. By importing this file, the widget can access and use the font sizes defined in
+/// `font_size.dart` to maintain consistency in the styling of text elements throughout the application.
+import 'package:paddy_rice/constants/font_size.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -9,7 +15,7 @@ class CustomTextField extends StatefulWidget {
   final IconData suffixIcon;
   final bool obscureText;
   final bool isError;
-  // final String errorMessage;
+  final String errorMessage;
   final void Function()? onSuffixIconPressed;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged; // Add this line
@@ -21,7 +27,7 @@ class CustomTextField extends StatefulWidget {
     required this.suffixIcon,
     this.obscureText = false,
     required this.isError,
-    // required this.errorMessage,
+    required this.errorMessage,
     this.onSuffixIconPressed,
     this.validator,
     this.onChanged, // Add this line
@@ -55,7 +61,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       _hasText = widget.controller.text.isNotEmpty;
     });
     if (widget.onChanged != null) {
-      widget.onChanged!(widget.controller.text); // Call the callback here
+      widget.onChanged!(widget.controller.text);
     }
   }
 
@@ -121,15 +127,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ),
             ),
           ),
-          // if (widget.isError)
-          //   Padding(
-          //     padding: const EdgeInsets.only(
-          //         top: 4.0, left: 16.0), // Add padding here
-          //     child: Text(
-          //       // widget.errorMessage,
-          //       // style: errorFont,
-          //     ),
-          //   ),
+          if (widget.isError)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0, left: 16.0),
+              child: Text(
+                widget.errorMessage,
+                style: errorFont,
+              ),
+            ),
         ],
       ),
     );

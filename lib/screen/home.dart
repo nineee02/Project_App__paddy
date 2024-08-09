@@ -289,6 +289,14 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
                             height: 88,
                             decoration: BoxDecoration(
                               color: fill_color,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 9,
+                                  // offset: Offset(0, 4),
+                                ),
+                              ],
                             ),
                             child: Padding(
                               padding:

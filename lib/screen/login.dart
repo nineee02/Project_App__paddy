@@ -21,18 +21,28 @@ class _LoginRouteState extends State<LoginRoute> {
   bool _isEmailOrPhoneError = false;
   bool _isPasswordError = false;
 
+  String? _errorMessage;
+
   void login() {
     String emailOrPhone = _emailOrPhoneController.text;
     String password = _passwordController.text;
 
-    if ((emailOrPhone == 'user@example.com' || emailOrPhone == '1231231231') &&
-        password == 'password123') {
-      context.router.replaceNamed('/bottom_navigation');
+    final validEmailsOrPhones = ['user@example.com', '1231231231'];
+    final correctPassword = 'password123';
+
+    if (validEmailsOrPhones.contains(emailOrPhone)) {
+      if (password == correctPassword) {
+        context.router.replaceNamed('/bottom_navigation');
+      } else {
+        setState(() {
+          _isPasswordError = true;
+          _errorMessage = S.of(context)!.incorrect_password;
+        });
+      }
     } else {
       setState(() {
-        _isEmailOrPhoneError =
-            emailOrPhone != 'user@example.com' && emailOrPhone != '1234567890';
-        _isPasswordError = password != 'password123';
+        _isEmailOrPhoneError = true;
+        _errorMessage = S.of(context)!.user_not_found_prompt;
       });
     }
   }
@@ -41,6 +51,7 @@ class _LoginRouteState extends State<LoginRoute> {
     if (_isEmailOrPhoneError) {
       setState(() {
         _isEmailOrPhoneError = false;
+        _errorMessage = null;
       });
     }
   }
@@ -49,6 +60,7 @@ class _LoginRouteState extends State<LoginRoute> {
     if (_isPasswordError) {
       setState(() {
         _isPasswordError = false;
+        _errorMessage = null;
       });
     }
   }
@@ -96,7 +108,7 @@ class _LoginRouteState extends State<LoginRoute> {
                   suffixIcon: Icons.clear,
                   obscureText: false,
                   isError: _isEmailOrPhoneError,
-                  // errorMessage: S.of(context)!.user_not_found_prompt,
+                  errorMessage: S.of(context)!.user_not_found_prompt,
                   onSuffixIconPressed: () {
                     _emailOrPhoneController.clear();
                   },
@@ -117,13 +129,13 @@ class _LoginRouteState extends State<LoginRoute> {
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                   obscureText: _obscureText,
                   isError: _isPasswordError,
-                  // errorMessage: S.of(context)!.incorrect_password,
+                  errorMessage: S.of(context)!.incorrect_password,
                   onSuffixIconPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
                     });
                   },
-                  onChanged: (value) => _clearPasswordError(), // Add this line
+                  onChanged: (value) => _clearPasswordError(),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return S.of(context)!.incorrect_password;

@@ -209,7 +209,7 @@ class _SignupRouteState extends State<SignupRoute> {
                   suffixIcon: Icons.clear,
                   obscureText: false,
                   isError: _isNameError,
-                  // errorMessage: S.of(context)!.name_error,
+                  errorMessage: S.of(context)!.name_error,
                   onSuffixIconPressed: () {
                     _nameController.clear();
                   },
@@ -231,7 +231,7 @@ class _SignupRouteState extends State<SignupRoute> {
                   suffixIcon: Icons.clear,
                   obscureText: false,
                   isError: _isSurnameError,
-                  // errorMessage: S.of(context)!.surname_error,
+                  errorMessage: S.of(context)!.surname_error,
                   onSuffixIconPressed: () {
                     _surnameController.clear();
                   },
@@ -253,7 +253,7 @@ class _SignupRouteState extends State<SignupRoute> {
                   suffixIcon: Icons.clear,
                   obscureText: false,
                   isError: _isPhoneError,
-                  // errorMessage: S.of(context)!.phone_error,
+                  errorMessage: S.of(context)!.phone_error,
                   onSuffixIconPressed: () {
                     _phoneController.clear();
                   },
@@ -275,7 +275,7 @@ class _SignupRouteState extends State<SignupRoute> {
                   suffixIcon: Icons.clear,
                   obscureText: false,
                   isError: _isEmailError,
-                  // errorMessage: S.of(context)!.email_error,
+                  errorMessage: S.of(context)!.email_error,
                   onSuffixIconPressed: () {
                     _emailController.clear();
                   },
@@ -298,7 +298,7 @@ class _SignupRouteState extends State<SignupRoute> {
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                   obscureText: _obscureText,
                   isError: _isPasswordError,
-                  // errorMessage: S.of(context)!.password_error,
+                  errorMessage: S.of(context)!.password_error,
                   onSuffixIconPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
@@ -323,7 +323,7 @@ class _SignupRouteState extends State<SignupRoute> {
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                   obscureText: _obscureText,
                   isError: _isConfirmPasswordError,
-                  // errorMessage: S.of(context)!.password_error,
+                  errorMessage: S.of(context)!.password_error,
                   onSuffixIconPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
