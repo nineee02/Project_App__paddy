@@ -20,8 +20,8 @@ class HomeRoute extends StatefulWidget {
 
 class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
   List<Device> devices = [
-    Device(name: "Device 1", id: "1", status: false),
-    Device(name: "Device 2", id: "2", status: true),
+    Device(name: "Device 1", id: "1", status: false, humidity: 16),
+    Device(name: "Device 2", id: "2", status: true, humidity: 14),
   ];
 
   @override
@@ -344,7 +344,7 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Text(
-                                              localizations.moisture,
+                                              localizations.humidity_,
                                               style: const TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -354,8 +354,8 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
                                             Text(
                                               "14 %",
                                               style: const TextStyle(
-                                                fontSize: 16,
-                                              ),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ],
                                         ),

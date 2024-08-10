@@ -61,7 +61,7 @@
   "setting": "Settings",
   "delete": "Delete",
   "temp": "Temp",
-  "moisture": "Moisture",
+  "humidity_": "Humidity",
   "front": "front",
   "back": "back",
   "device_already_exists": "Device already exists",

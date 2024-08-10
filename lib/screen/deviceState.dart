@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
@@ -19,6 +21,8 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
   late String deviceName;
   late double frontTemp;
   late double backTemp;
+  late double humidity;
+  String selectedTempType = 'Front';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _deviceNameController = TextEditingController();
@@ -37,6 +41,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
     deviceName = widget.device.name;
     frontTemp = widget.device.frontTemp;
     backTemp = widget.device.backTemp;
+    humidity = widget.device.humidity; // Initialize humidity
 
     _deviceNameController.text = deviceName;
     _frontTempController.text = frontTemp.toString();
@@ -72,44 +77,47 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
         widget.device.name = deviceName;
         widget.device.frontTemp = frontTemp;
         widget.device.backTemp = backTemp;
+        widget.device.humidity = humidity;
       });
       Navigator.pop(context, widget.device);
     }
   }
 
-  void incrementFrontTemp() {
+  void incrementTemp() {
     setState(() {
-      frontTemp += 1;
+      if (selectedTempType == 'Front') {
+        frontTemp += 1;
+        _frontTempController.text = frontTemp.toString();
+      } else if (selectedTempType == 'Back') {
+        backTemp += 1;
+        _backTempController.text = backTemp.toString();
+      } else if (selectedTempType == 'Humidity') {
+        humidity += 1;
+      }
       _isTempChanged = true;
-      _frontTempController.text = frontTemp.toString();
       _updateButtonState();
     });
   }
 
-  void decrementFrontTemp() {
+  void decrementTemp() {
     setState(() {
-      frontTemp -= 1;
+      if (selectedTempType == 'Front') {
+        frontTemp -= 1;
+        _frontTempController.text = frontTemp.toString();
+      } else if (selectedTempType == 'Back') {
+        backTemp -= 1;
+        _backTempController.text = backTemp.toString();
+      } else if (selectedTempType == 'Humidity') {
+        humidity -= 1;
+      }
       _isTempChanged = true;
-      _frontTempController.text = frontTemp.toString();
       _updateButtonState();
     });
   }
 
-  void incrementBackTemp() {
+  void selectTempType(String type) {
     setState(() {
-      backTemp += 1;
-      _isTempChanged = true;
-      _backTempController.text = backTemp.toString();
-      _updateButtonState();
-    });
-  }
-
-  void decrementBackTemp() {
-    setState(() {
-      backTemp -= 1;
-      _isTempChanged = true;
-      _backTempController.text = backTemp.toString();
-      _updateButtonState();
+      selectedTempType = type;
     });
   }
 
@@ -127,160 +135,329 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
       ),
       body: Stack(
         children: [
-          DecoratedImage(),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: DefaultTextStyle(
-                style: TextStyle(
-                  color: fontcolor,
-                  fontSize: 16,
-                ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 20),
-                      TextFieldCustom(
-                        controller: _deviceNameController,
-                        labelText: S.of(context)!.device_name,
-                        suffixIcon: Icons.clear,
-                        isError: _isDeviceNameError,
-                        errorMessage: S.of(context)!.field_required,
-                        onSuffixIconPressed: () {
-                          _deviceNameController.clear();
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            deviceName = value;
-                            _isDeviceNameError = value.isEmpty;
-                            _updateButtonState();
-                          });
-                        },
+          // DecoratedImage(),
+          Container(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: DefaultTextStyle(
+                      style: TextStyle(
+                        color: fontcolor,
+                        fontSize: 16,
                       ),
-                      const SizedBox(height: 20),
-                      TemperatureInput(
-                        controller: _frontTempController,
-                        labelText: S.of(context)!.front_temperature,
-                        isError: _isFrontTempError,
-                        errorMessage: S.of(context)!.field_required,
-                        onIncrement: incrementFrontTemp,
-                        onDecrement: decrementFrontTemp,
-                        onChanged: (value) {
-                          setState(() {
-                            try {
-                              frontTemp = double.parse(value);
-                              _isFrontTempError = false;
-                            } catch (e) {
-                              _isFrontTempError = true;
-                            }
-                          });
-                        },
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 20),
+                            TemperatureInput(
+                              tempType: selectedTempType,
+                              currentTemp: selectedTempType == 'Front'
+                                  ? frontTemp
+                                  : selectedTempType == 'Back'
+                                      ? backTemp
+                                      : humidity,
+                              onIncrement: incrementTemp,
+                              onDecrement: decrementTemp,
+                              onSelectType: selectTempType,
+                            ),
+                            const SizedBox(height: 20),
+                            TextFieldCustom(
+                              controller: _deviceNameController,
+                              labelText: S.of(context)!.device_name,
+                              suffixIcon: Icons.clear,
+                              isError: _isDeviceNameError,
+                              errorMessage: S.of(context)!.field_required,
+                              onSuffixIconPressed: () {
+                                _deviceNameController.clear();
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  deviceName = value;
+                                  _isDeviceNameError = value.isEmpty;
+                                  _updateButtonState();
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 8),
+                            InfoRow(
+                              label: 'Front Temp',
+                              currentValue: 46,
+                              maxValue: frontTemp,
+                              unit: '°C',
+                              onTap: () {
+                                setState(() {
+                                  selectedTempType = 'Front';
+                                });
+                              },
+                            ),
+                            InfoRow(
+                              label: 'Back Temp',
+                              currentValue: 32,
+                              maxValue: backTemp,
+                              unit: '°C',
+                              onTap: () {
+                                setState(() {
+                                  selectedTempType = 'Back';
+                                });
+                              },
+                            ),
+                            InfoRow(
+                              label: 'Humidity',
+                              currentValue: 21,
+                              maxValue: humidity,
+                              unit: '%',
+                              onTap: () {
+                                setState(() {
+                                  selectedTempType = 'Humidity';
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            CustomButton(
+                              text: S.of(context)!.update_settings,
+                              onPressed: _handleUpdateSettings,
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 20),
-                      TemperatureInput(
-                        controller: _backTempController,
-                        labelText: S.of(context)!.back_temperature,
-                        isError: _isBackTempError,
-                        errorMessage: S.of(context)!.field_required,
-                        onIncrement: incrementBackTemp,
-                        onDecrement: decrementBackTemp,
-                        onChanged: (value) {
-                          setState(() {
-                            try {
-                              backTemp = double.parse(value);
-                              _isBackTempError = false;
-                            } catch (e) {
-                              _isBackTempError = true;
-                            }
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      CustomButton(
-                        text: S.of(context)!.update_settings,
-                        onPressed: _handleUpdateSettings,
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          ),
+          )
         ],
       ),
     );
   }
 }
 
-class TemperatureInput extends StatelessWidget {
-  final TextEditingController controller;
-  final String labelText;
-  final bool isError;
-  final String errorMessage;
+class TemperatureInput extends StatefulWidget {
+  final String tempType;
+  final double currentTemp;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
-  final ValueChanged<String>? onChanged;
+  final void Function(String) onSelectType;
 
   TemperatureInput({
-    required this.controller,
-    required this.labelText,
-    required this.isError,
-    required this.errorMessage,
+    required this.tempType,
+    required this.currentTemp,
     required this.onIncrement,
     required this.onDecrement,
-    this.onChanged,
+    required this.onSelectType,
+  });
+
+  @override
+  _TemperatureInputState createState() => _TemperatureInputState();
+}
+
+class _TemperatureInputState extends State<TemperatureInput> {
+  Timer? _timer;
+
+  void _startTimer(VoidCallback action) {
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      action();
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            widget.tempType,
+            style: TextStyle(
+              fontSize: 14,
+              color: unnecessary_colors,
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onLongPressStart: (_) => _startTimer(widget.onDecrement),
+              onLongPressEnd: (_) => _stopTimer(),
+              onTap: widget.onDecrement,
+              child: Icon(Icons.remove, color: Color.fromRGBO(237, 76, 47, 1)),
+            ),
+            SizedBox(width: 16),
+            Text(
+              '${widget.currentTemp}',
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                color: fontcolor,
+              ),
+            ),
+            SizedBox(width: 16),
+            GestureDetector(
+              onLongPressStart: (_) => _startTimer(widget.onIncrement),
+              onLongPressEnd: (_) => _stopTimer(),
+              onTap: widget.onIncrement,
+              child: Icon(Icons.add, color: Color(0xFF80C080)),
+            ),
+          ],
+        ),
+        SizedBox(height: 5),
+        Text(
+          widget.tempType,
+          style: TextStyle(
+            fontSize: 18,
+            color: unnecessary_colors,
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 10,
+              backgroundColor:
+                  widget.tempType == 'Front' ? Colors.green : Colors.grey,
+              child: GestureDetector(
+                onTap: () => widget.onSelectType('Front'),
+              ),
+            ),
+            SizedBox(width: 8),
+            CircleAvatar(
+              radius: 10,
+              backgroundColor:
+                  widget.tempType == 'Back' ? Colors.green : Colors.grey,
+              child: GestureDetector(
+                onTap: () => widget.onSelectType('Back'),
+              ),
+            ),
+            SizedBox(width: 8),
+            CircleAvatar(
+              radius: 10,
+              backgroundColor:
+                  widget.tempType == 'Humidity' ? Colors.green : Colors.grey,
+              child: GestureDetector(
+                onTap: () => widget.onSelectType('Humidity'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class InfoRow extends StatelessWidget {
+  final String label;
+  final double currentValue;
+  final double maxValue;
+  final String unit;
+  final VoidCallback onTap;
+
+  InfoRow({
+    required this.label,
+    required this.currentValue,
+    required this.maxValue,
+    required this.unit,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 312,
-      height: 48,
-      decoration: BoxDecoration(
-          color: fill_color,
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              labelText,
-              style: TextStyle(
-                fontSize: 16,
-                color: fontcolor,
+    IconData icon;
+    if (label.contains('Humidity')) {
+      icon = Icons.water_drop;
+    } else {
+      icon = Icons.thermostat;
+    }
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Container(
+          width: 312,
+          height: 48,
+          padding: EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            color: fill_color,
+            borderRadius: BorderRadius.circular(12.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                blurRadius: 5,
+                spreadRadius: 1,
+                offset: Offset(0, 3),
               ),
-            ),
+            ],
           ),
-          Spacer(),
-          IconButton(
-            icon: Icon(Icons.remove, color: Color.fromRGBO(237, 76, 47, 1)),
-            onPressed: onDecrement,
-          ),
-          Container(
-            width: 50,
-            height: 48,
-            alignment: Alignment.center,
-            child: TextFormField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: fontcolor),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    icon,
+                    color: Colors.grey[700],
+                    size: 28,
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: fontcolor,
+                    ),
+                  ),
+                ],
               ),
-              onChanged: onChanged,
-            ),
+              Row(
+                children: [
+                  Text(
+                    '$currentValue',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: fontcolor,
+                    ),
+                  ),
+                  Text(
+                    ' / $maxValue',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: fontcolor,
+                    ),
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    unit,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: fontcolor,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          IconButton(
-            icon: Icon(Icons.add, color: Color(0xFF80C080)),
-            onPressed: onIncrement,
-          ),
-        ],
+        ),
       ),
     );
   }

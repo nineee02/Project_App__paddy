@@ -30,13 +30,17 @@ class _NotifiRouteState extends State<NotifiRoute> {
     final localizations = S.of(context);
     notifications = [
       NotificationItem("2024-07-19", "01:45 pm", localizations!.temp_front,
-          localizations.temp_exceeds),
+          localizations.temp_exceeds,
+          temperature: 40.5),
       NotificationItem("2024-08-19", "03:10 pm", localizations.temp_front,
-          localizations.temp_exceeds),
+          localizations.temp_exceeds,
+          temperature: 38.0),
       NotificationItem("2024-08-18", "10:32 am", localizations.temp_back,
-          localizations.temp_exceeds),
+          localizations.temp_exceeds,
+          temperature: 39.2),
       NotificationItem("2024-08-18", "11:40 am", localizations.temp_front,
-          localizations.temp_exceeds),
+          localizations.temp_exceeds,
+          temperature: 41.0),
       NotificationItem("2024-08-18", "04:23 pm", localizations.humidity,
           localizations.monitor_dryness),
     ];
@@ -118,19 +122,21 @@ class _NotifiRouteState extends State<NotifiRoute> {
                       ),
                     ),
                     ...entry.value
-                        .map((e) =>
-                            notificationCard(e.time, e.title, e.description))
+                        .map((e) => notificationCard(
+                            e.time, e.title, e.description,
+                            temperature: e.temperature))
                         .toList(),
                   ],
                 );
               }).toList(),
-            ),
+            )
         ],
       ),
     );
   }
 
-  Widget notificationCard(String time, String title, String description) {
+  Widget notificationCard(String time, String title, String description,
+      {double? temperature}) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
       shape: RoundedRectangleBorder(
@@ -140,7 +146,15 @@ class _NotifiRouteState extends State<NotifiRoute> {
       child: ListTile(
         title: Text(title,
             style: TextStyle(color: fontcolor, fontWeight: FontWeight.bold)),
-        subtitle: Text(description),
+        subtitle: Text(
+          temperature != null
+              ? "$description ${temperature.toStringAsFixed(1)}°C"
+              : description,
+          style: TextStyle(
+            color: unnecessary_colors,
+            fontSize: 16,
+          ),
+        ),
         leading: Container(
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Text(time, style: TextStyle(color: fontcolor, fontSize: 16)),
@@ -155,6 +169,8 @@ class NotificationItem {
   String time;
   String title;
   String description;
+  double? temperature;
 
-  NotificationItem(this.date, this.time, this.title, this.description);
+  NotificationItem(this.date, this.time, this.title, this.description,
+      {this.temperature});
 }

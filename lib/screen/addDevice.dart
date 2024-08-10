@@ -6,14 +6,14 @@ import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:paddy_rice/widgets/model.dart';
-import 'package:paddy_rice/router/routes.gr.dart'; // Ensure this import is correct for your router
+import 'package:paddy_rice/router/routes.gr.dart';
 
-class DeviceInfo {
-  String id;
-  String name;
-
-  DeviceInfo({required this.id, required this.name});
-}
+// class DeviceInfo {
+//   String id;
+//   String name;
+//   double humidity;
+//   DeviceInfo({required this.id, required this.name, required this.humidity});
+// }
 
 @RoutePage()
 class AddDeviceRoute extends StatefulWidget {
@@ -24,10 +24,10 @@ class AddDeviceRoute extends StatefulWidget {
 }
 
 class _AddDeviceRouteState extends State<AddDeviceRoute> {
-  List<DeviceInfo> _devices = [
-    DeviceInfo(id: "00:11:22:33:44:55", name: "Mock Device 1"),
-    DeviceInfo(id: "66:77:88:99:AA:BB", name: "Mock Device 2"),
-  ];
+  // List<DeviceInfo> _devices = [
+  //   DeviceInfo(id: "00:11:22:33:44:55", name: "Mock Device 1"),
+  //   DeviceInfo(id: "66:77:88:99:AA:BB", name: "Mock Device 2"),
+  // ];
 
   bool isScanning = false;
   bool scanComplete = false;
@@ -73,50 +73,50 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
     );
   }
 
-  void _connectToDevice(DeviceInfo device) async {
-    try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.of(context)!.connected_to(device.name))),
-      );
-      context.router.push(
-        SelectWifiRoute(
-          device: Device(
-            name: device.name,
-            id: device.id,
-            status: true,
-          ),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(S.of(context)!.failed_to_connect(e.toString()))),
-      );
-    }
-  }
+  // void _connectToDevice(DeviceInfo device) async {
+  //   try {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text(S.of(context)!.connected_to(device.name))),
+  //     );
+  //     context.router.push(
+  //       SelectWifiRoute(
+  //         device: Device(
+  //             name: device.name,
+  //             id: device.id,
+  //             status: true,
+  //             humidity: device.humidity),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text(S.of(context)!.failed_to_connect(e.toString()))),
+  //     );
+  //   }
+  // }
 
-  Widget _buildDeviceList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: _devices.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(
-            _devices[index].name,
-            style: TextStyle(color: fontcolor),
-          ),
-          subtitle: Text(_devices[index].id),
-          trailing: ElevatedButton(
-            onPressed: () => _connectToDevice(_devices[index]),
-            child: Text(S.of(context)!.connect),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: buttoncolor,
-              foregroundColor: fontcolor,
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // Widget _buildDeviceList() {
+  //   return ListView.builder(
+  //     shrinkWrap: true,
+  //     itemCount: _devices.length,
+  //     itemBuilder: (context, index) {
+  //       return ListTile(
+  //         title: Text(
+  //           _devices[index].name,
+  //           style: TextStyle(color: fontcolor),
+  //         ),
+  //         subtitle: Text(_devices[index].id),
+  //         trailing: ElevatedButton(
+  //           onPressed: () => _connectToDevice(_devices[index]),
+  //           child: Text(S.of(context)!.connect),
+  //           style: ElevatedButton.styleFrom(
+  //             backgroundColor: buttoncolor,
+  //             foregroundColor: fontcolor,
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _buildAutomaticDetectionUI() {
     return Column(
@@ -145,7 +145,7 @@ class _AddDeviceRouteState extends State<AddDeviceRoute> {
           style: TextStyle(color: unnecessary_colors),
         ),
         SizedBox(height: 30),
-        _buildDeviceList(),
+        // _buildDeviceList(),
       ],
     );
   }

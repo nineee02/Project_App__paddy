@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flag/flag_enum.dart';
+import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/main.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/CustomTextField.dart';
 
@@ -22,6 +25,16 @@ class _LoginRouteState extends State<LoginRoute> {
   bool _isPasswordError = false;
 
   String? _errorMessage;
+  Locale _locale = Locale('en');
+  bool isEnglish = true;
+
+  void _changeLanguage() {
+    setState(() {
+      isEnglish = !isEnglish;
+      _locale = isEnglish ? Locale('en') : Locale('th');
+      MyApp.setLocale(context, _locale);
+    });
+  }
 
   void login() {
     String emailOrPhone = _emailOrPhoneController.text;
@@ -68,6 +81,9 @@ class _LoginRouteState extends State<LoginRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: maincolor,
+      ),
       backgroundColor: maincolor,
       body: Center(
         child: SingleChildScrollView(
@@ -196,6 +212,53 @@ class _LoginRouteState extends State<LoginRoute> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    child: GestureDetector(
+                      onTap: _changeLanguage,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 26,
+                            decoration: BoxDecoration(
+                              color: fill_color,
+                              borderRadius: BorderRadius.circular(13.0),
+                            ),
+                          ),
+                          AnimatedPositioned(
+                            duration: Duration(milliseconds: 300),
+                            left: isEnglish ? 0 : 24,
+                            right: isEnglish ? 24 : 0,
+                            child: Flag.fromString(
+                              isEnglish ? 'GB' : 'TH',
+                              height: 26,
+                              width: 26,
+                              fit: BoxFit.cover,
+                              flagSize: FlagSize.size_1x1,
+                              borderRadius: 13,
+                            ),
+                          ),
+                          Positioned(
+                            left: isEnglish ? 30 : 5,
+                            top: 4,
+                            child: Text(
+                              isEnglish ? "EN" : "TH",
+                              style: TextStyle(
+                                color: fontcolor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

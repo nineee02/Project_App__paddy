@@ -33,10 +33,10 @@ class ChangeDeviceNameRoute extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 final newDevice = Device(
-                  name: nameController.text,
-                  id: device.id,
-                  status: device.status,
-                );
+                    name: nameController.text,
+                    id: device.id,
+                    status: device.status,
+                    humidity: device.humidity);
                 Navigator.pop(context, newDevice);
               },
               child: Text('Save'),

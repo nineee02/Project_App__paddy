@@ -33,6 +33,7 @@ class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
         currentIndex: _selectedTab,
         onTap: (index) => _changeTab(index),
         selectedItemColor: iconcolor,
+        backgroundColor: fill_color,
         unselectedItemColor: unnecessary_colors,
         items: [
           BottomNavigationBarItem(

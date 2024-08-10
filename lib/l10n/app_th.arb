@@ -62,7 +62,7 @@
   "setting": "ตั้งค่า",
   "delete": "ลบอุปกรณ์",
   "temp": "อุณหภูมิ",
-  "moisture": "ความชื้น",
+  "humidity_": "ความชื้น",
   "front": "ด้านหน้า",
   "back": "ด้านหลัง",
   "device_already_exists": "อุปกรณ์มีอยู่แล้ว",
