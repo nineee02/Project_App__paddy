@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
-import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:paddy_rice/widgets/model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -34,6 +32,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
   bool _isBackTempError = false;
   bool _isTempChanged = false;
   bool _isButtonEnabled = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -41,7 +40,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
     deviceName = widget.device.name;
     frontTemp = widget.device.frontTemp;
     backTemp = widget.device.backTemp;
-    humidity = widget.device.humidity; // Initialize humidity
+    humidity = widget.device.humidity;
 
     _deviceNameController.text = deviceName;
     _frontTempController.text = frontTemp.toString();
@@ -58,9 +57,20 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
     });
   }
 
-  void _handleUpdateSettings() {
+  Future<void> _handleUpdateSettings() async {
     if (_isButtonEnabled) {
+      setState(() {
+        isLoading = true; // เริ่มสถานะการโหลด
+      });
+
+      await Future.delayed(
+          Duration(seconds: 2)); // จำลองการบันทึกการเปลี่ยนแปลง
+
       updateDeviceSettings();
+
+      setState(() {
+        isLoading = false; // ยกเลิกสถานะการโหลดเมื่อเสร็จสิ้น
+      });
     }
   }
 
@@ -128,7 +138,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
       appBar: AppBar(
         backgroundColor: maincolor,
         title: Text(
-          '${S.of(context)!.device_settings(widget.device.name)}',
+          S.of(context)!.device_settings(widget.device.name),
           style: appBarFont,
         ),
         centerTitle: true,
@@ -185,7 +195,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
                             ),
                             const SizedBox(height: 8),
                             InfoRow(
-                              label: 'Front Temp',
+                              label: S.of(context)!.front_temperature,
                               currentValue: 46,
                               maxValue: frontTemp,
                               unit: '°C',
@@ -196,7 +206,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
                               },
                             ),
                             InfoRow(
-                              label: 'Back Temp',
+                              label: S.of(context)!.back_temperature,
                               currentValue: 32,
                               maxValue: backTemp,
                               unit: '°C',
@@ -207,7 +217,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
                               },
                             ),
                             InfoRow(
-                              label: 'Humidity',
+                              label: S.of(context)!.humidity_,
                               currentValue: 21,
                               maxValue: humidity,
                               unit: '%',
@@ -219,8 +229,11 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
                             ),
                             const SizedBox(height: 20),
                             CustomButton(
-                              text: S.of(context)!.update_settings,
-                              onPressed: _handleUpdateSettings,
+                              text: S.of(context)!.save,
+                              onPressed: () async {
+                                await _handleUpdateSettings();
+                              },
+                              isLoading: isLoading,
                             ),
                           ],
                         ),

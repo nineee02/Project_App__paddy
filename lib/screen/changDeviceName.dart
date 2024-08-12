@@ -11,8 +11,8 @@ class ChangeDeviceNameRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameController =
-        TextEditingController(text: device.name);
+    // TextEditingController nameController =
+    // TextEditingController(text: device.name);
 
     return Scaffold(
       appBar: AppBar(
@@ -23,26 +23,26 @@ class ChangeDeviceNameRoute extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(labelText: 'Device Name'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                final newDevice = Device(
-                    name: nameController.text,
-                    id: device.id,
-                    status: device.status,
-                    humidity: device.humidity);
-                Navigator.pop(context, newDevice);
-              },
-              child: Text('Save'),
-            ),
-          ],
-        ),
+        // child: Column(
+        //   children: [
+        //     TextField(
+        //       controller: nameController,
+        //       decoration: InputDecoration(labelText: 'Device Name'),
+        //     ),
+        //     SizedBox(height: 20),
+        //     ElevatedButton(
+        //       onPressed: () {
+        //         final newDevice = Device(
+        //             name: nameController.text,
+        //             id: device.id,
+        //             status: device.status,
+        //             humidity: device.humidity);
+        //         Navigator.pop(context, newDevice);
+        //       },
+        //       child: Text('Save'),
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

@@ -36,8 +36,8 @@ class ProfileRoute extends StatelessWidget {
           title: S.of(context)!.log_out,
           content: S.of(context)!.logout_confirmation,
           parentContext: context,
-          confirmButtonText: S.of(context)!.ok,
-          cancelButtonText: S.of(context)!.not_now,
+          confirmButtonText: S.of(context)!.log_out,
+          cancelButtonText: S.of(context)!.cancel,
           onConfirm: () {
             Navigator.of(context).pop();
             context.router.replaceNamed('/login');
@@ -97,130 +97,60 @@ class ProfileContent extends StatelessWidget {
                   color: fontcolor, fontSize: 12, fontWeight: FontWeight.w400),
             ),
           ),
-          ListTile(
-            leading: Icon(Icons.person, color: iconcolor),
-            title: Text(
-              S.of(context)!.personal_settings,
-              style: TextStyle(fontSize: 16, color: fontcolor),
-            ),
-            trailing: Icon(Icons.chevron_right, color: iconcolor),
-            onTap: () => _showEditProfileSheet(context, user),
-          ),
-          ChangePasswordTile(),
-          LanguageChangeTile(),
-          const SizedBox(
-            height: 16.0,
-          ),
-          Divider(color: unnecessary_colors),
-          const SizedBox(
-            height: 16.0,
-          ),
-          ListTile(
-            leading: Icon(Icons.logout, color: iconcolor),
-            title: Text(
-              S.of(context)!.log_out,
-              style: TextStyle(color: error_color, fontSize: 16),
-            ),
-            onTap: () => onLogout(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showEditProfileSheet(BuildContext context, UserProfile user) {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      backgroundColor: maincolor,
-      context: context,
-      builder: (BuildContext context) {
-        return FractionallySizedBox(
-          heightFactor: 0.9,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      S.of(context)!.edit_profile,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: fontcolor),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close, color: iconcolor),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  controller: TextEditingController(text: user.name),
-                  labelText: S.of(context)!.name,
-                  obscureText: false,
-                  suffixIcon: Icons.clear,
-                  onSuffixIconPressed: () {},
-                  isError: false,
-                  errorMessage: '',
-                  prefixIcon: Icons.person_outline,
-                ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  controller: TextEditingController(text: user.surname),
-                  labelText: S.of(context)!.surname,
-                  obscureText: false,
-                  suffixIcon: Icons.clear,
-                  onSuffixIconPressed: () {},
-                  isError: false,
-                  errorMessage: '',
-                  prefixIcon: Icons.person_outline,
-                ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  controller: TextEditingController(text: user.email),
-                  labelText: S.of(context)!.email,
-                  obscureText: false,
-                  suffixIcon: Icons.clear,
-                  onSuffixIconPressed: () {},
-                  isError: false,
-                  errorMessage: '',
-                  prefixIcon: Icons.email_outlined,
-                ),
-                SizedBox(height: 20),
-                CustomTextField(
-                  controller: TextEditingController(text: user.phone),
-                  labelText: S.of(context)!.phone,
-                  obscureText: false,
-                  suffixIcon: Icons.clear,
-                  onSuffixIconPressed: () {},
-                  isError: false,
-                  errorMessage: '',
-                  prefixIcon: Icons.phone_outlined,
-                ),
-                SizedBox(height: 20),
-                CustomButton(
-                  text: S.of(context)!.save_changes,
-                  onPressed: () {
-                    if (_validateProfile(user, context)) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(S.of(context)!.profile_updated),
-                        ),
-                      );
-                      Navigator.of(context).pop();
-                    }
-                  },
+          Container(
+            decoration: BoxDecoration(
+              color: fill_color, // กำหนดสีพื้นหลังที่คุณต้องการ
+              borderRadius: BorderRadius.circular(8), // กำหนดให้มุมมน
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12, // กำหนดเงา
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
+            child: Column(
+              children: [
+                ListTile(
+                  leading: Icon(Icons.person, color: iconcolor),
+                  title: Text(
+                    S.of(context)!.personal_settings,
+                    style: TextStyle(fontSize: 16, color: fontcolor),
+                  ),
+                  trailing: Icon(Icons.chevron_right, color: iconcolor),
+                  onTap: () => context.router.replaceNamed('/edit_profile'),
+                ),
+                ChangePasswordTile(),
+                LanguageChangeTile(),
+              ],
+            ),
           ),
-        );
-      },
+          const SizedBox(
+            height: 16.0,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: fill_color, // กำหนดสีพื้นหลังที่คุณต้องการ
+              borderRadius: BorderRadius.circular(8), // กำหนดให้มุมมน
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12, // กำหนดเงา
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ListTile(
+              leading: Icon(Icons.logout, color: iconcolor),
+              title: Text(
+                S.of(context)!.log_out,
+                style: TextStyle(color: error_color, fontSize: 16),
+              ),
+              onTap: () => onLogout(context),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -260,7 +190,7 @@ class ProfileHeader extends StatelessWidget {
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: maincolor,
+          color: fill_color,
         ),
         child: Row(
           children: [
@@ -424,6 +354,7 @@ class _ChangePasswordTileState extends State<ChangePasswordTile> {
   bool _isConfirmPasswordObscured = true;
   bool _isPasswordError = false;
   String _errorMessage = '';
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -517,9 +448,10 @@ class _ChangePasswordTileState extends State<ChangePasswordTile> {
                 SizedBox(height: 20),
                 CustomButton(
                   text: S.of(context)!.reset,
-                  onPressed: () {
+                  onPressed: () async {
                     _validatePasswords(context);
                   },
+                  isLoading: isLoading,
                 ),
               ],
             ),
@@ -529,28 +461,38 @@ class _ChangePasswordTileState extends State<ChangePasswordTile> {
     );
   }
 
-  void _validatePasswords(BuildContext context) {
+  void _validatePasswords(BuildContext context) async {
     setState(() {
       _isPasswordError = false;
       _errorMessage = '';
+      isLoading = true;
 
       if (_currentPasswordController.text.isEmpty ||
           _newPasswordController.text.isEmpty ||
           _confirmPasswordController.text.isEmpty) {
         _isPasswordError = true;
         _errorMessage = S.of(context)!.fill_out_fields;
+        isLoading = false;
       } else if (_newPasswordController.text !=
           _confirmPasswordController.text) {
         _isPasswordError = true;
         _errorMessage = S.of(context)!.passwords_do_not_match;
-      } else {
-        // Simulate password change success
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context)!.password_reset_successful)),
-        );
-        Navigator.of(context).pop();
-        context.router.replaceNamed('/bottom_navigation');
+        isLoading = false;
       }
     });
+
+    if (!_isPasswordError) {
+      await Future.delayed(Duration(seconds: 3)); // จำลองการรีเซ็ตรหัสผ่าน
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.of(context)!.password_reset_successful)),
+      );
+      Navigator.of(context).pop();
+      context.router.replaceNamed('/bottom_navigation');
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

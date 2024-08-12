@@ -8,7 +8,7 @@ import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 @RoutePage()
-class OtpRoute extends StatelessWidget {
+class OtpRoute extends StatefulWidget {
   final String inputValue;
 
   const OtpRoute({
@@ -17,24 +17,37 @@ class OtpRoute extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController _pinController = TextEditingController();
+  _OtpRouteState createState() => _OtpRouteState();
+}
 
-    void _verifyOtp() {
-      // if (_pinController.text.length == 4) {
-      // print('OTP verification button pressed');
+class _OtpRouteState extends State<OtpRoute> {
+  TextEditingController _pinController = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> _verifyOtp() async {
+    if (_pinController.text.length == 4) {
+      setState(() {
+        isLoading = true;
+      });
+
+      await Future.delayed(Duration(seconds: 3));
+      setState(() {
+        isLoading = false;
+      });
+
       context.router.replaceNamed('/change_password');
-      // } else {
-      //   print('Invalid OTP length');
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text(S.of(context)!.enter_valid_otp),
-      //       backgroundColor: error_color,
-      //     ),
-      //   );
-      // }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(S.of(context)!.enter_valid_otp),
+          backgroundColor: error_color,
+        ),
+      );
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: maincolor,
       appBar: AppBar(
@@ -44,7 +57,7 @@ class OtpRoute extends StatelessWidget {
           onPressed: () => context.router.replaceNamed('/forgot'),
         ),
         title: Text(
-          S.of(context)!.verify_email,
+          S.of(context)!.verification,
           style: appBarFont,
         ),
         centerTitle: true,
@@ -76,7 +89,9 @@ class OtpRoute extends StatelessWidget {
                       SizedBox(height: 20),
                       Center(
                         child: Text(
-                          S.of(context)!.verification_code_sent(inputValue),
+                          S
+                              .of(context)!
+                              .verification_code_sent(widget.inputValue),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: fontcolor,
@@ -138,8 +153,9 @@ class OtpRoute extends StatelessWidget {
                       SizedBox(height: 4.0),
                       Center(
                         child: CustomButton(
-                          text: S.of(context)!.verify_create_password,
+                          text: S.of(context)!.verify,
                           onPressed: _verifyOtp,
+                          isLoading: isLoading,
                         ),
                       ),
                     ],

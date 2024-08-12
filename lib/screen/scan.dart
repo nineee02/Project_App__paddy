@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:torch_light/torch_light.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:paddy_rice/constants/color.dart';
@@ -31,10 +30,10 @@ class _ScanRouteState extends State<ScanRoute> {
   Future<void> _requestCameraPermission() async {
     final status = await Permission.camera.request();
     if (status != PermissionStatus.granted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Camera permission is required to scan QR codes')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //       content: Text('Camera permission is required to scan QR codes')),
+      // );
     }
   }
 
@@ -65,21 +64,23 @@ class _ScanRouteState extends State<ScanRoute> {
 
   Future<void> _toggleTorch() async {
     try {
-      if (_torchIsOn) {
-        await TorchLight.disableTorch();
-      } else {
-        await TorchLight.enableTorch();
-      }
+      // bool? _torchIsOn = await controller?.getFlashStatus();
+      // if (_torchIsOn != null && _torchIsOn == true) {
+      //   await TorchLight.disableTorch();
+      await controller?.toggleFlash();
+      // } else {
+      // await TorchLight.enableTorch();
+      // }
       setState(() {
         _torchIsOn = !_torchIsOn;
       });
     } on Exception catch (e) {
       print('Could not toggle torch: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Could not toggle torch: $e'),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('Could not toggle torch: $e'),
+      //   ),
+      // );
     }
   }
 

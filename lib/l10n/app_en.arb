@@ -18,7 +18,7 @@
   "fill_out_fields": "Please fill out all fields.",
   "passwords_do_not_match": "Passwords do not match.",
   "logout_confirmation": "Are you sure you want to log out?",
-  "not_now": "Not Now",
+  "cancel": "Cancel",
   "name": "Name",
   "surname": "Surname",
   "email": "Email",
@@ -28,12 +28,11 @@
   "forgot_password": "Forgot Password",
   "user_not_found": "User not found",
   "user_not_found_prompt": "User not found. Would you like to sign up or enter a different email?",
-  "not_now": "Not now",
   "enter_email_verification": "Please Enter Your Email To Receive a Verification Code",
   "email": "Email",
   "field_required": "This field is required",
   "invalid_email_format": "Invalid email format",
-  "continue_text": "Continue",
+  "send": "Send",
   "correct_errors": "Please correct the errors.",
   "save": "Save",
 
@@ -47,11 +46,11 @@
   "no_account_prompt": "Don’t have an account?",
   "field_required": "This field is required",
 
-  "verify_email": "Verify Email",
+  "verification": "Verification",
   "verification_code_sent": "We have sent a verification code to your email: {inputValue}.",
   "enter_valid_otp": "Please enter a valid 4-digit OTP.",
   "resend_otp": "Didn't receive the OTP? Resend code",
-  "verify_create_password": "Verify and Create Password",
+  "verify": "Verify",
   "password_too_short": "Password too Short",
 
   "title": "Silo",
@@ -77,10 +76,10 @@
   "monitor_dryness": "monitor for dryness",
   "no_notifications": "No Notification",
 
-  "notification_setting": "Notification setting",
-  "device_messages": "Device messages",
-  "device_notification": "Device Notification",
-  "device_notification_management": "Device Notification Management",
+  "notifications": "Notifications",
+  "device_messages": "Device Messages",
+  "devices": "Devices",
+  "device_management": "Device Management",
   "temp_alert": "Temperature Alert",
   "humi_alert": "Humidity Alert",
 
@@ -100,11 +99,12 @@
   "password_error": "Passwords do not match",
   "success_message": "Registration successful. Please log in.",
   "error_message": "Error occurred",
+  "email_phone_exists": "Email or phone number already exists",
 
   "error": "Error",
   "success": "Success",
 
-  "create_new_password": "Create New Password",
+  "reset_password": "Reset Password",
   "new_password_instruction": "Your new password must be different \nfrom any previously used passwords.",
   "new_password": "New Password",
   "confirm_password": "Confirm Password",
@@ -127,13 +127,12 @@
   "device_name": "Device Name",
   "front_temperature": "Front Temp",
   "back_temperature": "Back Temp",
-  "update_settings": "Update Settings",
   
   "select_wifi_network": "Select Wi-Fi network",
   "this_device_supports": "This device only supports 2.4GHz Wi-Fi",
   "enter_password": "Enter password",
   "select_wifi_network_hint": "Select Wi-Fi network",
-  "please_select_wifi": "Please select a Wi-Fi network.",
+  "please_connect_wifi": "Please Connect Wi-Fi",
   "please_enter_password": "Please enter the Wi-Fi password.",
   "next": "Next",
 
@@ -141,5 +140,9 @@
   "please_enter_front_temp": "Please enter front_temp",
   "please_enter_back_temp": "Please enter back_temp",
 
-  "allow_notifications": "Allow notifications"
+  "allow_notifications": "Allow notifications",
+
+  "delete_confirmation": "Delete Confirmation",
+  "running": "Runnig",
+  "close": "Close"
 }

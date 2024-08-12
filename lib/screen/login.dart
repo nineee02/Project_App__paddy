@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/main.dart';
+import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/CustomTextField.dart';
 
@@ -36,27 +37,35 @@ class _LoginRouteState extends State<LoginRoute> {
     });
   }
 
-  void login() {
+  Future<void> login() async {
     String emailOrPhone = _emailOrPhoneController.text;
     String password = _passwordController.text;
 
     final validEmailsOrPhones = ['user@example.com', '1231231231'];
     final correctPassword = 'password123';
 
-    if (validEmailsOrPhones.contains(emailOrPhone)) {
-      if (password == correctPassword) {
-        context.router.replaceNamed('/bottom_navigation');
-      } else {
-        setState(() {
-          _isPasswordError = true;
-          _errorMessage = S.of(context)!.incorrect_password;
-        });
-      }
-    } else {
-      setState(() {
+    setState(() {
+      _isEmailOrPhoneError = false;
+      _isPasswordError = false;
+      _errorMessage = null;
+    });
+
+    if ((!validEmailsOrPhones.contains(emailOrPhone) ||
+        (password != correctPassword))) {
+      setState(() async {
         _isEmailOrPhoneError = true;
         _errorMessage = S.of(context)!.user_not_found_prompt;
+        _isPasswordError = true;
+        _errorMessage = _errorMessage != null
+            ? '${_errorMessage}\n${S.of(context)!.incorrect_password}'
+            : S.of(context)!.incorrect_password;
       });
+    }
+
+    if (!_isEmailOrPhoneError && !_isPasswordError) {
+      await Future.delayed(Duration(seconds: 3));
+      context.router.replace(BottomNavigationRoute(page: 0));
+      // context.router.replaceNamed('/bottom_navigation');
     }
   }
 
@@ -177,9 +186,9 @@ class _LoginRouteState extends State<LoginRoute> {
                 SizedBox(height: 8.0),
                 CustomButton(
                   text: S.of(context)!.sign_in,
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      login();
+                      await login();
                     }
                   },
                 ),

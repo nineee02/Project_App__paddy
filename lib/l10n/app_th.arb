@@ -18,7 +18,7 @@
   "fill_out_fields": "กรุณากรอกทุกช่อง.",
   "passwords_do_not_match": "รหัสผ่านไม่ตรงกัน.",
   "logout_confirmation": "คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?",
-  "not_now": "ยังไม่ใช่ตอนนี้",
+  "cancel": "ยกเลิก",
   "name": "ชื่อ",
   "surname": "นามสกุล",
   "email": "อีเมล",
@@ -29,12 +29,11 @@
   "user_not_found": "ไม่พบผู้ใช้",
   "user_not_found_prompt": "ไม่พบผู้ใช้ คุณต้องการสมัครสมาชิกหรือป้อนอีเมลอื่นหรือไม่?",
   "sign_up": "สมัครสมาชิก",
-  "not_now": "ยังไม่ใช่ตอนนี้",
   "enter_email_verification": "กรุณากรอกอีเมลของคุณเพื่อรับรหัสยืนยัน",
   "email": "อีเมล",
   "field_required": "ต้องกรอกข้อมูลนี้",
   "invalid_email_format": "รูปแบบอีเมลไม่ถูกต้อง",
-  "continue_text": "ดำเนินการต่อ",
+  "send": "ส่ง",
   "correct_errors": "โปรดแก้ไขข้อผิดพลาด",
   "save": "บันทึก",
 
@@ -48,11 +47,11 @@
   "no_account_prompt": "ไม่มีบัญชีผู้ใช้?",
   "field_required": "กรุณากรอกข้อมูลนี้",
 
-  "verify_email": "ยืนยันอีเมล",
+  "verification": "การตรวจสอบ",
   "verification_code_sent": "เราได้ส่งรหัสยืนยันไปยังอีเมลของคุณ: {inputValue}.",
   "enter_valid_otp": "กรุณาใส่รหัส OTP 4 หลักที่ถูกต้อง",
   "resend_otp": "ไม่ได้รับรหัส OTP? ส่งรหัสอีกครั้ง",
-  "verify_create_password": "ยืนยันและสร้างรหัสผ่าน",
+  "verify": "ยืนยัน",
   "password_too_short": "รหัสผ่านสั้นเกินไป",
 
   "title": "ไซโล",
@@ -78,10 +77,11 @@
   "monitor_dryness": "ตรวจสอบความแห้ง",
   "no_notifications": "ไม่มีการแจ้งเตือน",
 
-  "notification_setting": "ตั้งค่าการแจ้งเตือน",
-  "device_messages": "ข้อความจากอุปรกรณ์",
+  "notifications": "การแจ้งเตือน",
+  "device_messages": "ข้อความอุปกรณ์",
+  "devices": "อุปรกรณ์",
   "device_notification": "การแจ้งเตือนอุปกรณ์",
-  "device_notification_management": "การจัดการการแจ้งเตือนอุปกรณ์",
+  "device_management": "การจัดการอุปกรณ์",
   "temp_alert": "การแจ้งเตือนอุณหภูมิ",
   "humi_alert": "การแจ้งเตือนความชื้น",
 
@@ -100,11 +100,12 @@
   "password_error": "รหัสผ่านไม่ตรงกัน",
   "success_message": "ลงทะเบียนสำเร็จ. กรุณาเข้าสู่ระบบ.",
   "error_message": "เกิดข้อผิดพลาด",
+  "email_phone_exists": "อีเมลหรือเบอร์โทรศัพท์มีอยู่แล้ว",
 
   "error": "เกิดข้อผิดพลาด",
   "success": "สำเร็จ",
 
-  "create_new_password": "สร้างรหัสผ่านใหม่",
+  "reset_password": "รีเซ็ตรหัสผ่าน",
   "new_password_instruction": "รหัสผ่านใหม่ของคุณต้องแตกต่าง\nจากรหัสผ่านที่เคยใช้ก่อนหน้านี้",
   "new_password": "รหัสผ่านใหม่",
   "confirm_password": "ยืนยันรหัสผ่าน",
@@ -127,13 +128,12 @@
   "device_name": "ชื่ออุปกรณ์",
   "front_temperature": "อุณหภูมิด้านหน้า",
   "back_temperature": "อุณหภูมิด้านหลัง",
-  "update_settings": "อัปเดตการตั้งค่า",
   
   "select_wifi_network": "เลือกเครือข่าย Wi-Fi",
   "this_device_supports": "อุปกรณ์นี้รองรับเฉพาะ Wi-Fi 2.4GHz เท่านั้น",
   "enter_password": "กรอกรหัสผ่าน",
   "select_wifi_network_hint": "เลือกเครือข่าย Wi-Fi",
-  "please_select_wifi": "กรุณาเลือกเครือข่าย Wi-Fi.",
+  "please_connect_wifi": "กรุณาเชื่อมต่อ Wi-Fi.",
   "please_enter_password": "กรุณากรอกรหัสผ่าน Wi-Fi.",
   "next": "ถัดไป",
 
@@ -141,6 +141,9 @@
   "please_enter_front_temp": "กรุณาใส่ข้อมูลอุณหภูมิด้านหน้า",
   "please_enter_back_temp": "กรุณากรอกอุณหภูมิด้านหลัง",
 
-  "allow_notifications": "อนุญาตการแจ้งเตือน"
+  "allow_notifications": "อนุญาตการแจ้งเตือน",
 
+  "delete_confirmation": "ยืนยันการลบ",
+  "running": "กำลังทำงาน",
+  "close": "ปิด"
 }

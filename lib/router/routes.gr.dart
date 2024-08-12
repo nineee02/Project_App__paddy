@@ -40,9 +40,11 @@ abstract class $AppRouter extends _i17.RootStackRouter {
       );
     },
     BottomNavigationRoute.name: (routeData) {
+      final args = routeData.argsAs<BottomNavigationRouteArgs>(
+          orElse: () => const BottomNavigationRouteArgs());
       return _i17.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.BottomNavigationRoute(),
+        child: _i2.BottomNavigationRoute(page: args.page),
       );
     },
     ChangeDeviceNameRoute.name: (routeData) {
@@ -157,16 +159,32 @@ class AddDeviceRoute extends _i17.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.BottomNavigationRoute]
-class BottomNavigationRoute extends _i17.PageRouteInfo<void> {
-  const BottomNavigationRoute({List<_i17.PageRouteInfo>? children})
-      : super(
+class BottomNavigationRoute
+    extends _i17.PageRouteInfo<BottomNavigationRouteArgs> {
+  BottomNavigationRoute({
+    int page = 0,
+    List<_i17.PageRouteInfo>? children,
+  }) : super(
           BottomNavigationRoute.name,
+          args: BottomNavigationRouteArgs(page: page),
           initialChildren: children,
         );
 
   static const String name = 'BottomNavigationRoute';
 
-  static const _i17.PageInfo<void> page = _i17.PageInfo<void>(name);
+  static const _i17.PageInfo<BottomNavigationRouteArgs> page =
+      _i17.PageInfo<BottomNavigationRouteArgs>(name);
+}
+
+class BottomNavigationRouteArgs {
+  const BottomNavigationRouteArgs({this.page = 0});
+
+  final int page;
+
+  @override
+  String toString() {
+    return 'BottomNavigationRouteArgs{page: $page}';
+  }
 }
 
 /// generated route for

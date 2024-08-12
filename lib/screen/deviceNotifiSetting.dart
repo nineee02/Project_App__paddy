@@ -12,70 +12,87 @@ class DeviceNotifiSettingRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: maincolor,
+      appBar: AppBar(
         backgroundColor: maincolor,
-        appBar: AppBar(
-            backgroundColor: maincolor,
-            leading: IconButton(
-              onPressed: () {
-                context.router.replaceNamed('/settingNotifi');
-              },
-              icon: Icon(Icons.arrow_back, color: iconcolor),
-            ),
-            title: Text(
-              S.of(context)!.device_notification_management,
-              style: appBarFont,
-            ),
-            centerTitle: true),
-        body: Stack(
-          children: [
-            DecoratedImage(),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 40),
-                  Row(
-                    children: [
-                      Text(
-                        S.of(context)!.title,
-                        style: TextStyle(
-                            color: fontcolor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ],
+        leading: IconButton(
+          onPressed: () {
+            context.router.replaceNamed('/settingNotifi');
+          },
+          icon: Icon(Icons.arrow_back, color: iconcolor),
+        ),
+        title: Text(
+          S.of(context)!.device_management,
+          style: appBarFont,
+        ),
+        centerTitle: true,
+      ),
+      body: Stack(
+        children: [
+          DecoratedImage(),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 0.0, vertical: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 40),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    S.of(context)!.title,
+                    style: TextStyle(
+                      color: fontcolor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  buildSwitchTile(S.of(context)!.device_notification),
-                  const SizedBox(height: 16),
-                  buildSwitchTile(S.of(context)!.temp_alert),
-                  const SizedBox(height: 16),
-                  buildSwitchTile(S.of(context)!.humi_alert),
-                ],
-              ),
+                ),
+                const SizedBox(height: 16),
+                buildSwitchTile(S.of(context)!.devices),
+                buildSwitchTile(S.of(context)!.temp_alert),
+                buildSwitchTile(S.of(context)!.humi_alert),
+              ],
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildSwitchTile(String title) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(8.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
-        height: 48.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                  color: fontcolor, fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            SwitchMod(),
-          ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: fill_color,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+          height: 48.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: fontcolor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SwitchMod(),
+            ],
+          ),
         ),
       ),
     );

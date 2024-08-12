@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
+import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -88,7 +89,8 @@ class _NotifiRouteState extends State<NotifiRoute> {
       appBar: AppBar(
         backgroundColor: maincolor,
         leading: IconButton(
-          onPressed: () => context.router.replaceNamed('/bottom_navigation'),
+          onPressed: () =>
+              context.router.replace(BottomNavigationRoute(page: 0)),
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
         title: Text(S.of(context)!.notification, style: appBarFont),
@@ -142,22 +144,51 @@ class _NotifiRouteState extends State<NotifiRoute> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      color: fill_color,
-      child: ListTile(
-        title: Text(title,
-            style: TextStyle(color: fontcolor, fontWeight: FontWeight.bold)),
-        subtitle: Text(
-          temperature != null
-              ? "$description ${temperature.toStringAsFixed(1)}°C"
-              : description,
-          style: TextStyle(
-            color: unnecessary_colors,
-            fontSize: 16,
-          ),
+      // color: fill_color, // ลบออกเพื่อให้ `Container` ภายในกำหนดสีพื้นหลัง
+      child: Container(
+        decoration: BoxDecoration(
+          color: fill_color, // ใส่สีพื้นหลังที่ต้องการ
+          borderRadius: BorderRadius.circular(10),
         ),
-        leading: Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Text(time, style: TextStyle(color: fontcolor, fontSize: 16)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(time,
+                      style: TextStyle(
+                          color: fontcolor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(width: 8),
+                  Text(title,
+                      style: TextStyle(
+                          color: fontcolor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16)),
+                ],
+              ),
+              SizedBox(height: 4),
+              Row(
+                children: [
+                  SizedBox(width: 80),
+                  Expanded(
+                    child: Text(
+                      temperature != null
+                          ? "$description ${temperature.toStringAsFixed(1)}°C"
+                          : description,
+                      style: TextStyle(
+                        color: unnecessary_colors,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
+import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/model.dart';
 import 'package:wifi_scan/wifi_scan.dart';
@@ -32,6 +33,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
   bool _obscureText = true;
   FocusNode _passwordFocusNode = FocusNode();
   BluetoothCharacteristic? writeCharacteristic;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -106,7 +108,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
     if (selectedWifi == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(localizations.please_select_wifi),
+          content: Text(localizations.please_connect_wifi),
         ),
       );
       return false;
@@ -124,12 +126,19 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
     return true;
   }
 
-  void onSubmit() {
+  Future<void> onSubmit() async {
     if (validateInputs()) {
+      setState(() {
+        isLoading = true; // ตั้งค่า isLoading เป็น true
+      });
       final ssid = selectedWifi!;
       final password = passwordController.text;
-      sendWifiCredentials(ssid, password);
-      context.router.replaceNamed('/bottom_navigation');
+      await sendWifiCredentials(ssid, password);
+      setState(() {
+        isLoading = false; // ตั้งค่า isLoading เป็น false
+      });
+
+      context.router.replaceAll([BottomNavigationRoute(page: 0)]);
     }
   }
 
@@ -145,7 +154,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
         title: Text(
-          localizations.select_wifi_network,
+          localizations.please_connect_wifi,
           style: appBarFont,
         ),
         centerTitle: true,
@@ -308,7 +317,8 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
                         height: 48,
                         child: CustomButton(
                           text: localizations.next,
-                          onPressed: onSubmit,
+                          onPressed: onSubmit, // ต้องใช้ Future<void>
+                          isLoading: isLoading,
                         ),
                       ),
                     ],
