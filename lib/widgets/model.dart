@@ -7,6 +7,7 @@ class Device {
   final bool status;
   double frontTemp;
   double backTemp;
+  double humidity;
   BluetoothDevice? bluetoothDevice;
 
   Device({
@@ -15,6 +16,7 @@ class Device {
     required this.status,
     this.frontTemp = 0.0,
     this.backTemp = 0.0,
+    this.humidity = 0.0,
     this.bluetoothDevice,
   });
 }

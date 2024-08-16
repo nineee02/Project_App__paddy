@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
+import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -30,13 +31,17 @@ class _NotifiRouteState extends State<NotifiRoute> {
     final localizations = S.of(context);
     notifications = [
       NotificationItem("2024-07-19", "01:45 pm", localizations!.temp_front,
-          localizations.temp_exceeds),
+          localizations.temp_exceeds,
+          temperature: 40.5),
       NotificationItem("2024-08-19", "03:10 pm", localizations.temp_front,
-          localizations.temp_exceeds),
+          localizations.temp_exceeds,
+          temperature: 38.0),
       NotificationItem("2024-08-18", "10:32 am", localizations.temp_back,
-          localizations.temp_exceeds),
+          localizations.temp_exceeds,
+          temperature: 39.2),
       NotificationItem("2024-08-18", "11:40 am", localizations.temp_front,
-          localizations.temp_exceeds),
+          localizations.temp_exceeds,
+          temperature: 41.0),
       NotificationItem("2024-08-18", "04:23 pm", localizations.humidity,
           localizations.monitor_dryness),
     ];
@@ -84,7 +89,8 @@ class _NotifiRouteState extends State<NotifiRoute> {
       appBar: AppBar(
         backgroundColor: maincolor,
         leading: IconButton(
-          onPressed: () => context.router.replaceNamed('/bottom_navigation'),
+          onPressed: () =>
+              context.router.replace(BottomNavigationRoute(page: 0)),
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
         title: Text(S.of(context)!.notification, style: appBarFont),
@@ -118,32 +124,71 @@ class _NotifiRouteState extends State<NotifiRoute> {
                       ),
                     ),
                     ...entry.value
-                        .map((e) =>
-                            notificationCard(e.time, e.title, e.description))
+                        .map((e) => notificationCard(
+                            e.time, e.title, e.description,
+                            temperature: e.temperature))
                         .toList(),
                   ],
                 );
               }).toList(),
-            ),
+            )
         ],
       ),
     );
   }
 
-  Widget notificationCard(String time, String title, String description) {
+  Widget notificationCard(String time, String title, String description,
+      {double? temperature}) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      color: fill_color,
-      child: ListTile(
-        title: Text(title,
-            style: TextStyle(color: fontcolor, fontWeight: FontWeight.bold)),
-        subtitle: Text(description),
-        leading: Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Text(time, style: TextStyle(color: fontcolor, fontSize: 16)),
+      // color: fill_color, // ลบออกเพื่อให้ `Container` ภายในกำหนดสีพื้นหลัง
+      child: Container(
+        decoration: BoxDecoration(
+          color: fill_color, // ใส่สีพื้นหลังที่ต้องการ
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(time,
+                      style: TextStyle(
+                          color: fontcolor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(width: 8),
+                  Text(title,
+                      style: TextStyle(
+                          color: fontcolor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16)),
+                ],
+              ),
+              SizedBox(height: 4),
+              Row(
+                children: [
+                  SizedBox(width: 80),
+                  Expanded(
+                    child: Text(
+                      temperature != null
+                          ? "$description ${temperature.toStringAsFixed(1)}°C"
+                          : description,
+                      style: TextStyle(
+                        color: unnecessary_colors,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -155,6 +200,8 @@ class NotificationItem {
   String time;
   String title;
   String description;
+  double? temperature;
 
-  NotificationItem(this.date, this.time, this.title, this.description);
+  NotificationItem(this.date, this.time, this.title, this.description,
+      {this.temperature});
 }

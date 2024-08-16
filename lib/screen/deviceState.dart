@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
@@ -19,6 +20,8 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
   late String deviceName;
   late double frontTemp;
   late double backTemp;
+  late double humidity;
+  String selectedTempType = 'Front';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _deviceNameController = TextEditingController();
@@ -30,6 +33,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
   bool _isBackTempError = false;
   bool _isTempChanged = false;
   bool _isButtonEnabled = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -37,6 +41,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
     deviceName = widget.device.name;
     frontTemp = widget.device.frontTemp;
     backTemp = widget.device.backTemp;
+    humidity = widget.device.humidity;
 
     _deviceNameController.text = deviceName;
     _frontTempController.text = frontTemp.toString();
@@ -53,9 +58,20 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
     });
   }
 
-  void _handleUpdateSettings() {
+  Future<void> _handleUpdateSettings() async {
     if (_isButtonEnabled) {
+      setState(() {
+        isLoading = true; // เริ่มสถานะการโหลด
+      });
+
+      await Future.delayed(
+          Duration(seconds: 2)); // จำลองการบันทึกการเปลี่ยนแปลง
+
       updateDeviceSettings();
+
+      setState(() {
+        isLoading = false; // ยกเลิกสถานะการโหลดเมื่อเสร็จสิ้น
+      });
     }
   }
 
@@ -72,44 +88,47 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
         widget.device.name = deviceName;
         widget.device.frontTemp = frontTemp;
         widget.device.backTemp = backTemp;
+        widget.device.humidity = humidity;
       });
       Navigator.pop(context, widget.device);
     }
   }
 
-  void incrementFrontTemp() {
+  void incrementTemp() {
     setState(() {
-      frontTemp += 1;
+      if (selectedTempType == 'Front') {
+        frontTemp += 1;
+        _frontTempController.text = frontTemp.toString();
+      } else if (selectedTempType == 'Back') {
+        backTemp += 1;
+        _backTempController.text = backTemp.toString();
+      } else if (selectedTempType == 'Humidity') {
+        humidity += 1;
+      }
       _isTempChanged = true;
-      _frontTempController.text = frontTemp.toString();
       _updateButtonState();
     });
   }
 
-  void decrementFrontTemp() {
+  void decrementTemp() {
     setState(() {
-      frontTemp -= 1;
+      if (selectedTempType == 'Front') {
+        frontTemp -= 1;
+        _frontTempController.text = frontTemp.toString();
+      } else if (selectedTempType == 'Back') {
+        backTemp -= 1;
+        _backTempController.text = backTemp.toString();
+      } else if (selectedTempType == 'Humidity') {
+        humidity -= 1;
+      }
       _isTempChanged = true;
-      _frontTempController.text = frontTemp.toString();
       _updateButtonState();
     });
   }
 
-  void incrementBackTemp() {
+  void selectTempType(String type) {
     setState(() {
-      backTemp += 1;
-      _isTempChanged = true;
-      _backTempController.text = backTemp.toString();
-      _updateButtonState();
-    });
-  }
-
-  void decrementBackTemp() {
-    setState(() {
-      backTemp -= 1;
-      _isTempChanged = true;
-      _backTempController.text = backTemp.toString();
-      _updateButtonState();
+      selectedTempType = type;
     });
   }
 
@@ -120,7 +139,7 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
       appBar: AppBar(
         backgroundColor: maincolor,
         title: Text(
-          '${S.of(context)!.device_settings(widget.device.name)}',
+          S.of(context)!.device_settings(widget.device.name),
           style: appBarFont,
         ),
         centerTitle: true,
@@ -128,86 +147,114 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
       body: Stack(
         children: [
           DecoratedImage(),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: DefaultTextStyle(
-                style: TextStyle(
-                  color: fontcolor,
-                  fontSize: 16,
-                ),
-                child: Form(
-                  key: _formKey,
+          Column(
+            children: [
+              Container(
+                child: SingleChildScrollView(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 20),
-                      TextFieldCustom(
-                        controller: _deviceNameController,
-                        labelText: S.of(context)!.device_name,
-                        suffixIcon: Icons.clear,
-                        isError: _isDeviceNameError,
-                        errorMessage: S.of(context)!.field_required,
-                        onSuffixIconPressed: () {
-                          _deviceNameController.clear();
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            deviceName = value;
-                            _isDeviceNameError = value.isEmpty;
-                            _updateButtonState();
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      TemperatureInput(
-                        controller: _frontTempController,
-                        labelText: S.of(context)!.front_temperature,
-                        isError: _isFrontTempError,
-                        errorMessage: S.of(context)!.field_required,
-                        onIncrement: incrementFrontTemp,
-                        onDecrement: decrementFrontTemp,
-                        onChanged: (value) {
-                          setState(() {
-                            try {
-                              frontTemp = double.parse(value);
-                              _isFrontTempError = false;
-                            } catch (e) {
-                              _isFrontTempError = true;
-                            }
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      TemperatureInput(
-                        controller: _backTempController,
-                        labelText: S.of(context)!.back_temperature,
-                        isError: _isBackTempError,
-                        errorMessage: S.of(context)!.field_required,
-                        onIncrement: incrementBackTemp,
-                        onDecrement: decrementBackTemp,
-                        onChanged: (value) {
-                          setState(() {
-                            try {
-                              backTemp = double.parse(value);
-                              _isBackTempError = false;
-                            } catch (e) {
-                              _isBackTempError = true;
-                            }
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      CustomButton(
-                        text: S.of(context)!.update_settings,
-                        onPressed: _handleUpdateSettings,
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: DefaultTextStyle(
+                          style: TextStyle(
+                            color: fontcolor,
+                            fontSize: 16,
+                          ),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 20),
+                                TextFieldCustom(
+                                  controller: _deviceNameController,
+                                  labelText: S.of(context)!.device_name,
+                                  suffixIcon: Icons.clear,
+                                  isError: _isDeviceNameError,
+                                  errorMessage: S.of(context)!.field_required,
+                                  onSuffixIconPressed: () {
+                                    _deviceNameController.clear();
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      deviceName = value;
+                                      _isDeviceNameError = value.isEmpty;
+                                      _updateButtonState();
+                                    });
+                                  },
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16)),
+                                    InfoRow(
+                                      label: S.of(context)!.front_temperature,
+                                      currentValue: 46,
+                                      maxValue: frontTemp,
+                                      unit: '°C',
+                                      onTap: () {
+                                        setState(() {
+                                          selectedTempType = 'Front';
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    InfoRow(
+                                      label: S.of(context)!.back_temperature,
+                                      currentValue: 32,
+                                      maxValue: backTemp,
+                                      unit: '°C',
+                                      onTap: () {
+                                        setState(() {
+                                          selectedTempType = 'Back';
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16)),
+                                    InfoRow(
+                                      label: S.of(context)!.humidity_,
+                                      currentValue: 21,
+                                      maxValue: humidity,
+                                      unit: '%',
+                                      onTap: () {
+                                        setState(() {
+                                          selectedTempType = 'Humidity';
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                CustomButton(
+                                  text: S.of(context)!.save,
+                                  onPressed: () async {
+                                    await _handleUpdateSettings();
+                                  },
+                                  isLoading: isLoading,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
+              )
+            ],
           ),
         ],
       ),
@@ -215,72 +262,145 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
   }
 }
 
-class TemperatureInput extends StatelessWidget {
-  final TextEditingController controller;
-  final String labelText;
-  final bool isError;
-  final String errorMessage;
-  final VoidCallback onIncrement;
-  final VoidCallback onDecrement;
-  final ValueChanged<String>? onChanged;
+class InfoRow extends StatelessWidget {
+  final String label;
+  final double currentValue;
+  final double maxValue;
+  final String unit;
+  final VoidCallback onTap;
 
-  TemperatureInput({
-    required this.controller,
-    required this.labelText,
-    required this.isError,
-    required this.errorMessage,
-    required this.onIncrement,
-    required this.onDecrement,
-    this.onChanged,
+  InfoRow({
+    required this.label,
+    required this.currentValue,
+    required this.maxValue,
+    required this.unit,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 312,
-      height: 48,
-      decoration: BoxDecoration(
-          color: fill_color,
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              labelText,
-              style: TextStyle(
-                fontSize: 16,
-                color: fontcolor,
+    IconData icon;
+    if (label.contains('Humidity')) {
+      icon = Icons.water_drop;
+    } else {
+      icon = Icons.thermostat;
+    }
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Container(
+          width: 148,
+          height: 112,
+          padding: EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            color: fill_color,
+            borderRadius: BorderRadius.circular(12.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                blurRadius: 5,
+                spreadRadius: 1,
+                offset: Offset(0, 3),
               ),
-            ),
+            ],
           ),
-          Spacer(),
-          IconButton(
-            icon: Icon(Icons.remove, color: Color.fromRGBO(237, 76, 47, 1)),
-            onPressed: onDecrement,
-          ),
-          Container(
-            width: 50,
-            height: 48,
-            alignment: Alignment.center,
-            child: TextFormField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: fontcolor),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: fontcolor,
+                    ),
+                  ),
+                ],
               ),
-              onChanged: onChanged,
-            ),
+              SizedBox(
+                height: 16,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Current : ',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: unnecessary_colors,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        'Target : ',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: unnecessary_colors,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '$currentValue',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: fontcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            unit,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: fontcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            '$maxValue',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: fontcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            unit,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: fontcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
-          IconButton(
-            icon: Icon(Icons.add, color: Color(0xFF80C080)),
-            onPressed: onIncrement,
-          ),
-        ],
+        ),
       ),
     );
   }

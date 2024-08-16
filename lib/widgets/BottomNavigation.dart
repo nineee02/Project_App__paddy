@@ -7,6 +7,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class BottomNavigationRoute extends StatefulWidget {
+  final int page;
+
+  const BottomNavigationRoute({this.page = 0});
   @override
   _BottomNavigationRouteState createState() => _BottomNavigationRouteState();
 }
@@ -18,6 +21,11 @@ class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
     HomeRoute(),
     ProfileRoute(),
   ];
+  @override
+  void initState() {
+    super.initState();
+    _selectedTab = widget.page;
+  }
 
   void _changeTab(int index) {
     setState(() {
@@ -33,6 +41,7 @@ class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
         currentIndex: _selectedTab,
         onTap: (index) => _changeTab(index),
         selectedItemColor: iconcolor,
+        backgroundColor: fill_color,
         unselectedItemColor: unnecessary_colors,
         items: [
           BottomNavigationBarItem(

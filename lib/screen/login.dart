@@ -1,9 +1,18 @@
+import 'dart:convert';
+import 'package:flag/flag_enum.dart';
+import 'package:flag/flag_widget.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:auto_route/auto_route.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:paddy_rice/constants/color.dart';
+import 'package:paddy_rice/main.dart';
+import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/CustomTextField.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class LoginRoute extends StatefulWidget {
@@ -22,28 +31,46 @@ class _LoginRouteState extends State<LoginRoute> {
   bool _isPasswordError = false;
 
   String? _errorMessage;
+  Locale _locale = Locale('en');
+  bool isEnglish = true;
 
-  void login() {
+  void _changeLanguage() {
+    setState(() {
+      isEnglish = !isEnglish;
+      _locale = isEnglish ? Locale('en') : Locale('th');
+      MyApp.setLocale(context, _locale);
+    });
+  }
+
+  Future<void> login() async {
     String emailOrPhone = _emailOrPhoneController.text;
     String password = _passwordController.text;
 
     final validEmailsOrPhones = ['user@example.com', '1231231231'];
     final correctPassword = 'password123';
 
-    if (validEmailsOrPhones.contains(emailOrPhone)) {
-      if (password == correctPassword) {
-        context.router.replaceNamed('/bottom_navigation');
-      } else {
-        setState(() {
-          _isPasswordError = true;
-          _errorMessage = S.of(context)!.incorrect_password;
-        });
-      }
-    } else {
-      setState(() {
+    setState(() {
+      _isEmailOrPhoneError = false;
+      _isPasswordError = false;
+      _errorMessage = null;
+    });
+
+    if ((!validEmailsOrPhones.contains(emailOrPhone) ||
+        (password != correctPassword))) {
+      setState(() async {
         _isEmailOrPhoneError = true;
         _errorMessage = S.of(context)!.user_not_found_prompt;
+        _isPasswordError = true;
+        _errorMessage = _errorMessage != null
+            ? '${_errorMessage}\n${S.of(context)!.incorrect_password}'
+            : S.of(context)!.incorrect_password;
       });
+    }
+
+    if (!_isEmailOrPhoneError && !_isPasswordError) {
+      await Future.delayed(Duration(seconds: 3));
+      context.router.replace(BottomNavigationRoute(page: 0));
+      // context.router.replaceNamed('/bottom_navigation');
     }
   }
 
@@ -68,6 +95,9 @@ class _LoginRouteState extends State<LoginRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: maincolor,
+      ),
       backgroundColor: maincolor,
       body: Center(
         child: SingleChildScrollView(
@@ -107,17 +137,19 @@ class _LoginRouteState extends State<LoginRoute> {
                   prefixIcon: Icons.person_outline,
                   suffixIcon: Icons.clear,
                   obscureText: false,
-                  isError: _isEmailOrPhoneError,
-                  errorMessage: S.of(context)!.user_not_found_prompt,
+                  isError: _isEmailOrPhoneError ||
+                      _isPasswordError, // Check both errors
+                  errorMessage:
+                      _errorMessage ?? '', // Display general error message
                   onSuffixIconPressed: () {
                     _emailOrPhoneController.clear();
                   },
-                  onChanged: (value) => _clearEmailOrPhoneError(),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.of(context)!.user_not_found_prompt;
-                    }
-                    return null;
+                  onChanged: (value) {
+                    setState(() {
+                      _isEmailOrPhoneError = false;
+                      _isPasswordError = false;
+                      _errorMessage = null;
+                    });
                   },
                 ),
                 SizedBox(height: 16.0),
@@ -128,19 +160,21 @@ class _LoginRouteState extends State<LoginRoute> {
                   suffixIcon:
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                   obscureText: _obscureText,
-                  isError: _isPasswordError,
-                  errorMessage: S.of(context)!.incorrect_password,
+                  isError: _isPasswordError ||
+                      _isEmailOrPhoneError, // Check both errors
+                  errorMessage:
+                      _errorMessage ?? '', // Display general error message
                   onSuffixIconPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
                     });
                   },
-                  onChanged: (value) => _clearPasswordError(),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.of(context)!.incorrect_password;
-                    }
-                    return null;
+                  onChanged: (value) {
+                    setState(() {
+                      _isEmailOrPhoneError = false;
+                      _isPasswordError = false;
+                      _errorMessage = null;
+                    });
                   },
                 ),
                 SizedBox(height: 8.0),
@@ -161,9 +195,9 @@ class _LoginRouteState extends State<LoginRoute> {
                 SizedBox(height: 8.0),
                 CustomButton(
                   text: S.of(context)!.sign_in,
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      login();
+                      await login();
                     }
                   },
                 ),
@@ -196,6 +230,53 @@ class _LoginRouteState extends State<LoginRoute> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    child: GestureDetector(
+                      onTap: _changeLanguage,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 26,
+                            decoration: BoxDecoration(
+                              color: fill_color,
+                              borderRadius: BorderRadius.circular(13.0),
+                            ),
+                          ),
+                          AnimatedPositioned(
+                            duration: Duration(milliseconds: 300),
+                            left: isEnglish ? 0 : 24,
+                            right: isEnglish ? 24 : 0,
+                            child: Flag.fromString(
+                              isEnglish ? 'GB' : 'TH',
+                              height: 26,
+                              width: 26,
+                              fit: BoxFit.cover,
+                              flagSize: FlagSize.size_1x1,
+                              borderRadius: 13,
+                            ),
+                          ),
+                          Positioned(
+                            left: isEnglish ? 30 : 5,
+                            top: 4,
+                            child: Text(
+                              isEnglish ? "EN" : "TH",
+                              style: TextStyle(
+                                color: fontcolor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

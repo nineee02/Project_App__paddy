@@ -23,6 +23,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
   Color _inputBorderColor = fill_color;
   FocusNode _inputFocusNode = FocusNode();
   Color _labelColor = unnecessary_colors;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -59,7 +60,7 @@ class _ForgotRouteState extends State<ForgotRoute> {
           content: S.of(context)!.user_not_found_prompt,
           parentContext: context,
           confirmButtonText: S.of(context)!.sign_up,
-          cancelButtonText: S.of(context)!.not_now,
+          cancelButtonText: S.of(context)!.cancel,
           onConfirm: () {
             context.router.replaceNamed('/signup');
           },
@@ -76,13 +77,25 @@ class _ForgotRouteState extends State<ForgotRoute> {
     return existingUsers.contains(email);
   }
 
-  void _validateAndContinue() {
+  Future<void> _validateAndContinue() async {
     if (_formKey.currentState?.validate() ?? false) {
+      setState(() {
+        isLoading = true;
+      });
+
       final inputValue = _controller.text;
 
+      await Future.delayed(Duration(seconds: 2)); // จำลองการตรวจสอบผู้ใช้
+
       if (_checkUserExists(inputValue)) {
+        setState(() {
+          isLoading = false;
+        });
         context.router.push(OtpRoute(inputValue: inputValue));
       } else {
+        setState(() {
+          isLoading = false;
+        });
         _showUserNotFoundDialog();
       }
     } else {
@@ -219,8 +232,9 @@ class _ForgotRouteState extends State<ForgotRoute> {
                           width: 312,
                           height: 48,
                           child: CustomButton(
-                            text: S.of(context)!.continue_text,
+                            text: S.of(context)!.send,
                             onPressed: _validateAndContinue,
+                            isLoading: isLoading,
                           ),
                         ),
                       ],

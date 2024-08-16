@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
-
-/// The line `import 'package:paddy_rice/constants/font_size.dart';` is importing a Dart file named
-/// `font_size.dart` from the `constants` directory within the `paddy_rice` package. This file likely
-/// contains predefined font sizes that are used within the `CustomTextField` widget or other parts of
-/// the application. By importing this file, the widget can access and use the font sizes defined in
-/// `font_size.dart` to maintain consistency in the styling of text elements throughout the application.
 import 'package:paddy_rice/constants/font_size.dart';
 
 class CustomTextField extends StatefulWidget {

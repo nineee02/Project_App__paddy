@@ -43,7 +43,7 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
           icon: Icon(Icons.arrow_back, color: iconcolor),
         ),
         title: Text(
-          S.of(context)!.notification_setting,
+          S.of(context)!.notifications,
           style: appBarFont,
         ),
         centerTitle: true,
@@ -53,34 +53,52 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
           DecoratedImage(),
           Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                const EdgeInsets.symmetric(horizontal: 0.0, vertical: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  S.of(context)!.device_messages,
-                  style: TextStyle(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    S.of(context)!.device_messages,
+                    style: TextStyle(
                       color: fontcolor,
                       fontSize: 12,
-                      fontWeight: FontWeight.w400),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: toggleNotification,
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
+                    decoration: BoxDecoration(
+                      color: fill_color,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 0),
+                      vertical: 8.0,
+                      horizontal: 16,
+                    ),
                     height: 48,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          S.of(context)!.device_notification,
+                          S.of(context)!.devices,
                           style: TextStyle(
-                              color: fontcolor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500),
+                            color: fontcolor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         Switch(
                           value: isNotificationEnabled,
@@ -114,25 +132,41 @@ class _SettingNotifiRouteState extends State<SettingNotifiRoute> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(
+                  height: 8,
+                ),
                 if (showManagement)
                   InkWell(
                     onTap: () =>
                         context.router.replaceNamed('/deviceNotifiSetting'),
                     borderRadius: BorderRadius.circular(8),
                     child: Container(
+                      decoration: BoxDecoration(
+                        color: fill_color,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
                       padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 0),
+                        vertical: 8.0,
+                        horizontal: 16,
+                      ),
                       height: 48,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            S.of(context)!.device_notification_management,
+                            S.of(context)!.device_management,
                             style: TextStyle(
-                                color: fontcolor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500),
+                              color: fontcolor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           Icon(Icons.chevron_right, color: iconcolor),
                         ],

@@ -32,6 +32,8 @@ class _SignupRouteState extends State<SignupRoute> {
   bool _isPasswordError = false;
   bool _isConfirmPasswordError = false;
 
+  bool isLoading = false;
+
   FocusNode _nameFocusNode = FocusNode();
   FocusNode _surnameFocusNode = FocusNode();
   FocusNode _phoneFocusNode = FocusNode();
@@ -88,7 +90,7 @@ class _SignupRouteState extends State<SignupRoute> {
           content: message,
           parentContext: context,
           confirmButtonText: S.of(context)!.ok,
-          cancelButtonText: '',
+          cancelButtonText: S.of(context)!.cancel,
           onConfirm: () {
             Navigator.of(context).pop();
           },
@@ -109,7 +111,7 @@ class _SignupRouteState extends State<SignupRoute> {
           content: message,
           parentContext: context,
           confirmButtonText: S.of(context)!.ok,
-          cancelButtonText: '',
+          cancelButtonText: S.of(context)!.cancel,
           onConfirm: () {
             Navigator.of(context).pop();
             context.router.replaceNamed('/login');
@@ -136,7 +138,7 @@ class _SignupRouteState extends State<SignupRoute> {
     });
 
     if (_isEmailError || _isPhoneError) {
-      _showErrorDialog('Email or phone number already exists.');
+      _showErrorDialog(S.of(context)!.email_phone_exists);
       return false;
     }
 
@@ -148,12 +150,25 @@ class _SignupRouteState extends State<SignupRoute> {
         _isConfirmPasswordError);
   }
 
-  void signup() {
+  Future<void> signup() async {
     if (_validateFields()) {
+      setState(() {
+        isLoading = true;
+      });
+
+      await Future.delayed(Duration(seconds: 3));
+
       if (_checkIfEmailOrPhoneExists(
           _emailController.text, _phoneController.text)) {
         _showErrorDialog('Email or phone number already exists.');
+        setState(() {
+          isLoading = false;
+        });
+        _showErrorDialog(S.of(context)!.email_phone_exists);
       } else {
+        setState(() {
+          isLoading = false;
+        });
         _showSuccessDialog(S.of(context)!.success_message);
       }
     }
@@ -162,7 +177,6 @@ class _SignupRouteState extends State<SignupRoute> {
   bool _checkIfEmailOrPhoneExists(String email, String phone) {
     List<String> existingEmails = ['user@example.com'];
     List<String> existingPhones = ['1231231231'];
-
     return existingEmails.contains(email) || existingPhones.contains(phone);
   }
 
@@ -342,12 +356,7 @@ class _SignupRouteState extends State<SignupRoute> {
                 const SizedBox(height: 16.0),
                 Center(
                   child: CustomButton(
-                    text: S.of(context)!.save,
-                    onPressed: () {
-                      signup();
-                      print('Signup button pressed');
-                    },
-                  ),
+                      text: S.of(context)!.sign_up, onPressed: signup),
                 )
               ],
             ),
