@@ -16,7 +16,7 @@ class Device {
     required this.status,
     this.frontTemp = 0.0,
     this.backTemp = 0.0,
-    required this.humidity,
+    this.humidity = 0.0,
     this.bluetoothDevice,
   });
 }

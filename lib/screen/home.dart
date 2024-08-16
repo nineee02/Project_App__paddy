@@ -10,7 +10,6 @@ import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:paddy_rice/widgets/model.dart';
 import 'package:paddy_rice/widgets/shDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:paddy_rice/widgets/shDialog.dart';
 
 @RoutePage()
 class HomeRoute extends StatefulWidget {
@@ -22,8 +21,16 @@ class HomeRoute extends StatefulWidget {
 
 class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
   List<Device> devices = [
-    Device(name: "Device 1", id: "1", status: false, humidity: 16),
-    Device(name: "Device 2", id: "2", status: true, humidity: 14),
+    Device(
+      name: "Device 1",
+      id: "1",
+      status: false,
+    ),
+    Device(
+      name: "Device 2",
+      id: "2",
+      status: true,
+    ),
   ];
 
   @override
@@ -264,7 +271,7 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
               ),
               child: Container(
                 width: 352,
-                height: 152,
+                height: 120,
                 decoration: BoxDecoration(
                   color: fill_color,
                   borderRadius: BorderRadius.circular(8),
@@ -275,23 +282,24 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
                     ),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8),
-                      child: Row(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             device.name.length > 21
                                 ? '${device.name.substring(0, 21)}...'
                                 : device.name,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: fontcolor),
                             overflow: TextOverflow.ellipsis,
                           ),
                           Container(
@@ -313,74 +321,65 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
                           ),
                         ],
                       ),
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        localizations.temp,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${localizations.front}: 24° / ${device.frontTemp}°",
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${localizations.back}: 24° / ${device.backTemp}°",
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        localizations.humidity_,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 12.0),
-                                      Text(
-                                        "${device.humidity} %",
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${device.frontTemp} C',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: fontcolor),
+                              ),
+                              Text(
+                                S.of(context)!.temp_front,
+                                style: TextStyle(
+                                    fontSize: 12, color: unnecessary_colors),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${device.backTemp} C',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: fontcolor),
+                              ),
+                              Text(
+                                S.of(context)!.temp_back,
+                                style: TextStyle(
+                                    fontSize: 12, color: unnecessary_colors),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${device.humidity} %',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: fontcolor),
+                              ),
+                              Text(
+                                S.of(context)!.humidity_,
+                                style: TextStyle(
+                                    fontSize: 12, color: unnecessary_colors),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
@@ -156,28 +160,30 @@ class _SignupRouteState extends State<SignupRoute> {
         isLoading = true;
       });
 
-      await Future.delayed(Duration(seconds: 3));
+      final response = await http.post(
+        Uri.parse('${ApiConstants.baseUrl}/signup'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'name': _nameController.text,
+          'surname': _surnameController.text,
+          'phone': _phoneController.text,
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        }),
+      );
 
-      if (_checkIfEmailOrPhoneExists(
-          _emailController.text, _phoneController.text)) {
-        setState(() {
-          isLoading = false;
-        });
+      setState(() {
+        isLoading = false;
+      });
+
+      if (response.statusCode == 201) {
+        _showSuccessDialog(S.of(context)!.success_message);
+      } else if (response.statusCode == 409) {
         _showErrorDialog(S.of(context)!.email_phone_exists);
       } else {
-        setState(() {
-          isLoading = false;
-        });
-        _showSuccessDialog(S.of(context)!.success_message);
+        _showErrorDialog(S.of(context)!.error);
       }
     }
-  }
-
-  bool _checkIfEmailOrPhoneExists(String email, String phone) {
-    List<String> existingEmails = ['user@example.com'];
-    List<String> existingPhones = ['1231231231'];
-
-    return existingEmails.contains(email) || existingPhones.contains(phone);
   }
 
   final phoneRegex = RegExp(r'^[0-9]{10}$');

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/constants/font_size.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
+import 'package:paddy_rice/widgets/decorated_image.dart';
 import 'package:paddy_rice/widgets/model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -145,234 +146,118 @@ class _DeviceSateRouteState extends State<DeviceSateRoute> {
       ),
       body: Stack(
         children: [
-          // DecoratedImage(),
-          Container(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: DefaultTextStyle(
-                      style: TextStyle(
-                        color: fontcolor,
-                        fontSize: 16,
-                      ),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 20),
-                            TemperatureInput(
-                              tempType: selectedTempType,
-                              currentTemp: selectedTempType == 'Front'
-                                  ? frontTemp
-                                  : selectedTempType == 'Back'
-                                      ? backTemp
-                                      : humidity,
-                              onIncrement: incrementTemp,
-                              onDecrement: decrementTemp,
-                              onSelectType: selectTempType,
+          DecoratedImage(),
+          Column(
+            children: [
+              Container(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: DefaultTextStyle(
+                          style: TextStyle(
+                            color: fontcolor,
+                            fontSize: 16,
+                          ),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 20),
+                                TextFieldCustom(
+                                  controller: _deviceNameController,
+                                  labelText: S.of(context)!.device_name,
+                                  suffixIcon: Icons.clear,
+                                  isError: _isDeviceNameError,
+                                  errorMessage: S.of(context)!.field_required,
+                                  onSuffixIconPressed: () {
+                                    _deviceNameController.clear();
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      deviceName = value;
+                                      _isDeviceNameError = value.isEmpty;
+                                      _updateButtonState();
+                                    });
+                                  },
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16)),
+                                    InfoRow(
+                                      label: S.of(context)!.front_temperature,
+                                      currentValue: 46,
+                                      maxValue: frontTemp,
+                                      unit: '°C',
+                                      onTap: () {
+                                        setState(() {
+                                          selectedTempType = 'Front';
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    InfoRow(
+                                      label: S.of(context)!.back_temperature,
+                                      currentValue: 32,
+                                      maxValue: backTemp,
+                                      unit: '°C',
+                                      onTap: () {
+                                        setState(() {
+                                          selectedTempType = 'Back';
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16)),
+                                    InfoRow(
+                                      label: S.of(context)!.humidity_,
+                                      currentValue: 21,
+                                      maxValue: humidity,
+                                      unit: '%',
+                                      onTap: () {
+                                        setState(() {
+                                          selectedTempType = 'Humidity';
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                CustomButton(
+                                  text: S.of(context)!.save,
+                                  onPressed: () async {
+                                    await _handleUpdateSettings();
+                                  },
+                                  isLoading: isLoading,
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 20),
-                            TextFieldCustom(
-                              controller: _deviceNameController,
-                              labelText: S.of(context)!.device_name,
-                              suffixIcon: Icons.clear,
-                              isError: _isDeviceNameError,
-                              errorMessage: S.of(context)!.field_required,
-                              onSuffixIconPressed: () {
-                                _deviceNameController.clear();
-                              },
-                              onChanged: (value) {
-                                setState(() {
-                                  deviceName = value;
-                                  _isDeviceNameError = value.isEmpty;
-                                  _updateButtonState();
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 8),
-                            InfoRow(
-                              label: S.of(context)!.front_temperature,
-                              currentValue: 46,
-                              maxValue: frontTemp,
-                              unit: '°C',
-                              onTap: () {
-                                setState(() {
-                                  selectedTempType = 'Front';
-                                });
-                              },
-                            ),
-                            InfoRow(
-                              label: S.of(context)!.back_temperature,
-                              currentValue: 32,
-                              maxValue: backTemp,
-                              unit: '°C',
-                              onTap: () {
-                                setState(() {
-                                  selectedTempType = 'Back';
-                                });
-                              },
-                            ),
-                            InfoRow(
-                              label: S.of(context)!.humidity_,
-                              currentValue: 21,
-                              maxValue: humidity,
-                              unit: '%',
-                              onTap: () {
-                                setState(() {
-                                  selectedTempType = 'Humidity';
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                            CustomButton(
-                              text: S.of(context)!.save,
-                              onPressed: () async {
-                                await _handleUpdateSettings();
-                              },
-                              isLoading: isLoading,
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          )
+                ),
+              )
+            ],
+          ),
         ],
       ),
-    );
-  }
-}
-
-class TemperatureInput extends StatefulWidget {
-  final String tempType;
-  final double currentTemp;
-  final VoidCallback onIncrement;
-  final VoidCallback onDecrement;
-  final void Function(String) onSelectType;
-
-  TemperatureInput({
-    required this.tempType,
-    required this.currentTemp,
-    required this.onIncrement,
-    required this.onDecrement,
-    required this.onSelectType,
-  });
-
-  @override
-  _TemperatureInputState createState() => _TemperatureInputState();
-}
-
-class _TemperatureInputState extends State<TemperatureInput> {
-  Timer? _timer;
-
-  void _startTimer(VoidCallback action) {
-    _timer?.cancel();
-    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-      action();
-    });
-  }
-
-  void _stopTimer() {
-    _timer?.cancel();
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            widget.tempType,
-            style: TextStyle(
-              fontSize: 14,
-              color: unnecessary_colors,
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onLongPressStart: (_) => _startTimer(widget.onDecrement),
-              onLongPressEnd: (_) => _stopTimer(),
-              onTap: widget.onDecrement,
-              child: Icon(Icons.remove, color: Color.fromRGBO(237, 76, 47, 1)),
-            ),
-            SizedBox(width: 16),
-            Text(
-              '${widget.currentTemp}',
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.bold,
-                color: fontcolor,
-              ),
-            ),
-            SizedBox(width: 16),
-            GestureDetector(
-              onLongPressStart: (_) => _startTimer(widget.onIncrement),
-              onLongPressEnd: (_) => _stopTimer(),
-              onTap: widget.onIncrement,
-              child: Icon(Icons.add, color: Color(0xFF80C080)),
-            ),
-          ],
-        ),
-        SizedBox(height: 5),
-        Text(
-          widget.tempType,
-          style: TextStyle(
-            fontSize: 18,
-            color: unnecessary_colors,
-          ),
-        ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 10,
-              backgroundColor:
-                  widget.tempType == 'Front' ? Colors.green : Colors.grey,
-              child: GestureDetector(
-                onTap: () => widget.onSelectType('Front'),
-              ),
-            ),
-            SizedBox(width: 8),
-            CircleAvatar(
-              radius: 10,
-              backgroundColor:
-                  widget.tempType == 'Back' ? Colors.green : Colors.grey,
-              child: GestureDetector(
-                onTap: () => widget.onSelectType('Back'),
-              ),
-            ),
-            SizedBox(width: 8),
-            CircleAvatar(
-              radius: 10,
-              backgroundColor:
-                  widget.tempType == 'Humidity' ? Colors.green : Colors.grey,
-              child: GestureDetector(
-                onTap: () => widget.onSelectType('Humidity'),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
@@ -406,8 +291,8 @@ class InfoRow extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Container(
-          width: 312,
-          height: 48,
+          width: 148,
+          height: 112,
           padding: EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             color: fill_color,
@@ -421,17 +306,11 @@ class InfoRow extends StatelessWidget {
               ),
             ],
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(
-                    icon,
-                    color: Colors.grey[700],
-                    size: 28,
-                  ),
-                  SizedBox(width: 12),
                   Text(
                     label,
                     style: TextStyle(
@@ -441,30 +320,81 @@ class InfoRow extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 16,
+              ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '$currentValue',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: fontcolor,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Current : ',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: unnecessary_colors,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        'Target : ',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: unnecessary_colors,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    ' / $maxValue',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: fontcolor,
-                    ),
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    unit,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: fontcolor,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '$currentValue',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: fontcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            unit,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: fontcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            '$maxValue',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: fontcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            unit,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: fontcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),

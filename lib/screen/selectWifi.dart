@@ -88,8 +88,23 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
         }
         if (writeCharacteristic != null) break;
       }
+
+      device.state.listen((state) {
+        if (state == BluetoothDeviceState.disconnected) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Device disconnected. Please reconnect.'),
+            ),
+          );
+        }
+      });
     } catch (e) {
       print('Error connecting to device: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to connect to device. Please try again.'),
+        ),
+      );
     }
   }
 
@@ -129,13 +144,13 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
   Future<void> onSubmit() async {
     if (validateInputs()) {
       setState(() {
-        isLoading = true; // ตั้งค่า isLoading เป็น true
+        isLoading = true;
       });
       final ssid = selectedWifi!;
       final password = passwordController.text;
       await sendWifiCredentials(ssid, password);
       setState(() {
-        isLoading = false; // ตั้งค่า isLoading เป็น false
+        isLoading = false;
       });
 
       context.router.replaceAll([BottomNavigationRoute(page: 0)]);
@@ -317,7 +332,7 @@ class _SelectWifiRouteState extends State<SelectWifiRoute> {
                         height: 48,
                         child: CustomButton(
                           text: localizations.next,
-                          onPressed: onSubmit, // ต้องใช้ Future<void>
+                          onPressed: onSubmit,
                           isLoading: isLoading,
                         ),
                       ),

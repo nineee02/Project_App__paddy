@@ -1,13 +1,18 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flag/flag_enum.dart';
 import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:paddy_rice/constants/api.dart';
 import 'package:paddy_rice/constants/color.dart';
 import 'package:paddy_rice/main.dart';
 import 'package:paddy_rice/router/routes.gr.dart';
 import 'package:paddy_rice/widgets/CustomButton.dart';
 import 'package:paddy_rice/widgets/CustomTextField.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class LoginRoute extends StatefulWidget {
@@ -41,31 +46,35 @@ class _LoginRouteState extends State<LoginRoute> {
     String emailOrPhone = _emailOrPhoneController.text;
     String password = _passwordController.text;
 
-    final validEmailsOrPhones = ['user@example.com', '1231231231'];
-    final correctPassword = 'password123';
+    final response = await http.post(
+      Uri.parse('${ApiConstants.baseUrl}/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'emailOrPhone': emailOrPhone,
+        'password': password,
+      }),
+    );
 
-    setState(() {
-      _isEmailOrPhoneError = false;
-      _isPasswordError = false;
-      _errorMessage = null;
-    });
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      final userId = responseData['userId'];
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setInt('userId', userId);
 
-    if ((!validEmailsOrPhones.contains(emailOrPhone) ||
-        (password != correctPassword))) {
-      setState(() async {
-        _isEmailOrPhoneError = true;
-        _errorMessage = S.of(context)!.user_not_found_prompt;
-        _isPasswordError = true;
-        _errorMessage = _errorMessage != null
-            ? '${_errorMessage}\n${S.of(context)!.incorrect_password}'
-            : S.of(context)!.incorrect_password;
-      });
-    }
-
-    if (!_isEmailOrPhoneError && !_isPasswordError) {
-      await Future.delayed(Duration(seconds: 3));
       context.router.replace(BottomNavigationRoute(page: 0));
-      // context.router.replaceNamed('/bottom_navigation');
+    } else {
+      if (response.statusCode == 401) {
+        setState(() {
+          _isPasswordError = true;
+        });
+      } else if (response.statusCode == 404) {
+        setState(() {
+          _isEmailOrPhoneError = true;
+        });
+      } else {
+        print('Error: ${response.statusCode}');
+      }
     }
   }
 
@@ -132,17 +141,19 @@ class _LoginRouteState extends State<LoginRoute> {
                   prefixIcon: Icons.person_outline,
                   suffixIcon: Icons.clear,
                   obscureText: false,
-                  isError: _isEmailOrPhoneError,
-                  errorMessage: S.of(context)!.user_not_found_prompt,
+                  isError: _isEmailOrPhoneError ||
+                      _isPasswordError, // Check both errors
+                  errorMessage:
+                      _errorMessage ?? '', // Display general error message
                   onSuffixIconPressed: () {
                     _emailOrPhoneController.clear();
                   },
-                  onChanged: (value) => _clearEmailOrPhoneError(),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.of(context)!.user_not_found_prompt;
-                    }
-                    return null;
+                  onChanged: (value) {
+                    setState(() {
+                      _isEmailOrPhoneError = false;
+                      _isPasswordError = false;
+                      _errorMessage = null;
+                    });
                   },
                 ),
                 SizedBox(height: 16.0),
@@ -153,19 +164,21 @@ class _LoginRouteState extends State<LoginRoute> {
                   suffixIcon:
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                   obscureText: _obscureText,
-                  isError: _isPasswordError,
-                  errorMessage: S.of(context)!.incorrect_password,
+                  isError: _isPasswordError ||
+                      _isEmailOrPhoneError, // Check both errors
+                  errorMessage:
+                      _errorMessage ?? '', // Display general error message
                   onSuffixIconPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
                     });
                   },
-                  onChanged: (value) => _clearPasswordError(),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return S.of(context)!.incorrect_password;
-                    }
-                    return null;
+                  onChanged: (value) {
+                    setState(() {
+                      _isEmailOrPhoneError = false;
+                      _isPasswordError = false;
+                      _errorMessage = null;
+                    });
                   },
                 ),
                 SizedBox(height: 8.0),

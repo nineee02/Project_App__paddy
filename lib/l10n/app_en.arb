@@ -144,5 +144,12 @@
 
   "delete_confirmation": "Delete Confirmation",
   "running": "Runnig",
-  "close": "Close"
+  "close": "Close",
+
+  "please_turn_on_bluetooth": "Please turn on Bluetooth",
+  "bluetooth_required": "Bluetooth is required",
+
+  "login_failed_prompt": "Login failed notification",
+
+  "fields_cannot_be_empty": "Fields cannot be empty"
 }
